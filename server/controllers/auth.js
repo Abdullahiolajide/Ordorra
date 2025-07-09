@@ -53,6 +53,7 @@ const signUp = async (req, res)=>{
     });
     await sendVerificationCode(req, res, code, email)
 
+
     res.status(201).json({
       message: 'User created successfully',
       data: user

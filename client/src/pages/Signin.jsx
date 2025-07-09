@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
 import { MdNavigateNext } from 'react-icons/md'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { backendurl } from '../../global'
+import axios from 'axios'
 
 const Signin = () => {
     const [user, setUser] = useState({})
+    const [loading, setLoading] = useState(false)
+    const [errMsg, setErrMsg] = useState('')
+    const navigate = useNavigate()
 
     const handleChange = (e)=>{
         setUser(prevUser=>(
@@ -13,8 +18,32 @@ const Signin = () => {
             }
         ))
     }
-    const signIn = ()=>{
-        console.log(user)
+    const signIn = async()=>{
+        const { email, password} = user;
+
+        try {
+            setLoading(true);
+
+            const res = await axios.post(`${backendurl}/auth/signin`, {
+            email,
+            password
+            });
+            // alert("You have being Signed Up successfully")
+            console.log(res.data);
+            navigate('/dashboard')
+
+            // or show toast
+
+        } catch (err) {
+            // better error handling
+            if (err.response) {
+            setErrMsg(err.response.data.message || 'Something went wrong');
+            } else {
+            setErrMsg('Network error');
+            }
+        } finally {
+            setLoading(false);
+        }
     }
 
   return (
@@ -50,10 +79,11 @@ const Signin = () => {
 
             <div>
                 <button 
-                className='w-full py-2 bg-green-600 rounded text-white my-2 active:bg-green-700 hover:bg-green-500 cursor-pointer'
+                className={`w-full py-2 ${loading ? 'bg-gray-300' : 'bg-green-600 active:bg-green-700 hover:bg-green-500'} rounded text-white my-2  cursor-pointer`}
+                disabled={loading}
                 onClick={signIn}
                 >
-                    Sign Up
+                    Sign In{loading && '...'}
                 </button>
             </div>
             <div className='flex space-x-2 justify-center'>

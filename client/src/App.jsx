@@ -7,6 +7,8 @@ import LandingPage from './pages/LandingPage'
 import LNavbar from './components/LNavbar'
 import Signup from './pages/Signup'
 import Signin from './pages/Signin'
+import VerifyEmail from './pages/verifyEmail'
+import DashboardLayout from './components/DashboardLayout'
 
 function App() {
 
@@ -17,8 +19,10 @@ function App() {
           <Route index element={<LandingPage />}/>
           <Route path='signup' element={<Signup />}/>
           <Route path='signin' element={<Signin />}/>
-
+          <Route path='verify-email' element={<VerifyEmail />}/>
         </Route>
+
+        <Route path='/dashboard' element={<DashboardLayout />}/>
       </Routes>
     </>
   )
