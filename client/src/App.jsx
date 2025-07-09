@@ -7,7 +7,7 @@ import LandingPage from './pages/LandingPage'
 import LNavbar from './components/LNavbar'
 import Signup from './pages/Signup'
 import Signin from './pages/Signin'
-import VerifyEmail from './pages/verifyEmail'
+import VerifyEmail from './pages/VerifyEmail'
 import DashboardLayout from './components/DashboardLayout'
 
 function App() {
