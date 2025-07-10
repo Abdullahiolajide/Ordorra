@@ -171,10 +171,84 @@ const resendVerificationCode = async (req, res) => {
   }
 };
 
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expires = new Date(Date.now() + 30 * 60 * 1000);
+
+    user.resetCode = code;
+    user.resetExpires = expires;
+    await user.save();
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    await transporter.sendMail({
+      from: `"Ordorra" <${process.env.EMAIL}>`,
+      to: email,
+      subject: 'Password Reset Code',
+      html: `
+        <h2>Reset your password</h2>
+        <p>Use the code below to reset your password:</p>
+        <h1>${code}</h1>
+        <p>This code expires in 30 minutes.</p>
+      `
+    });
+
+    res.status(200).json({ message: 'Reset code sent to your email' });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
+
+
+const resetPassword = async (req, res) => {
+  const { email, code, newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user || user.resetCode !== code)
+      return res.status(400).json({ message: 'Invalid code or email' });
+
+    if (user.resetExpires < new Date())
+      return res.status(400).json({ message: 'Code expired' });
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+    user.password = hashed;
+    user.resetCode = null;
+    user.resetExpires = null;
+    await user.save();
+
+    res.status(200).json({ message: 'Password updated successfully' });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
+
+
 
 module.exports = {
     signUp,
     verifyCode,
     resendVerificationCode,
-    signIn
+    signIn,
+    forgotPassword,
+    resetPassword
 }

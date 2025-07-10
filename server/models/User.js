@@ -15,7 +15,9 @@ const userSchema = new mongoose.Schema({
     default: false
   },
   verificationCode: String,
-  codeExpires: Date
+  codeExpires: Date,
+  resetCode: String,
+  resetExpires: Date
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

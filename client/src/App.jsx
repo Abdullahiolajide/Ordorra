@@ -9,6 +9,8 @@ import Signup from './pages/Signup'
 import Signin from './pages/Signin'
 import VerifyEmail from './pages/VerifyEmail'
 import DashboardLayout from './components/DashboardLayout'
+import ResetPassword from './pages/ResetPassword'
+import ForgotPassword from './pages/ForgotPassword'
 
 function App() {
 
@@ -20,6 +22,8 @@ function App() {
           <Route path='signup' element={<Signup />}/>
           <Route path='signin' element={<Signin />}/>
           <Route path='verify-email' element={<VerifyEmail />}/>
+          <Route path='reset-password' element={<ResetPassword />}/>
+          <Route path='forgot-password' element={<ForgotPassword />}/>
         </Route>
 
         <Route path='/dashboard' element={<DashboardLayout />}/>

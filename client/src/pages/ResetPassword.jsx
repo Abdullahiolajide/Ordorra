@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { backendurl } from '../../global'
 import axios from 'axios'
 
-const Signup = () => {
+const ResetPassword = () => {
     const [user, setUser] = useState({})
     const [errMsg, setErrMsg] = useState('')
     const [loading, setLoading] = useState(false)
@@ -20,9 +20,12 @@ const Signup = () => {
             }
         ))
     }
-    const signUp = async () => {
-        const { email, password, confirm_password } = user;
-        if (!email || !password || !confirm_password) {
+    const reset = async () => {
+        const { code, password, confirm_password } = user;
+        const email = localStorage.getItem('ouseremail')
+        if (!email) return navigate('/forgot-password')
+        
+        if (!code || !password || !confirm_password) {
             return setErrMsg('Fill in all fields')
         }
 
@@ -34,14 +37,10 @@ const Signup = () => {
         try {
             setLoading(true);
 
-            const res = await axios.post(`${backendurl}/auth/signup`, {
-            email,
-            password
-            });
-            localStorage.setItem('ouseremail', email)
+            const res = await axios.post(`${backendurl}/auth/reset-password`, { email, code, newPassword: password });
             // alert("You have being Signed Up successfully")
             console.log(res.data);
-            navigate('/verify-email')
+            navigate('/signin')
 
             // or show toast
 
@@ -63,25 +62,25 @@ const Signup = () => {
         <section className=' mt-10 w-full max-w-xs  md:max-w-md'>
             <div><img src="images/store.png" alt="" width={50} className='mx-auto'/></div>
            <div className='text-center'>
-             <h1 className='text-2xl'>Sign Up to Ordorra</h1>
-            <p className='text-sm'>Create your WhatsApp commerce Storefront </p>
+             <h1 className='text-2xl'>Reset your password</h1>
+            <p className='text-sm'>Check your email for your reset code</p>
             <p><small className='text-red-500'>{errMsg && errMsg}</small></p>
            </div>
 
             <div className='flex flex-col my-4 '>
-                <label htmlFor="" className='text-sm py-1'>Email</label>
+                <label htmlFor="" className='text-sm py-1'>Reset Code</label>
                 <input 
                 type="text"
-                name='email'
-                value={user?.email || ''}
-                className={`border ${clicked && !user.email ? 'border-red-600' : 'border-gray-400'} rounded px-3 py-2 w-full`} 
-                placeholder='Ex. example@gmail.com'
+                name='code'
+                value={user?.code || ''}
+                className={`border ${clicked && !user.code ? 'border-red-600' : 'border-gray-400'} rounded px-3 py-2 w-full`} 
+                placeholder='Enter yout reset Code'
                 onChange={handleChange}
                 />
             </div>
 
              <div className='flex flex-col my-4'>
-                <label htmlFor="" className='text-sm py-1'>Password</label>
+                <label htmlFor="" className='text-sm py-1'>New password</label>
                 <input 
                 type="password"
                 name='password'
@@ -92,8 +91,8 @@ const Signup = () => {
                 />
             </div>
 
-            <div className='flex flex-col my-4'>
-                <label htmlFor="" className='text-sm py-1'>Confirm Password</label>
+            <div className='flex flex-col mt-2'>
+                <label htmlFor="" className='text-sm py-1'>Confirm new password</label>
                 <input 
                 type="password"
                 name='confirm_password'
@@ -103,14 +102,18 @@ const Signup = () => {
                 onChange={handleChange}
                 />
             </div>
+              <div className='flex space-x-2 text-sm'>
+                <span>Didnt receive a code?</span> 
+                <Link to={'/forgot-password'}><span className='flex text-green-600 items-center justify-center'>Resend</span> </Link>
+            </div>
 
             <div>
                 <button 
                 className={`w-full py-2 ${loading ? 'bg-gray-300' : 'bg-green-600 active:bg-green-700 hover:bg-green-500'} rounded text-white my-2  cursor-pointer`}
                 disabled={loading}
-                onClick={()=> {signUp(); setClicked(true)}}
+                onClick={()=> {reset(); setClicked(true)}}
                 >
-                    Sign Up{loading && '...'}
+                    Reset Password{loading && '...'}
                 </button>
             </div>
             <div className='flex space-x-2 justify-center'>
@@ -123,4 +126,4 @@ const Signup = () => {
   )
 }
 
-export default Signup
+export default ResetPassword

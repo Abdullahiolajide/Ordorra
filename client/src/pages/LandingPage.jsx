@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const LandingPage = () => {
   return (
@@ -10,7 +11,9 @@ const LandingPage = () => {
                     </h1>
                 <h3 className='text-center max-w-4xl md:text-xl my-4 mx-4'>Build a simple online storefront and manage your orders right from WhatsApp</h3>
             <div>
-                <button className='rounded-md bg-green-800 text-white px-4 py-2 hover:bg-green-700 duration-150 cursor-pointer'>Get Started</button>
+                <Link to={'/signup'}>
+                    <button className='rounded-md bg-green-800 text-white px-4 py-2 hover:bg-green-700 duration-150 cursor-pointer'>Get Started</button>
+                </Link>
             </div>
 
             <div>
