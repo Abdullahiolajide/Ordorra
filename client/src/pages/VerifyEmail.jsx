@@ -3,6 +3,8 @@ import { CiLock } from 'react-icons/ci'
 import { backendurl } from '../../global'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { myToast } from '../components/myToast'
+import { toast } from 'react-toastify'
 
 const verifyEmail = () => {
     const [otp, setOtp] = useState('')
@@ -23,7 +25,13 @@ const verifyEmail = () => {
                 email,
                 code:otp
             });
-            setMessage('success')
+            myToast(
+                     <div className='text-center w-full max-w-xl'>
+                              <h1 className='text-xl font-md'>Verification Completed</h1>
+                              <p>Please sign in to continue</p>
+                              <button className='mt-2 p-2 bg-green-700 text-white rounded mx-auto' onClick={()=> toast.dismiss()}>Okay</button>
+                    </div>
+                )
             console.log(res.data);
             navigate('/signin')
             // or show toast

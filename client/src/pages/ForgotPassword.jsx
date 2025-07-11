@@ -3,6 +3,8 @@ import { MdNavigateNext } from 'react-icons/md'
 import { Link, useNavigate } from 'react-router-dom'
 import { backendurl } from '../../global'
 import axios from 'axios'
+import { myToast } from '../components/myToast'
+import { toast } from 'react-toastify'
 
 const ForgotPassword = () => {
     const [user, setUser] = useState({})
@@ -32,6 +34,13 @@ const ForgotPassword = () => {
             // alert("You have being Signed Up successfully")
             console.log(res.data);
             localStorage.setItem('ouseremail', email)
+            myToast(
+                                 <div className='text-center w-full max-w-xl'>
+                                          <h1 className='text-xl font-md text-black'>Code Sent</h1>
+                                          <p>A reset code has been sent to your email, use it to reset your password</p>
+                                          <button className='mt-2 p-2 bg-green-700 text-white rounded mx-auto' onClick={()=> toast.dismiss()}>Okay</button>
+                                </div>
+                            )
             navigate('/reset-password')
 
             // or show toast

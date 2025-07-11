@@ -11,6 +11,7 @@ import VerifyEmail from './pages/VerifyEmail'
 import DashboardLayout from './components/DashboardLayout'
 import ResetPassword from './pages/ResetPassword'
 import ForgotPassword from './pages/ForgotPassword'
+import { ToastContainer } from 'react-toastify'
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
 
         <Route path='/dashboard' element={<DashboardLayout />}/>
       </Routes>
+      <ToastContainer />
     </>
   )
 }

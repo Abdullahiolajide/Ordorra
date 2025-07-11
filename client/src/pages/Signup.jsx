@@ -3,6 +3,8 @@ import { MdNavigateNext } from 'react-icons/md'
 import { Link, useNavigate } from 'react-router-dom'
 import { backendurl } from '../../global'
 import axios from 'axios'
+import { myToast } from '../components/myToast'
+import { toast } from 'react-toastify'
 
 const Signup = () => {
     const [user, setUser] = useState({})
@@ -39,8 +41,14 @@ const Signup = () => {
             password
             });
             localStorage.setItem('ouseremail', email)
-            // alert("You have being Signed Up successfully")
             console.log(res.data);
+            myToast(
+                     <div className='text-center w-full max-w-xl'>
+                              <h1 className='text-xl font-md'>Sign Up Successful</h1>
+                              <p>A verification code has been sent to your email. Please enter it to complete your registration.</p>
+                              <button className='mt-2 p-2 bg-green-700 text-white rounded mx-auto' onClick={()=> toast.dismiss()}>Okay</button>
+                    </div>
+                )
             navigate('/verify-email')
 
             // or show toast

@@ -3,6 +3,8 @@ import { MdNavigateNext } from 'react-icons/md'
 import { Link, useNavigate } from 'react-router-dom'
 import { backendurl } from '../../global'
 import axios from 'axios'
+import { myToast } from '../components/myToast'
+import { toast } from 'react-toastify'
 
 const Signin = () => {
     const [user, setUser] = useState({})
@@ -32,7 +34,14 @@ const Signin = () => {
             email,
             password
             });
-            // alert("You have being Signed Up successfully")
+            // myToast(
+            //                      <div className='text-center w-full max-w-xl'>
+            //                               <h1 className='text-xl font-md'>Sign In Successful</h1>
+            //                               <p>A verification code has been sent to your email. Please enter it to complete your registration.</p>
+            //                               <button className='mt-2 p-2 bg-green-700 text-white rounded mx-auto'>Okay</button>
+            //                     </div>
+            //                 )
+            toast.success("Signed In Successfully")
             console.log(res.data);
             navigate('/dashboard')
 

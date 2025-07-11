@@ -35,7 +35,7 @@ await transporter.sendMail(mailOptions);
 
 const signUp = async (req, res)=>{
      const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit
-        const expires = new Date(Date.now() + 30 * 60 * 1000); // expires in 10 mins
+      const expires = new Date(Date.now() + 30 * 60 * 1000); // expires in 10 mins
         
 
    try {
@@ -53,14 +53,21 @@ const signUp = async (req, res)=>{
     });
     await sendVerificationCode(req, res, code, email)
 
-
+    c
     res.status(201).json({
       message: 'User created successfully',
-      data: user
+      data: {
+          email: user.email,
+          _id: user._id
+        }
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+     if (err.code === 11000 && err.keyPattern.email) {
+      return res.status(400).json({ message: 'Email already exists, go to Sign In' });
+    }
+
+    console.log(err);
+    res.status(500).json({ message: 'Something went wrong' });
   }
 
 }

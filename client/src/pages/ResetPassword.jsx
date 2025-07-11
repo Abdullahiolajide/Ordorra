@@ -3,6 +3,8 @@ import { MdNavigateNext } from 'react-icons/md'
 import { Link, useNavigate } from 'react-router-dom'
 import { backendurl } from '../../global'
 import axios from 'axios'
+import { myToast } from '../components/myToast'
+import { toast } from 'react-toastify'
 
 const ResetPassword = () => {
     const [user, setUser] = useState({})
@@ -38,7 +40,13 @@ const ResetPassword = () => {
             setLoading(true);
 
             const res = await axios.post(`${backendurl}/auth/reset-password`, { email, code, newPassword: password });
-            // alert("You have being Signed Up successfully")
+            myToast(
+                     <div className='text-center w-full max-w-xl'>
+                              <h1 className='text-xl font-md text-black'>Password Changed</h1>
+                              <p>Your password has been changed successfully, you can now sign in with your new password</p>
+                              <button className='mt-2 p-2 bg-green-700 text-white rounded mx-auto' onClick={()=> toast.dismiss()}>Okay</button>
+                    </div>
+                )
             console.log(res.data);
             navigate('/signin')
 
@@ -60,7 +68,7 @@ const ResetPassword = () => {
   return (
     <div className='flex items-center justify-center h-[90vh]]'>
         <section className=' mt-10 w-full max-w-xs  md:max-w-md'>
-            <div><img src="images/store.png" alt="" width={50} className='mx-auto'/></div>
+            <div><img src="https://img.icons8.com/?size=100&id=11320&format=png&color=000000" alt="" width={50} className='mx-auto'/></div>
            <div className='text-center'>
              <h1 className='text-2xl'>Reset your password</h1>
             <p className='text-sm'>Check your email for your reset code</p>

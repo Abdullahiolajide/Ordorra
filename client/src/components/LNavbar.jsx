@@ -11,7 +11,7 @@ const LNavbar = () => {
             <div className='flex  max-w-7xl mx-auto'>
                {/* Desktop  */}
                <div className='px-4  w-full flex space-x-4 '>
-                  <div className='flex items-center text-xl md:text-3xl font-bold text-gray-700'><Icon /> Ordorra</div>
+                  <Link to={'/'}><div className='flex items-center text-xl md:text-3xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
 
                   <div className='md:hidden text-xl flex items-center cursor-pointer active:bg-gray-700/20 px-2 rounded ' 
                         onClick={()=> setShow(prev=> !prev)}>
