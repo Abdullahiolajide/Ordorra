@@ -12,10 +12,10 @@ import DashboardLayout from './components/DashboardLayout'
 import ResetPassword from './pages/ResetPassword'
 import ForgotPassword from './pages/ForgotPassword'
 import { ToastContainer } from 'react-toastify'
-import Index from './pages/dashboard'
 import Products from './pages/dashboard/Products'
 import Orders from './pages/dashboard/Orders'
 import Settings from './pages/dashboard/Settings'
+import Dashboard from './pages/dashboard/Dashboard'
 
 function App() {
 
@@ -32,7 +32,7 @@ function App() {
         </Route>
 
         <Route path='dashboard' element={<DashboardLayout />}>
-          <Route index element={<Index />}/>
+          <Route index element={<Dashboard />}/>
           <Route path='products' element={<Products />}/>
           <Route path='orders' element={<Orders />}/>
           <Route path='settings' element={<Settings />}/>
