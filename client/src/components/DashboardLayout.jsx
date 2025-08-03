@@ -1,19 +1,106 @@
-import React from 'react'
-import { myToast } from './myToast'
-import { toast } from 'react-toastify'
+import React, { useEffect } from 'react';
+import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import Icon from './Icon';
+import { TbLayoutDashboardFilled, TbPackages } from 'react-icons/tb';
+import { AiFillHome } from 'react-icons/ai';
+import { IoIosSettings } from 'react-icons/io';
+ import capitalize from 'just-capitalize';
 
 const DashboardLayout = () => {
-  return (
-    <div>DashboardLayout
-      <button onClick={()=> myToast(
-        <div className='text-center w-full max-w-xl'>
-          <h1 className='text-xl font-md'>Sign Up Successful</h1>
-          <p>A verification code has been sent to your email. Please enter it to complete your registration.</p>
-          <button className='mt-2 p-2 bg-green-700 text-white rounded mx-auto' onClick={()=> toast.dismiss()}>close</button>
-        </div>
-    )}>show Toast</button>
-    </div>
-  )
-}
+  const navigate = useNavigate();
+  const location = useLocation()
+  const params= useParams()
+  const path = location.pathname.split('/')
 
-export default DashboardLayout
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/signin'); // redirect to login if no token
+    }
+  }, []);
+
+  return (
+    <div className="dashboard-container lg:flex">
+      <section className='hidden lg:block border border-gray-300 h-[100vh] w-52 px-2 py-4'>
+      <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
+
+      <ul className='mt-10 flex flex-col space-y-4'>
+        <NavLink to={''} end className={({isActive})=> isActive ? 'text-green-500 bg-gray-300/30' : 'text-gray-700'}>
+          <li className={`group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30`}>
+            <span className=' group-hover:text-green-600 text-xl'><AiFillHome /></span>
+            <span>Dashboard</span>
+          </li>
+        </NavLink>
+
+        <NavLink to={'products'}  className={({isActive})=> isActive ? 'text-green-500 bg-gray-300/30' : 'text-gray-700'}>
+          <li className='group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30'> 
+            <span className=' group-hover:text-green-600 text-xl'><TbLayoutDashboardFilled /></span>
+            <span>Products</span>
+          </li>
+        </NavLink>
+
+        <NavLink to={'orders'}  className={({isActive})=> isActive ? 'text-green-500 bg-gray-300/30' : 'text-gray-700'}>
+          <li className='group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30'>
+            <span className=' group-hover:text-green-600 text-xl'><TbPackages /></span>
+            <span>Orders</span>
+          </li>
+        </NavLink>
+
+
+        <NavLink to={'settings'}  className={({isActive})=> isActive ? 'text-green-500 bg-gray-300/30' : 'text-gray-700'}>
+          <li className='group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30'>
+            <span className=' group-hover:text-green-600 text-xl'><IoIosSettings /></span>
+            <span>Settings</span>
+          </li>
+        </NavLink>
+      </ul>
+
+      </section>
+      <main className='px-4'>
+        <header className=' py-4'>
+          <div className='text-2xl font-medium md:text-3xl'>{capitalize(path[path.length -1])} </div>
+        </header>
+
+     <div>
+       <Outlet />
+     </div>
+
+      </main>
+      <section className='lg:hidden bg-white border border-gray-300 fixed w-full bottom-0'>
+        <ul className='max-w-xl mx-auto flex justify-around'>
+        <NavLink to={''} end className={({isActive})=> isActive ? 'text-green-500 ' : 'text-gray-700'}>
+          <li className={`group flex flex-col items-center justify-center space-x-2 p-2 text-center`}>
+            <span className='group-hover:text-green-600 text-xl text-center'><AiFillHome /></span>
+            <span className='text-sm mt-1 mx-2'>Home</span>
+          </li>
+        </NavLink>
+
+        <NavLink to={'products'}  className={({isActive})=> isActive ? 'text-green-500' : 'text-gray-700'}>
+          <li className='group flex flex-col items-center justify-center space-x-2 p-2  text-center'> 
+            <span className=' group-hover:text-green-600 text-xl'><TbLayoutDashboardFilled /></span>
+            <span className='text-sm mt-1 mx-2 group-hover:text-green-600'>Products</span>
+          </li>
+        </NavLink>
+
+        <NavLink to={'orders'}  className={({isActive})=> isActive ? 'text-green-500 ' : 'text-gray-700'}>
+          <li className='group flex flex-col items-center justify-center space-x-2 p-2  text-center'>
+            <span className=' group-hover:text-green-600 text-xl'><TbPackages /></span>
+            <span className='text-sm mt-1 mx-2'>Orders</span>
+          </li>
+        </NavLink>
+
+
+        <NavLink to={'settings'}  className={({isActive})=> isActive ? 'text-green-500 ' : 'text-gray-700'}>
+          <li className='group flex flex-col items-center justify-center space-x-2 p-2  text-center'>
+            <span className=' group-hover:text-green-600 text-xl'><IoIosSettings /></span>
+            <span className='text-sm mt-1 mx-2'>Settings</span>
+          </li>
+        </NavLink>
+      </ul> 
+      </section>
+    </div>
+  );
+};
+
+export default DashboardLayout;

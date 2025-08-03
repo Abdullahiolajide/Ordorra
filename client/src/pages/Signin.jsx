@@ -34,14 +34,8 @@ const Signin = () => {
             email,
             password
             });
-            // myToast(
-            //                      <div className='text-center w-full max-w-xl'>
-            //                               <h1 className='text-xl font-md'>Sign In Successful</h1>
-            //                               <p>A verification code has been sent to your email. Please enter it to complete your registration.</p>
-            //                               <button className='mt-2 p-2 bg-green-700 text-white rounded mx-auto'>Okay</button>
-            //                     </div>
-            //                 )
             toast.success("Signed In Successfully")
+            localStorage.setItem('token', res.data.token)
             console.log(res.data);
             navigate('/dashboard')
 

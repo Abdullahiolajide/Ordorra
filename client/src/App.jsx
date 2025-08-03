@@ -12,6 +12,10 @@ import DashboardLayout from './components/DashboardLayout'
 import ResetPassword from './pages/ResetPassword'
 import ForgotPassword from './pages/ForgotPassword'
 import { ToastContainer } from 'react-toastify'
+import Index from './pages/dashboard'
+import Products from './pages/dashboard/Products'
+import Orders from './pages/dashboard/Orders'
+import Settings from './pages/dashboard/Settings'
 
 function App() {
 
@@ -27,7 +31,13 @@ function App() {
           <Route path='forgot-password' element={<ForgotPassword />}/>
         </Route>
 
-        <Route path='/dashboard' element={<DashboardLayout />}/>
+        <Route path='dashboard' element={<DashboardLayout />}>
+          <Route index element={<Index />}/>
+          <Route path='products' element={<Products />}/>
+          <Route path='orders' element={<Orders />}/>
+          <Route path='settings' element={<Settings />}/>
+        </Route>
+        
       </Routes>
       <ToastContainer />
     </>
