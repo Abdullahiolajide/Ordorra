@@ -16,6 +16,7 @@ import Products from './pages/dashboard/Products'
 import Orders from './pages/dashboard/Orders'
 import Settings from './pages/dashboard/Settings'
 import Dashboard from './pages/dashboard/Dashboard'
+import AddProducts from './pages/dashboard/AddProducts'
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
           <Route path='products' element={<Products />}/>
           <Route path='orders' element={<Orders />}/>
           <Route path='settings' element={<Settings />}/>
+          <Route path='add-products' element={<AddProducts />}/>
         </Route>
 
       </Routes>

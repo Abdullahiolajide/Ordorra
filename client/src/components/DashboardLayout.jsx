@@ -57,12 +57,13 @@ const DashboardLayout = () => {
       </ul>
 
       </section>
-      <main className='px-4'>
-        <header className=' py-4'>
-          <div className='text-2xl font-medium md:text-3xl'>{capitalize(path[path.length -1])} </div>
+        <header className='p-3 border border-gray-300 flex justify-center lg:hidden'>
+          {/* <div className='text-2xl font-medium md:text-3xl'>{capitalize(path[path.length -1])} </div> */}
+          <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
         </header>
+      <main className='px-4'>
 
-     <div>
+     <div className='mb-20'>
        <Outlet />
      </div>
 
