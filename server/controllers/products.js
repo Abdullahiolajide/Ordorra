@@ -28,7 +28,7 @@ const createProduct = async (req, res) => {
 // Get all products for a user
 const getMyProducts = async (req, res) => {
   try {
-    const products = await Product.find({ ownerId: req.user._id }).sort({ createdAt: -1 });
+    const products = await Product.find({ ownerId: req.user.userId }).sort({ createdAt: -1 });
     res.json(products);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
@@ -40,7 +40,7 @@ const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findOneAndDelete({
       _id: req.params.id,
-      ownerId: req.user._id,
+      ownerId: req.user.userId,
     });
 
     if (!product) {

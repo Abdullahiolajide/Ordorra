@@ -1,7 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { backendurl } from '../../../global';
+import thousandify from 'thousandify'
+import { RefreshContext } from '../../components/DashboardLayout';
 
 const AddProducts = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +15,7 @@ const AddProducts = () => {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false)
   const fileInputRef = useRef(null);
+  const {setRefresh} = useContext(RefreshContext)
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -77,6 +80,7 @@ const handleSubmit = async (e) => {
 
     toast.success('Product created!');
     console.log('Response:', res.data);
+    setRefresh(prev=> !prev)
     // Optionally reset form
   } catch (err) {
     console.error(err);

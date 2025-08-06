@@ -1,16 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Icon from './Icon';
 import { TbLayoutDashboardFilled, TbPackages } from 'react-icons/tb';
 import { AiFillHome } from 'react-icons/ai';
 import { IoIosSettings } from 'react-icons/io';
- import capitalize from 'just-capitalize';
+import capitalize from 'just-capitalize';
+
+const RefreshContext = createContext()
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
   const location = useLocation()
   const params= useParams()
   const path = location.pathname.split('/')
+  const [refresh, setRefresh] = useState(false)
 
 
   useEffect(() => {
@@ -21,7 +24,7 @@ const DashboardLayout = () => {
   }, []);
 
   return (
-    <div className="dashboard-container lg:flex">
+    <div className="dashboard-container lg:flex ">
       <section className='hidden lg:block border border-gray-300 h-[100vh] w-52 px-2 py-4'>
       <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
 
@@ -54,6 +57,16 @@ const DashboardLayout = () => {
             <span>Settings</span>
           </li>
         </NavLink>
+
+        {/* <NavLink  className={'text-gray-700'}> */}
+          <li className='cursor-pointer group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30' onClick={()=> {
+            localStorage.removeItem('token')
+            navigate('/signin', {replace: true})
+            }}>
+            <span className=' group-hover:text-green-600 text-xl'><IoIosSettings /></span>
+            <span>Logout</span>
+          </li>
+        {/* </NavLink> */}
       </ul>
 
       </section>
@@ -61,10 +74,12 @@ const DashboardLayout = () => {
           {/* <div className='text-2xl font-medium md:text-3xl'>{capitalize(path[path.length -1])} </div> */}
           <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
         </header>
-      <main className='px-4'>
+      <main className='px-4 w-full'>
 
      <div className='mb-20'>
-       <Outlet />
+      <RefreshContext.Provider value={{refresh, setRefresh}}>
+        <Outlet />
+      </RefreshContext.Provider>
      </div>
 
       </main>
@@ -98,6 +113,8 @@ const DashboardLayout = () => {
             <span className='text-sm mt-1 mx-2'>Settings</span>
           </li>
         </NavLink>
+
+        
       </ul> 
       </section>
     </div>
@@ -105,3 +122,4 @@ const DashboardLayout = () => {
 };
 
 export default DashboardLayout;
+export { RefreshContext }
