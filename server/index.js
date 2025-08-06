@@ -5,6 +5,7 @@ const cors = require('cors')
 const PORT = process.env.PORT
 const mongoose = require('mongoose');
 const auth = require('./routes/auth')
+const productRoutes = require('./routes/products');
 app.use(cors())
 app.use(express.json())
 
@@ -14,6 +15,7 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.error('MongoDB connection error:', err));
 
 app.use('/api/auth', auth)
+app.use('/api/products', productRoutes);
 app.use((req, res)=>{
     res.status(404).send('Page Not Found')
 })

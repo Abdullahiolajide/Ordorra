@@ -78,7 +78,7 @@ const Signin = () => {
              <div className='flex flex-col mt-4 mb-1'>
                 <label htmlFor="" className='text-sm py-1'>Password</label>
                 <input 
-                type="text"
+                type="password"
                 name='password'
                 value={user?.password || ''}
                 className={`border ${clicked && !user.password ?'border-red-600' : 'border-gray-400'} rounded px-3 py-2 w-full`} 

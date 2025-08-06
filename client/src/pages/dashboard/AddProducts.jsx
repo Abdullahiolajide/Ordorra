@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { backendurl } from '../../../global';
 
 const AddProducts = () => {
   const [formData, setFormData] = useState({
@@ -48,17 +49,41 @@ const uploadImageToCloudinary = async (file) => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { name, price, description, imageUrl } = formData;
-    if (!name || !price || !description || !imageUrl) {
-      return toast.info('All fields are required and image must be uploaded');
-    }
-    // setSaving(true)
 
-    console.log('Product saved:', formData);
-    // TODO: send to backend
-  };
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const { name, price, description, imageUrl } = formData;
+
+  if (!name || !price || !description || !imageUrl) {
+    return toast.info('All fields are required and image must be uploaded');
+  }
+
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return toast.error('User not authenticated');
+  }
+
+  try {
+    const res = await axios.post(
+      `${backendurl}/products/create-product`, // Replace with your backend URL
+      { name, price, description, imageUrl },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    toast.success('Product created!');
+    console.log('Response:', res.data);
+    // Optionally reset form
+  } catch (err) {
+    console.error(err);
+    toast.error(err.response?.data?.message || 'Failed to create product');
+  }
+};
+
 
   return (
     <div className="max-w-xl mx-auto mt-10 p-6 bg-white">
@@ -93,7 +118,6 @@ const uploadImageToCloudinary = async (file) => {
             rows="4"
             className="w-full border px-3 py-2 rounded border-gray-400"
             onChange={handleChange}
-            required
           ></textarea>
         </div>
 

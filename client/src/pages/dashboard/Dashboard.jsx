@@ -23,7 +23,7 @@ const Dashboard = () => {
 
 
       {/* Add Product Modal  */}
-        <section className={`add-products fixed top-0 right-0 bg-white p-2 h-[100dvh] duration-300 ${show ? 'translate-x-0' : 'translate-x-full'}`}>
+        <section className={`add-products fixed top-0 right-0 bg-white p-2 h-[100dvh] duration-300 w-full md:w-fit ${show ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className='absolute right-0 p-4 text-4xl cursor-pointer' onClick={()=> setShow(false)}><IoIosClose /></div>
           <AddProducts />
         </section>
