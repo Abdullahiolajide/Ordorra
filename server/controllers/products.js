@@ -25,7 +25,7 @@ const createProduct = async (req, res) => {
   }
 };
 
-// Get all products for a user
+// Get all products for the user
 const getMyProducts = async (req, res) => {
   try {
     const products = await Product.find({ ownerId: req.user.userId }).sort({ createdAt: -1 });
@@ -35,7 +35,6 @@ const getMyProducts = async (req, res) => {
   }
 };
 
-// Delete a product
 const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findOneAndDelete({
@@ -53,8 +52,31 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const updateProduct = async (req, res) => {
+  try {
+    const { name, price, description, imageUrl } = req.body;
+
+    const updatedProduct = await Product.findOneAndUpdate(
+      { _id: req.params.id, ownerId: req.user.userId },
+      { name, price, description, imageUrl },
+      { new: true } 
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product not found or not authorized' });
+    }
+
+    res.json(updatedProduct);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 module.exports = {
     createProduct,
     getMyProducts,
-    deleteProduct
+    deleteProduct,
+    updateProduct
 }

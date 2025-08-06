@@ -12,13 +12,15 @@ const Products = () => {
   const [userProducts, setUserProducts] = useState([])
   const [show, setShow] = useState(false)
   const [actions, setActions] = useState(null)
+  const [productInfo, setProductInfo] = useState(null)
   const { refresh } = useContext(RefreshContext)
 
   useEffect(()=>{
     getProducts()
   }, [refresh])
+
     const getProducts = async () => {
-      const token = localStorage.getItem('token'); // or whatever key you used
+      const token = localStorage.getItem('token'); 
 
       try {
         const res = await axios.get(`${backendurl}/products/get-products`, {
@@ -34,12 +36,41 @@ const Products = () => {
       }
     };
 
+    const deleteProduct = async (productId) => {
+      const token = localStorage.getItem('token');
+
+      try {
+        const res = await axios.delete(`${backendurl}/products/delete/${productId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log(res.data);
+
+        
+        getProducts(); 
+      } catch (error) {
+        console.error('Error deleting product:', error);
+      }
+    };
+
+
+
+
   
 
 
   return (
     <div>
-       <div className={`backdrop fixed w-full h-[100dvh] bg-black/30 top-0 left-0 ${show ? 'block' : 'hidden'} duration-400`} onClick={()=> setShow(false)}></div>
+      {/* Backdrop  */}
+       <div className={`backdrop fixed w-full h-[100dvh] bg-black/30 top-0 left-0 ${show ? 'block' : 'hidden'} duration-400`}onClick={()=> {
+            setProductInfo(null)
+            setShow(false)
+
+          }}></div>
+
+
      <div className='text-3xl font-medium md:py-4 py-2'> Products</div>
      <div className='md:my-5 my-3 flex text-sm'>
       <input 
@@ -72,9 +103,14 @@ const Products = () => {
                   <span className='text-sm '><SlOptionsVertical /></span> </button>
 
 
-               {actions == index && <div className='absolute right-8 top-5 bg-white shadow-xl' >
-                  <div className='border-b border-gray-300 py-2 px-10 cursor-pointer hover:bg-gray-400/30'>Edit</div>
-                  <div className='px-10 py-2 text-red-400 cursor-pointer hover:bg-gray-400/30'>Delete</div>
+               {actions == index && <div className='absolute right-8 top-5 bg-white shadow-xl' onClick={()=> setActions(null)}>
+                  <div className='border-b border-gray-300 py-2 px-10 cursor-pointer hover:bg-gray-400/30'
+                  onClick={()=> {
+                    setProductInfo(product)
+                    setShow(true)
+                  }}
+                  >Edit</div>
+                  <div className='px-10 py-2 text-red-400 cursor-pointer hover:bg-gray-400/30' onClick={()=> deleteProduct(product._id)}>Delete</div>
                 </div>}
               </td>
             </tr>
@@ -82,8 +118,12 @@ const Products = () => {
         </tbody>
       </table>
         <section className={`add-products fixed top-0 right-0 bg-white p-2 h-[100dvh] duration-300 w-full md:w-fit ${show ? 'translate-x-0' : 'translate-x-full'}`}>
-          <div className='absolute right-0 p-4 text-4xl cursor-pointer' onClick={()=> setShow(false)}><IoIosClose /></div>
-          <AddProducts />
+          <div className='absolute right-0 p-4 text-4xl cursor-pointer' onClick={()=> {
+            setProductInfo(null)
+            setShow(false)
+
+          }}><IoIosClose /></div>
+          <AddProducts productInfo={productInfo} />
         </section>
 
     </div>
