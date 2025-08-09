@@ -190,13 +190,16 @@ const forgotPassword = async (req, res) => {
     user.resetExpires = expires;
     await user.save();
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASS
-      }
-    });
+ const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, // TLS
+  auth: {
+    user: process.env.EMAIL,
+    pass: process.env.EMAIL_PASS, // should be App Password
+  },
+});
+
 
     await transporter.sendMail({
       from: `"Ordorra" <${process.env.EMAIL}>`,

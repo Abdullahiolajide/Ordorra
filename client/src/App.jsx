@@ -17,6 +17,7 @@ import Orders from './pages/dashboard/Orders'
 import Settings from './pages/dashboard/Settings'
 import Dashboard from './pages/dashboard/Dashboard'
 import AddProducts from './pages/dashboard/AddProducts'
+import StoreInfo from './pages/dashboard/StoreInfo'
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
           <Route index element={<Dashboard />}/>
           <Route path='products' element={<Products />}/>
           <Route path='orders' element={<Orders />}/>
+          <Route path='store-info' element={<StoreInfo />}/>
           <Route path='settings' element={<Settings />}/>
           <Route path='add-products' element={<AddProducts />}/>
         </Route>

@@ -15,25 +15,25 @@ const verifyEmail = () => {
 
     const verifyEmail = async () => {
         const email = localStorage.getItem('ouseremail')
-        console.log(otp, email)
         
-
+        
         try {
             setLoading(true);
-
+            
             const res = await axios.post(`${backendurl}/auth/verify-code`, {
                 email,
                 code:otp
             });
             myToast(
-                     <div className='text-center w-full max-w-xl'>
+                <div className='text-center w-full max-w-xl'>
                               <h1 className='text-xl font-md'>Verification Completed</h1>
                               <p>Please sign in to continue</p>
                               <button className='mt-2 p-2 bg-green-700 text-white rounded mx-auto' onClick={()=> toast.dismiss()}>Okay</button>
                     </div>
                 )
-            console.log(res.data);
-            navigate('/signin')
+                // console.log(res.data);
+                localStorage.removeItem('ouseremail')
+                navigate('/signin')
             // or show toast
 
         } catch (err) {

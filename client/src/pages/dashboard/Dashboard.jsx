@@ -26,6 +26,9 @@ const Dashboard = () => {
         <section className={`add-products fixed top-0 right-0 bg-white p-2 h-[100dvh] duration-300 w-full md:w-fit ${show ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className='absolute right-0 p-4 text-4xl cursor-pointer' onClick={()=> setShow(false)}><IoIosClose /></div>
           <AddProducts />
+          <div className='flex justify-center'>
+            <button className='w-5/6 mx-auto bg-gray-400/30 border border-gray-300 rounded py-2 mb-48 cursor-pointer' onClick={()=> setShow(false)}>Cancel</button>
+          </div>
         </section>
 
       {/* Add Product Modal  */}

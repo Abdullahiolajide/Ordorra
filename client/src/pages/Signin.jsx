@@ -36,7 +36,7 @@ const Signin = () => {
             });
             toast.success("Signed In Successfully")
             localStorage.setItem('token', res.data.token)
-            console.log(res.data);
+            // console.log(res.data);
             navigate('/dashboard')
 
             // or show toast

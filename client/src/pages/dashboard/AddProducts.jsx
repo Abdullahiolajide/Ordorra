@@ -71,6 +71,7 @@ const uploadImageToCloudinary = async (file) => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   const { name, price, description, imageUrl } = formData;
+  setSaving(true)
   if(productInfo){
     return updateProduct(productInfo._id, { name, price, description, imageUrl })
   }
@@ -96,6 +97,7 @@ const handleSubmit = async (e) => {
     );
 
     toast.success('Product created!');
+    setSaving(false)
     setRefresh(prev=> !prev)
     setFormData({
         name: '',
@@ -121,6 +123,7 @@ const handleSubmit = async (e) => {
         });
 
         toast.success('Product updated successfully');
+        setSaving(false)
         setRefresh(prev=> !prev)
         setFormData({
         name: '',
@@ -142,11 +145,12 @@ const handleSubmit = async (e) => {
       <h2 className="text-2xl font-bold mb-4">{productInfo ? 'Edit Product' :'Add New Product'}</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block font-medium">Product Name</label>
+          <label className="block font-medium text-sm text-gray-600">Product Name</label>
           <input
             type="text"
             name="name"
-            className="w-full border px-3 py-2 rounded border-gray-400"
+            placeholder='Ex. Sneakers for men'
+            className="w-full bg-gray-50 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
             onChange={handleChange}
             value={formData.name}
             required
@@ -154,11 +158,12 @@ const handleSubmit = async (e) => {
         </div>
 
         <div>
-          <label className="block font-medium">Price (₦)</label>
+          <label className="block font-medium text-sm text-gray-600">Price (₦)</label>
           <input
             type="number"
             name="price"
-            className="w-full border px-3 py-2 rounded border-gray-400"
+            placeholder='Ex. 30000'
+            className="w-full bg-gray-50 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
             onChange={handleChange}
             value={formData.price}
             required
@@ -166,18 +171,18 @@ const handleSubmit = async (e) => {
         </div>
 
         <div>
-          <label className="block font-medium">Description</label>
+          <label className="block font-medium text-sm text-gray-600">Description <span className='text-xs'>(optional)</span></label>
           <textarea
             name="description"
             rows="4"
-            className="w-full border px-3 py-2 rounded border-gray-400"
+            className="w-full bg-gray-50 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
             onChange={handleChange}
             value={formData.description}
           ></textarea>
         </div>
 
         <div>
-          <label className="block font-medium">Product Image</label>
+          <label className="block font-medium text-sm text-gray-600">Product Image</label>
           <div className='text-gray-600 text-xs'>Click below to select an image</div>
           <input
             type="file"
@@ -198,6 +203,7 @@ const handleSubmit = async (e) => {
           {saving ? "Saving..." : "Save Product"}
         </button>
       </form>
+      
     </div>
   );
 };

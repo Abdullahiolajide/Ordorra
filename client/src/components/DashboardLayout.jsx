@@ -5,6 +5,7 @@ import { TbLayoutDashboardFilled, TbPackages } from 'react-icons/tb';
 import { AiFillHome } from 'react-icons/ai';
 import { IoIosSettings } from 'react-icons/io';
 import capitalize from 'just-capitalize';
+import { MdBrandingWatermark } from 'react-icons/md';
 
 const RefreshContext = createContext()
 
@@ -25,7 +26,8 @@ const DashboardLayout = () => {
 
   return (
     <div className="dashboard-container lg:flex ">
-      <section className='hidden lg:block border border-gray-300 h-[100vh] w-52 px-2 py-4'>
+       <div className="h-16 w-64 bg-transparent hidden lg:block"></div>
+      <section className='hidden lg:block border border-gray-300 h-[100vh] w-52 px-2 py-4 fixed'>
       <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
 
       <ul className='mt-10 flex flex-col space-y-4'>
@@ -43,10 +45,10 @@ const DashboardLayout = () => {
           </li>
         </NavLink>
 
-        <NavLink to={'orders'}  className={({isActive})=> isActive ? 'text-green-500 bg-gray-300/30' : 'text-gray-700'}>
+        <NavLink to={'store-info'}  className={({isActive})=> isActive ? 'text-green-500 bg-gray-300/30' : 'text-gray-700'}>
           <li className='group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30'>
-            <span className=' group-hover:text-green-600 text-xl'><TbPackages /></span>
-            <span>Orders</span>
+            <span className=' group-hover:text-green-600 text-xl'><MdBrandingWatermark /></span>
+            <span>Store Info</span>
           </li>
         </NavLink>
 
@@ -76,11 +78,11 @@ const DashboardLayout = () => {
         </header>
       <main className='px-4 w-full'>
 
-     <div className='mb-20'>
-      <RefreshContext.Provider value={{refresh, setRefresh}}>
-        <Outlet />
-      </RefreshContext.Provider>
-     </div>
+        <div className='mb-20'>
+          <RefreshContext.Provider value={{refresh, setRefresh}}>
+            <Outlet />
+          </RefreshContext.Provider>
+        </div>
 
       </main>
       <section className='lg:hidden bg-white border border-gray-300 fixed w-full bottom-0'>
@@ -99,10 +101,10 @@ const DashboardLayout = () => {
           </li>
         </NavLink>
 
-        <NavLink to={'orders'}  className={({isActive})=> isActive ? 'text-green-500 ' : 'text-gray-700'}>
+        <NavLink to={'store-info'}  className={({isActive})=> isActive ? 'text-green-500 ' : 'text-gray-700'}>
           <li className='group flex flex-col items-center justify-center space-x-2 p-2  text-center'>
-            <span className=' group-hover:text-green-600 text-xl'><TbPackages /></span>
-            <span className='text-sm mt-1 mx-2'>Orders</span>
+            <span className=' group-hover:text-green-600 text-xl'><MdBrandingWatermark /></span>
+            <span className='text-sm mt-1 mx-2'>Store Info</span>
           </li>
         </NavLink>
 

@@ -124,6 +124,15 @@ const Products = () => {
 
           }}><IoIosClose /></div>
           <AddProducts productInfo={productInfo} />
+          <div className='flex justify-center'>
+            <button className='w-5/6 mx-auto bg-gray-400/30 border border-gray-300 rounded py-2 mb-48 cursor-pointer'
+            onClick={()=> {
+            setProductInfo(null)
+            setShow(false)
+
+          }}
+            >Cancel</button>
+          </div>
         </section>
 
     </div>
