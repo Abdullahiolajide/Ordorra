@@ -25,7 +25,6 @@ const StoreInfo = () => {
         });
 
         if (res.data) {
-          console.log(res.data)
           setFormData(res.data);
           setIsEditing(true);
         }
@@ -95,13 +94,13 @@ const StoreInfo = () => {
   };
 
   return (
-  <div className="max-w-2xl mx-auto p-6 rounded-md lg:border border-gray-200 mt-8">
+  <div className="max-w-2xl mx-auto p-6 rounded-md lg:border border-gray-200">
     <h2 className="text-xl font-bold mb-4">Store Information</h2>
     <form onSubmit={handleSubmit} className="space-y-4">
       
       {/* Full Name */}
       <div>
-        <label className="block font-medium text-sm text-gray-600">Full Name</label>
+        <label className="block font-medium text-sm text-gray-800">Full Name</label>
         <input
           type="text"
           name="fullname"
@@ -109,13 +108,13 @@ const StoreInfo = () => {
           value={formData.fullname}
           onChange={handleChange}
           required
-          className="w-full bg-gray-50 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>
 
       {/* WhatsApp Number */}
       <div>
-        <label className="block font-medium text-sm text-gray-600">WhatsApp Number</label>
+        <label className="block font-medium text-sm text-gray-800">WhatsApp Number</label>
         <input
           type="tel"
           name="whatsappNumber"
@@ -123,13 +122,13 @@ const StoreInfo = () => {
           value={formData.whatsappNumber}
           onChange={handleChange}
           required
-          className="w-full bg-gray-50 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>
 
       {/* Phone Number */}
       <div>
-        <label className="block font-medium text-sm text-gray-600">Phone Number</label>
+        <label className="block font-medium text-sm text-gray-800">Phone Number</label>
         <input
           type="tel"
           name="phoneNumber"
@@ -137,13 +136,13 @@ const StoreInfo = () => {
           value={formData.phoneNumber}
           onChange={handleChange}
           required
-          className="w-full bg-gray-50 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>
 
       {/* Store Name */}
       <div>
-        <label className="block font-medium text-sm text-gray-600">Store Name</label>
+        <label className="block font-medium text-sm text-gray-800">Store Name</label>
         <input
           type="text"
           name="storeName"
@@ -151,13 +150,13 @@ const StoreInfo = () => {
           value={formData.storeName}
           onChange={handleChange}
           required
-          className="w-full bg-gray-50 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>
 
       {/* Store Handle */}
       <div>
-        <label className="block font-medium text-sm text-gray-600">Store Handle (unique)</label>
+        <label className="block font-medium text-sm text-gray-800">Store Handle (unique)</label>
         <input
           type="text"
           name="handle"
@@ -166,39 +165,39 @@ const StoreInfo = () => {
           onChange={handleChange}
           required
           disabled={isEditing}
-          className="w-full bg-gray-50 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>
 
       {/* Store Bio */}
       <div>
-        <label className="block font-medium text-sm text-gray-600">Store Bio</label>
+        <label className="block font-medium text-sm text-gray-800">Store Bio</label>
         <textarea
           name="storeBio"
           placeholder='Ex. Everything you need just an order away'
           value={formData.storeBio}
           onChange={handleChange}
           rows="3"
-          className="w-full bg-gray-50 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </div>
 
       {/* Store Logo */}
       <div>
-        <label className="block font-medium text-sm text-gray-600">Store Logo (optional)</label>
+        <label className="block font-medium text-sm text-gray-800">Store Logo (optional)</label>
         <input
           type="file"
           name="storeLogo"
           onChange={handleChange}
           accept="image/*"
-          className="w-full bg-gray-50 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
         />
         {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
         {formData.storeLogo && (
           <img
             src={formData.storeLogo}
             alt="Store Logo Preview"
-            className="mt-2 h-16 object-contain"
+            className="mt-2 h-16 object-contain border border-green-600 rounded"
           />
         )}
       </div>

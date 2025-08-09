@@ -142,15 +142,15 @@ const handleSubmit = async (e) => {
 
   return (
     <div className="max-w-xl mx-auto mt-10 p-6 bg-white">
-      <h2 className="text-2xl font-bold mb-4">{productInfo ? 'Edit Product' :'Add New Product'}</h2>
+      <h2 className="text-2xl font-bold mb-2 md:mb-4">{productInfo ? 'Edit Product' :'Add New Product'}</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block font-medium text-sm text-gray-600">Product Name</label>
+          <label className="block font-medium text-sm text-gray-800">Product Name</label>
           <input
             type="text"
             name="name"
             placeholder='Ex. Sneakers for men'
-            className="w-full bg-gray-50 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
             onChange={handleChange}
             value={formData.name}
             required
@@ -158,12 +158,12 @@ const handleSubmit = async (e) => {
         </div>
 
         <div>
-          <label className="block font-medium text-sm text-gray-600">Price (₦)</label>
+          <label className="block font-medium text-sm text-gray-800">Price (₦)</label>
           <input
             type="number"
             name="price"
             placeholder='Ex. 30000'
-            className="w-full bg-gray-50 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
             onChange={handleChange}
             value={formData.price}
             required
@@ -171,25 +171,25 @@ const handleSubmit = async (e) => {
         </div>
 
         <div>
-          <label className="block font-medium text-sm text-gray-600">Description <span className='text-xs'>(optional)</span></label>
+          <label className="block font-medium text-sm text-gray-800">Description <span className='text-xs'>(optional)</span></label>
           <textarea
             name="description"
             rows="4"
-            className="w-full bg-gray-50 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
             onChange={handleChange}
             value={formData.description}
           ></textarea>
         </div>
 
         <div>
-          <label className="block font-medium text-sm text-gray-600">Product Image</label>
+          <label className="block font-medium text-sm text-gray-800">Product Image</label>
           <div className='text-gray-600 text-xs'>Click below to select an image</div>
           <input
             type="file"
             accept="image/*"
              ref={fileInputRef}
             onChange={handleImageChange}
-            className='border p-1 rounded cursor-pointer border-gray-400'
+            className='w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'
             required={!productInfo}
           />
           {uploading && <p className="text-sm text-gray-500 mt-1">Uploading image...</p>}

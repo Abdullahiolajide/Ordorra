@@ -6,6 +6,7 @@ import { AiFillHome } from 'react-icons/ai';
 import { IoIosSettings } from 'react-icons/io';
 import capitalize from 'just-capitalize';
 import { MdBrandingWatermark } from 'react-icons/md';
+import { IoLogOut } from 'react-icons/io5';
 
 const RefreshContext = createContext()
 
@@ -30,7 +31,7 @@ const DashboardLayout = () => {
       <section className='hidden lg:block border border-gray-300 h-[100vh] w-52 px-2 py-4 fixed'>
       <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
 
-      <ul className='mt-10 flex flex-col space-y-4'>
+      <ul className='mt-10 flex flex-col space-y-4 h-full'>
         <NavLink to={''} end className={({isActive})=> isActive ? 'text-green-500 bg-gray-300/30' : 'text-gray-700'}>
           <li className={`group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30`}>
             <span className=' group-hover:text-green-600 text-xl'><AiFillHome /></span>
@@ -61,18 +62,19 @@ const DashboardLayout = () => {
         </NavLink>
 
         {/* <NavLink  className={'text-gray-700'}> */}
-          <li className='cursor-pointer group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30' onClick={()=> {
+          <li className='cursor-pointer group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30 hover:text-red-600' onClick={()=> {
             localStorage.removeItem('token')
             navigate('/signin', {replace: true})
             }}>
-            <span className=' group-hover:text-green-600 text-xl'><IoIosSettings /></span>
+            <span className=' group-hover:text-red-600 text-xl'><IoLogOut /></span>
             <span>Logout</span>
           </li>
         {/* </NavLink> */}
       </ul>
 
       </section>
-        <header className='p-3 border border-gray-300 flex justify-center lg:hidden'>
+      <div className='h-14 bg-transparent'></div>
+        <header className='p-3 border border-gray-300 flex justify-center lg:hidden fixed w-full top-0 bg-white/70'>
           {/* <div className='text-2xl font-medium md:text-3xl'>{capitalize(path[path.length -1])} </div> */}
           <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
         </header>

@@ -32,13 +32,15 @@ const getStoreInfo = async (req, res) => {
   try {
     const storeInfo = await StoreInfos.findOne({ user: req.user.userId });
     if (!storeInfo) {
-      return res.status(404).json({ message: 'Store info not found' });
+      // Return empty result instead of error for new users
+      return res.status(200).json(null); 
     }
     res.json(storeInfo);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 const editStoreInfo = async (req, res) => {
   try {
