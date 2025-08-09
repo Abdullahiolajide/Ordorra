@@ -18,6 +18,7 @@ import Settings from './pages/dashboard/Settings'
 import Dashboard from './pages/dashboard/Dashboard'
 import AddProducts from './pages/dashboard/AddProducts'
 import StoreInfo from './pages/dashboard/StoreInfo'
+import Store from './pages/Store'
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
           <Route path='settings' element={<Settings />}/>
           <Route path='add-products' element={<AddProducts />}/>
         </Route>
+        <Route path='/store/:handle' element={<Store />} />
 
       </Routes>
       <ToastContainer />

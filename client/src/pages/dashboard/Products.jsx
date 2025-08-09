@@ -62,81 +62,141 @@ const Products = () => {
 
 
   return (
-    <div>
-      {/* Backdrop  */}
-       <div className={`backdrop fixed w-full h-[100dvh] bg-black/30 top-0 left-0 ${show ? 'block' : 'hidden'} duration-400`}onClick={()=> {
-            setProductInfo(null)
-            setShow(false)
+  <div className="relative">
+    {/* Backdrop */}
+    <div
+      className={`fixed inset-0 bg-black/30 z-40 transition-opacity duration-300 ${
+        show ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+      }`}
+      onClick={() => {
+        setProductInfo(null);
+        setShow(false);
+      }}
+    ></div>
 
-          }}></div>
+    <div className="text-2xl font-semibold text-gray-800 md:py-4 py-2">Products</div>
 
-
-     <div className='text-3xl font-medium md:py-4 py-2'> Products</div>
-     <div className='md:my-5 my-3 flex text-sm'>
-      <input 
-      type="text" 
-      placeholder='Search Product'
-      className='border py-1 px-2 rounded border-gray-300 w-full'
+    {/* Search & Add */}
+    <div className="md:my-5 my-3 flex text-sm gap-2">
+      <input
+        type="text"
+        placeholder="Search Product"
+        className="border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500 transition"
       />
-      <button className='text-sm bg-green-500 text-white mx-2 py-1 md:px-4 px-2 w-fit whitespace-nowrap rounded flex items-center cursor-pointer' onClick={()=> setShow(true)}> <span className='text-2xl pr-1'><IoAddOutline /></span> Add Product</button>
-     </div>
+      <button
+        className="whitespace-nowrap flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg px-4 py-3 transition"
+        onClick={() => setShow(true)}
+      >
+        <IoAddOutline className="text-xl whitespace-nowrap
+" /> Add Product
+      </button>
+    </div>
 
-     <table className="w-full border border-gray-300 rounded-md text-sm md:text-base">
-        <thead className='bg-gray-200'>
-          <tr className="text-left">
-            <th className="px-1 md:px-2 py-2 border-b border-gray-300 w-1">Id</th>
-            <th className="px-1 md:px-2 py-2 border-b border-gray-300 w-1">Image</th>
-            <th className="px-1 md:px-2 py-2 border-b border-gray-300 ">Name</th>
-            <th className="px-1 md:px-2 py-2 border-b border-gray-300 w-1">Price(₦)</th>
-            <th className="px-1 md:px-2 py-2 border-b border-gray-300 text-center w-1"></th>
+    {/* Table */}
+    <div className="rounded-lg border border-gray-200">
+      <table className="w-full text-sm md:text-base">
+        <thead className="bg-gray-100 text-gray-700">
+          <tr>
+            <th className="px-3 py-3 text-left w-1">ID</th>
+            <th className="px-3 py-3 text-left w-1">Image</th>
+            <th className="px-3 py-3 text-left">Name</th>
+            <th className="px-3 py-3 text-left w-1 md:whitespace-nowrap">Price (₦)</th>
+            <th className="px-3 py-3 text-center w-1"></th>
           </tr>
         </thead>
         <tbody>
           {userProducts.map((product, index) => (
-            <tr key={index} className="border-t border-gray-300">
-              <td className="px-1 md:px-2 py-1">{index + 1}</td>
-              <td className="px-1 md:px-2 py-1"><img src={product.imageUrl} alt="" className='md:w-12 w-10' /></td>
-              <td className="px-1 md:px-2 py-1">{product.name}</td>
-              <td className="px-1 md:px-2 py-1">{thousandify(product.price)}</td>
-              <td className="pr-2 md:px-2 py-1 text-center relative">
-                <button className={`text-xl hover:bg-gray-400/30 rounded-4xl flex items-center justify-center w-6 h-6 cursor-pointer ${actions == index ? 'bg-gray-400/40' :''}`} onClick={()=> setActions(prev => prev == null ? index : null)}> 
-                  <span className='text-sm '><SlOptionsVertical /></span> </button>
+            <tr
+              key={index}
+              className="border-t border-gray-200 hover:bg-gray-50 transition"
+            >
+              <td className="px-3 py-2">{index + 1}</td>
+              <td className="px-3 py-2">
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="w-12 h-12 object-cover rounded"
+                />
+              </td>
+              <td className="px-3 py-2">{product.name}</td>
+              <td className="px-3 py-2">{thousandify(product.price)}</td>
+              <td className="px-3 py-2 text-center relative">
+                <button
+                  className={`p-1.5 cursor-pointer rounded-full hover:bg-gray-200 transition ${
+                    actions === index ? 'bg-gray-200' : ''
+                  }`}
+                  onClick={() =>
+                    setActions((prev) => (prev === null ? index : null))
+                  }
+                >
+                  <SlOptionsVertical className="text-gray-600" />
+                </button>
 
-
-               {actions == index && <div className='absolute right-8 top-5 bg-white shadow-xl' onClick={()=> setActions(null)}>
-                  <div className='border-b border-gray-300 py-2 px-10 cursor-pointer hover:bg-gray-400/30'
-                  onClick={()=> {
-                    setProductInfo(product)
-                    setShow(true)
-                  }}
-                  >Edit</div>
-                  <div className='px-10 py-2 text-red-400 cursor-pointer hover:bg-gray-400/30' onClick={()=> deleteProduct(product._id)}>Delete</div>
-                </div>}
+                {/* Dropdown menu */}
+                {actions === index && (
+                  <div
+                    className="absolute right-8 top-5 bg-white border border-gray-200 shadow-lg rounded-md overflow-hidden z-50"
+                    onClick={() => setActions(null)}
+                  >
+                    <div
+                      className="px-6 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer transition"
+                      onClick={() => {
+                        setProductInfo(product);
+                        setShow(true);
+                      }}
+                    >
+                      Edit
+                    </div>
+                    <div
+                      className="px-6 py-2 text-red-500 hover:bg-gray-100 cursor-pointer transition"
+                      onClick={() => deleteProduct(product._id)}
+                    >
+                      Delete
+                    </div>
+                  </div>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-        <section className={`add-products fixed top-0 right-0 bg-white p-2 h-[100dvh] duration-300 w-full md:w-fit ${show ? 'translate-x-0' : 'translate-x-full'}`}>
-          <div className='absolute right-0 p-4 text-4xl cursor-pointer' onClick={()=> {
-            setProductInfo(null)
-            setShow(false)
-
-          }}><IoIosClose /></div>
-          <AddProducts productInfo={productInfo} />
-          <div className='flex justify-center'>
-            <button className='w-5/6 mx-auto bg-gray-400/30 border border-gray-300 rounded py-2 mb-48 cursor-pointer'
-            onClick={()=> {
-            setProductInfo(null)
-            setShow(false)
-
-          }}
-            >Cancel</button>
-          </div>
-        </section>
-
     </div>
-  )
+
+    {/* Adding slide  */}
+    <section
+      className={`fixed top-0 right-0 bg-white h-[100dvh] shadow-lg z-50 transition-transform duration-300 w-full md:w-[450px] ${
+        show ? 'translate-x-0' : 'translate-x-full'
+      }`}
+    >
+      <div
+        className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 text-3xl cursor-pointer transition"
+        onClick={() => {
+          setProductInfo(null);
+          setShow(false);
+        }}
+      >
+        <IoIosClose />
+      </div>
+
+      <div className="p-6 overflow-y-auto h-full">
+        <AddProducts productInfo={productInfo} />
+
+        <div className="flex justify-center mt-6">
+          <button
+            className="w-full bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg py-2 transition"
+            onClick={() => {
+              setProductInfo(null);
+              setShow(false);
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+);
+
 }
 
 export default Products

@@ -140,72 +140,88 @@ const handleSubmit = async (e) => {
     };
 
 
-  return (
-    <div className="max-w-xl mx-auto mt-10 p-6 bg-white">
-      <h2 className="text-2xl font-bold mb-2 md:mb-4">{productInfo ? 'Edit Product' :'Add New Product'}</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block font-medium text-sm text-gray-800">Product Name</label>
-          <input
-            type="text"
-            name="name"
-            placeholder='Ex. Sneakers for men'
-            className="w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            onChange={handleChange}
-            value={formData.name}
-            required
-          />
-        </div>
+return (
+  <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded-xl ">
+    <h2 className="text-2xl font-bold mb-2 md:mb-4 text-gray-900">
+      {productInfo ? 'Edit Product' : 'Add New Product'}
+    </h2>
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Product Name */}
+      <div>
+        <label className="block font-medium text-sm text-gray-700 mb-1">
+          Product Name
+        </label>
+        <input
+          type="text"
+          name="name"
+          placeholder="Ex. Sneakers for men"
+          className="w-full bg-gray-50 rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          onChange={handleChange}
+          value={formData.name}
+          required
+        />
+      </div>
 
-        <div>
-          <label className="block font-medium text-sm text-gray-800">Price (₦)</label>
-          <input
-            type="number"
-            name="price"
-            placeholder='Ex. 30000'
-            className="w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            onChange={handleChange}
-            value={formData.price}
-            required
-          />
-        </div>
+      {/* Price */}
+      <div>
+        <label className="block font-medium text-sm text-gray-700 mb-1">
+          Price (₦)
+        </label>
+        <input
+          type="number"
+          name="price"
+          placeholder="Ex. 30000"
+          className="w-full bg-gray-50 rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          onChange={handleChange}
+          value={formData.price}
+          required
+        />
+      </div>
 
-        <div>
-          <label className="block font-medium text-sm text-gray-800">Description <span className='text-xs'>(optional)</span></label>
-          <textarea
-            name="description"
-            rows="4"
-            className="w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            onChange={handleChange}
-            value={formData.description}
-          ></textarea>
-        </div>
+      {/* Description */}
+      <div>
+        <label className="block font-medium text-sm text-gray-700 mb-1">
+          Description <span className="text-xs text-gray-500">(optional)</span>
+        </label>
+        <textarea
+          name="description"
+          rows="4"
+          className="w-full bg-gray-50 rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          onChange={handleChange}
+          value={formData.description}
+        ></textarea>
+      </div>
 
-        <div>
-          <label className="block font-medium text-sm text-gray-800">Product Image</label>
-          <div className='text-gray-600 text-xs'>Click below to select an image</div>
-          <input
-            type="file"
-            accept="image/*"
-             ref={fileInputRef}
-            onChange={handleImageChange}
-            className='w-full bg-gray-50 rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'
-            required={!productInfo}
-          />
-          {uploading && <p className="text-sm text-gray-500 mt-1">Uploading image...</p>}
-        </div>
+      {/* Product Image */}
+      <div>
+        <label className="block font-medium text-sm text-gray-700 mb-1">
+          Product Image
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleImageChange}
+          className="block w-full text-sm text-gray-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100 cursor-pointer transition"
+          required={!productInfo}
+        />
+        {uploading && (
+          <p className="text-sm text-gray-500 mt-1">Uploading image...</p>
+        )}
+      </div>
 
-        <button
-          type="submit"
-          disabled={uploading || saving}
-          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded disabled:opacity-50"
-        >
-          {saving ? "Saving..." : "Save Product"}
-        </button>
-      </form>
-      
-    </div>
-  );
+      {/* Submit Button */}
+      <button
+        type="submit"
+        disabled={uploading || saving}
+        className="cursor-pointer w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {saving ? 'Saving...' : 'Save Product'}
+      </button>
+    </form>
+  </div>
+);
+
 };
 
 export default AddProducts;

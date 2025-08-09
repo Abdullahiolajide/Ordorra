@@ -26,53 +26,55 @@ const DashboardLayout = () => {
   }, []);
 
   return (
-    <div className="dashboard-container lg:flex ">
+    <div className="dashboard-container lg:flex bg-gray-50 ">
        <div className="h-16 w-64 bg-transparent hidden lg:block"></div>
-      <section className='hidden lg:block border border-gray-300 h-[100vh] w-52 px-2 py-4 fixed'>
-      <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
+      <section className='hidden lg:block border border-gray-300 h-[100vh] w-52 px-2 py-4 fixed bg-white'>
+  <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
 
-      <ul className='mt-10 flex flex-col space-y-4 h-full'>
-        <NavLink to={''} end className={({isActive})=> isActive ? 'text-green-500 bg-gray-300/30' : 'text-gray-700'}>
-          <li className={`group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30`}>
-            <span className=' group-hover:text-green-600 text-xl'><AiFillHome /></span>
-            <span>Dashboard</span>
-          </li>
-        </NavLink>
+  <ul className='mt-10 flex flex-col justify-between h-[calc(100%-2.5rem)]'> 
+    <div className="flex flex-col space-y-4">
+      <NavLink to={''} end className={({isActive})=> isActive ? 'text-green-500 bg-green-300/30 rounded-md' : 'text-gray-700'}>
+        <li className={`group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30`}>
+          <span className=' group-hover:text-green-600 text-xl'><AiFillHome /></span>
+          <span>Dashboard</span>
+        </li>
+      </NavLink>
 
-        <NavLink to={'products'}  className={({isActive})=> isActive ? 'text-green-500 bg-gray-300/30' : 'text-gray-700'}>
-          <li className='group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30'> 
-            <span className=' group-hover:text-green-600 text-xl'><TbLayoutDashboardFilled /></span>
-            <span>Products</span>
-          </li>
-        </NavLink>
+      <NavLink to={'products'}  className={({isActive})=> isActive ? 'text-green-500 bg-green-300/30' : 'text-gray-700'}>
+        <li className='group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30'> 
+          <span className=' group-hover:text-green-600 text-xl'><TbLayoutDashboardFilled /></span>
+          <span>Products</span>
+        </li>
+      </NavLink>
 
-        <NavLink to={'store-info'}  className={({isActive})=> isActive ? 'text-green-500 bg-gray-300/30' : 'text-gray-700'}>
-          <li className='group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30'>
-            <span className=' group-hover:text-green-600 text-xl'><MdBrandingWatermark /></span>
-            <span>Store Info</span>
-          </li>
-        </NavLink>
+      <NavLink to={'store-info'}  className={({isActive})=> isActive ? 'text-green-500 bg-green-300/30 rounded-md' : 'text-gray-700'}>
+        <li className='group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30'>
+          <span className=' group-hover:text-green-600 text-xl'><MdBrandingWatermark /></span>
+          <span>Store Info</span>
+        </li>
+      </NavLink>
 
+      <NavLink to={'settings'}  className={({isActive})=> isActive ? 'text-green-500 bg-green-300/30 rounded-md' : 'text-gray-700'}>
+        <li className='group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30'>
+          <span className=' group-hover:text-green-600 text-xl'><IoIosSettings /></span>
+          <span>Settings</span>
+        </li>
+      </NavLink>
+    </div>
 
-        <NavLink to={'settings'}  className={({isActive})=> isActive ? 'text-green-500 bg-gray-300/30' : 'text-gray-700'}>
-          <li className='group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30'>
-            <span className=' group-hover:text-green-600 text-xl'><IoIosSettings /></span>
-            <span>Settings</span>
-          </li>
-        </NavLink>
+    {/* Logout at the bottom */}
+    <li 
+      className='cursor-pointer group flex items-center space-x-2 p-2 mb-10 rounded hover:bg-gray-300/30 hover:text-red-600'
+      onClick={()=> {
+        localStorage.removeItem('token')
+        navigate('/signin', {replace: true})
+      }}>
+      <span className=' group-hover:text-red-600 text-xl'><IoLogOut /></span>
+      <span>Logout</span>
+    </li>
+  </ul>
+</section>
 
-        {/* <NavLink  className={'text-gray-700'}> */}
-          <li className='cursor-pointer group flex items-center space-x-2 p-2 rounded hover:bg-gray-300/30 hover:text-red-600' onClick={()=> {
-            localStorage.removeItem('token')
-            navigate('/signin', {replace: true})
-            }}>
-            <span className=' group-hover:text-red-600 text-xl'><IoLogOut /></span>
-            <span>Logout</span>
-          </li>
-        {/* </NavLink> */}
-      </ul>
-
-      </section>
       <div className='h-14 bg-transparent'></div>
         <header className='p-3 border border-gray-300 flex justify-center lg:hidden fixed w-full top-0 bg-white/70'>
           {/* <div className='text-2xl font-medium md:text-3xl'>{capitalize(path[path.length -1])} </div> */}
@@ -80,47 +82,66 @@ const DashboardLayout = () => {
         </header>
       <main className='px-4 w-full'>
 
-        <div className='mb-20'>
-          <RefreshContext.Provider value={{refresh, setRefresh}}>
-            <Outlet />
-          </RefreshContext.Provider>
-        </div>
+       <div className="mb-20 min-h-screen">
+        <RefreshContext.Provider value={{ refresh, setRefresh }}>
+          <Outlet />
+        </RefreshContext.Provider>
+      </div>
+
 
       </main>
-      <section className='lg:hidden bg-white border border-gray-300 fixed w-full bottom-0'>
-        <ul className='max-w-xl mx-auto flex justify-around'>
-        <NavLink to={''} end className={({isActive})=> isActive ? 'text-green-500 ' : 'text-gray-700'}>
-          <li className={`group flex flex-col items-center justify-center space-x-2 p-2 text-center`}>
-            <span className='group-hover:text-green-600 text-xl text-center'><AiFillHome /></span>
-            <span className='text-sm mt-1 mx-2'>Home</span>
-          </li>
+      <nav className="lg:hidden bg-white border-t border-gray-200 fixed w-full bottom-0 shadow-sm">
+      <ul className="max-w-xl mx-auto flex justify-around py-1">
+        <NavLink
+          to=""
+          end
+          className={({ isActive }) =>
+            `flex flex-col items-center gap-1 py-2 ${
+              isActive ? "text-green-600" : "text-gray-600 hover:text-green-500"
+            }`
+          }
+        >
+          <AiFillHome className="text-xl" />
+          <span className="text-xs">Home</span>
         </NavLink>
 
-        <NavLink to={'products'}  className={({isActive})=> isActive ? 'text-green-500' : 'text-gray-700'}>
-          <li className='group flex flex-col items-center justify-center space-x-2 p-2  text-center'> 
-            <span className=' group-hover:text-green-600 text-xl'><TbLayoutDashboardFilled /></span>
-            <span className='text-sm mt-1 mx-2 group-hover:text-green-600'>Products</span>
-          </li>
+        <NavLink
+          to="products"
+          className={({ isActive }) =>
+            `flex flex-col items-center gap-1 py-2 ${
+              isActive ? "text-green-600" : "text-gray-600 hover:text-green-500"
+            }`
+          }
+        >
+          <TbLayoutDashboardFilled className="text-xl" />
+          <span className="text-xs">Products</span>
         </NavLink>
 
-        <NavLink to={'store-info'}  className={({isActive})=> isActive ? 'text-green-500 ' : 'text-gray-700'}>
-          <li className='group flex flex-col items-center justify-center space-x-2 p-2  text-center'>
-            <span className=' group-hover:text-green-600 text-xl'><MdBrandingWatermark /></span>
-            <span className='text-sm mt-1 mx-2'>Store Info</span>
-          </li>
+        <NavLink
+          to="store-info"
+          className={({ isActive }) =>
+            `flex flex-col items-center gap-1 py-2 ${
+              isActive ? "text-green-600" : "text-gray-600 hover:text-green-500"
+            }`
+          }
+        >
+          <MdBrandingWatermark className="text-xl" />
+          <span className="text-xs">Store Info</span>
         </NavLink>
 
-
-        <NavLink to={'settings'}  className={({isActive})=> isActive ? 'text-green-500 ' : 'text-gray-700'}>
-          <li className='group flex flex-col items-center justify-center space-x-2 p-2  text-center'>
-            <span className=' group-hover:text-green-600 text-xl'><IoIosSettings /></span>
-            <span className='text-sm mt-1 mx-2'>Settings</span>
-          </li>
+        <NavLink
+          to="settings"
+          className={({ isActive }) =>
+            `flex flex-col items-center gap-1 py-2 ${
+              isActive ? "text-green-600" : "text-gray-600 hover:text-green-500"
+            }`
+          }
+        >
+          <IoIosSettings className="text-xl" />
+          <span className="text-xs">Settings</span>
         </NavLink>
-
-        
-      </ul> 
-      </section>
+      </ul>
+    </nav>
     </div>
   );
 };
