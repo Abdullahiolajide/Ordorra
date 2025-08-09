@@ -1,3 +1,4 @@
+const Product = require("../models/Product");
 const StoreInfos = require("../models/StoreInfos") ;
 
 
@@ -41,6 +42,27 @@ const getStoreInfo = async (req, res) => {
   }
 };
 
+const getStore = async (req, res) => {
+  try {
+    const store = await StoreInfos.findOne({ handle: req.params.handle });
+    if (!store) {
+      return res.status(404).json({ message: "Store does not exist" });
+    }
+
+    const products = await Product.find({ ownerId: store.user }).sort({ createdAt: -1 });
+
+    
+    res.json({
+      store,
+      products
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
 
 const editStoreInfo = async (req, res) => {
   try {
@@ -73,5 +95,6 @@ const editStoreInfo = async (req, res) => {
 module.exports = {
   setStoreInfo,
   getStoreInfo,
-  editStoreInfo
+  editStoreInfo,
+  getStore
 }

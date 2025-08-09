@@ -3,6 +3,8 @@ const router = express.Router();
 const storeInfo = require('../controllers/storeInfo')
 const protect = require('../middleware/auth');
 
+router.get('/info/:handle', storeInfo.getStore);
+
 router.use(protect)
 
 router.post('/info', storeInfo.setStoreInfo);
