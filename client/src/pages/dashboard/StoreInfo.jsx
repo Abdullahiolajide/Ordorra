@@ -16,9 +16,11 @@ const StoreInfo = () => {
   const [uploading, setUploading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchStoreInfo = async () => {
+      setLoading(true)
       try {
         const token = localStorage.getItem('token');
         const res = await axios.get(`${backendurl}/store/info`, {
@@ -34,6 +36,9 @@ const StoreInfo = () => {
           console.error('Error fetching store info:', err.response?.data || err.message);
           toast.error('Failed to fetch store information.');
         }
+      }
+      finally{
+        setLoading(false)
       }
     };
 
@@ -98,6 +103,14 @@ const StoreInfo = () => {
 
   return (
     <div className="max-w-6xl mx-auto md:p-6">
+       {loading && <div
+            className={`fixed inset-0 z-50 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}
+            >
+
+            <div className="h-13 w-13 border absolute border-5 rounded-4xl border-b-transparent border-green-600 animate-spin">
+
+            </div>
+      </div>}
       <h2 className="text-3xl font-bold mb-8 mt-4 text-gray-800">Store Information</h2>
       <div className="grid lg:grid-cols-2 gap-10">
         

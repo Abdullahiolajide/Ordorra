@@ -1,41 +1,85 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import AddProducts from "./AddProducts";
 import { IoIosClose } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { FiCopy } from "react-icons/fi";
+import { backendurl } from "../../../global";
+import { RefreshContext } from "../../components/DashboardLayout";
 
 const Dashboard = () => {
   const [show, setShow] = useState(false);
-  const [storeInfo, setStoreInfo] = useState(true);
+  const [storeInfo, setStoreInfo] = useState(false);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [handle, setHandle] = useState(null)
+  const { refresh } = useContext(RefreshContext)
+  // const location = useLocation()
   const [stats, setStats] = useState({
-    products: 11,
-    visits: 51,
-    orders: 12,
+    products: null,
+    visits: null,
+    orders: null,
   });
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const { data: store } = await axios.get("/api/store/info");
-  //       setStoreInfo(store);
 
-  //       const { data: statsData } = await axios.get("/api/store/stats");
-  //       setStats(statsData);
-  //     } catch (err) {
-  //       setStoreInfo(null);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(()=>{
+      getProducts()
+    }, [refresh])
+  
+
+    useEffect(() => {
+      const fetchStoreInfo = async () => {
+        setLoading(true)
+        try {
+          const token = localStorage.getItem('token');
+          const res = await axios.get(`${backendurl}/store/info`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+  
+          if (res.data.handle) {
+            // setFormData(res.data);
+            // setIsEditing(true);
+            setStoreInfo(true)
+            setHandle(res.data.handle)
+          }
+        } catch (err) {
+          if (err.response?.status !== 404) {
+            console.error('Error fetching store info:', err.response?.data || err.message);
+            toast.error('Failed to fetch store information.');
+          }
+        }
+        finally{
+          setLoading(false)
+        }
+      };
+  
+      fetchStoreInfo();
+    }, []);
+
+
+    const getProducts = async () => {
+      const token = localStorage.getItem('token'); 
+      setLoading(true)
+
+      try {
+        const res = await axios.get(`${backendurl}/products/get-products`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setStats(prev=> ({...prev, products: res.data.length}))
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+      finally{
+        setLoading(false)
+      }
+    };
 
   const handleCopy = () => {
     // if (!storeInfo) return;
-    navigator.clipboard.writeText(`http://localhost:5173/store/${storeInfo.handle}`);
+    navigator.clipboard.writeText(`${window.location.origin}/store/${handle}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
@@ -71,35 +115,35 @@ const Dashboard = () => {
             <p className="text-sm text-gray-500">Products</p>
             <p className="text-3xl font-bold text-gray-800">{stats.products}</p>
           </div>
-          <div className="bg-white rounded-lg shadow p-6 text-center hover:shadow-md transition">
+          {/* <div className="bg-white rounded-lg shadow p-6 text-center hover:shadow-md transition">
             <p className="text-sm text-gray-500">Page Visits</p>
             <p className="text-3xl font-bold text-gray-800">{stats.visits}</p>
           </div>
           <div className="bg-white rounded-lg shadow p-6 text-center hover:shadow-md transition">
             <p className="text-sm text-gray-500">Order Clicks</p>
             <p className="text-3xl font-bold text-gray-800">{stats.orders}</p>
-          </div>
+          </div> */}
         </section>
       {/* )} */}
       {!loading && (
-        <section className="mb-8 p-4 bg-white border border-gray-400 rounded-lg shadow-sm flex items-center justify-between">
+        <section className="mb-8 p-4 bg-white border border-gray-300 rounded-lg shadow-sm flex items-center justify-between">
           
           {storeInfo ? (
             <>
               <div>
                 <p className="text-gray-700 font-medium">Your Storefront Link:</p>
                 <a
-                  href={`http://localhost:5173/store/${storeInfo.handle}`}
+                  href={`${window.location.origin}/store/${handle}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-green-600 hover:underline break-all"
                 >
-                  {`http://localhost:5173/store/${storeInfo.handle}`}
+                  {`${window.location.origin}/store/${handle}`}
                 </a>
               </div>
               <button
                 onClick={handleCopy}
-                className="ml-4 flex items-center gap-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg border transition"
+                className="ml-4 flex items-center gap-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg border border-gray-300 transition"
               >
                 <FiCopy />
                 {copied ? "Copied!" : "Copy"}
@@ -111,7 +155,7 @@ const Dashboard = () => {
                 You haven’t set up your store info yet.
               </p>
               <Link
-                to="/storeinfo"
+                to="store-info"
                 className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow"
               >
                 Complete Store Setup
@@ -123,7 +167,7 @@ const Dashboard = () => {
 
       {/* Add Product Modal */}
       <section
-        className={`fixed top-0 right-0 bg-white p-4 md:p-6 h-[100dvh] w-full md:w-[400px] shadow-xl transform transition-transform duration-300 ${
+        className={`fixed top-0 right-0 bg-white p-4 md:p-6 h-[100dvh] w-full md:w-[400px] shadow-xl transform transition-transform duration-300 overflow-y-auto h-full  ${
           show ? "translate-x-0" : "translate-x-full"
         }`}
       >

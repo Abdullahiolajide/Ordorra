@@ -13,6 +13,7 @@ const Products = () => {
   const [show, setShow] = useState(false)
   const [actions, setActions] = useState(null)
   const [productInfo, setProductInfo] = useState(null)
+  const [loading, setLoading] = useState(false)
   const { refresh } = useContext(RefreshContext)
 
   useEffect(()=>{
@@ -21,6 +22,7 @@ const Products = () => {
 
     const getProducts = async () => {
       const token = localStorage.getItem('token'); 
+      setLoading(true)
 
       try {
         const res = await axios.get(`${backendurl}/products/get-products`, {
@@ -33,6 +35,9 @@ const Products = () => {
         setUserProducts(res.data)
       } catch (error) {
         console.error('Error fetching products:', error);
+      }
+      finally{
+        setLoading(false)
       }
     };
 
@@ -73,6 +78,14 @@ const Products = () => {
         setShow(false);
       }}
     ></div>
+     {loading && <div
+            className={`fixed inset-0 min-h-screen z-50 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}
+            >
+
+            <div className="h-13 w-13 border absolute border-5 rounded-4xl border-b-transparent border-green-600 animate-spin">
+
+            </div>
+      </div>}
 
     <div className="text-2xl font-semibold text-gray-800 md:py-4 py-2">Products</div>
 

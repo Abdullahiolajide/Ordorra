@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { backendurl } from "../../global";
 import { useParams } from "react-router-dom";
+import thousandify from 'thousandify'
 
 const Store = () => {
     const params = useParams()
@@ -76,7 +77,7 @@ const Store = () => {
               <h3 className="text-lg font-semibold text-gray-800">
                 {product.name}
               </h3>
-              <p className="text-green-600 font-bold mt-1">N{product.price}</p>
+              <p className="text-green-600 font-bold mt-1">N{thousandify(product.price)}</p>
               <button className="cursor-pointer mt-3 w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition">
                 Add to Cart
               </button>
