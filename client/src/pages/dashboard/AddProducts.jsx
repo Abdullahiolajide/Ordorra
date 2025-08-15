@@ -97,10 +97,9 @@ const handleSubmit = async (e) => {
     );
 
     toast.success('Product created!');
-    setSaving(false)
     setRefresh(prev=> !prev)
     setFormData({
-        name: '',
+      name: '',
         price: '',
         description: '',
         imageUrl: '',
@@ -109,6 +108,10 @@ const handleSubmit = async (e) => {
   } catch (err) {
     console.error(err);
     toast.error(err.response?.data?.message || 'Failed to create product');
+  }
+  finally{
+    setSaving(false)
+
   }
 };
 
