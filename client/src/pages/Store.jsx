@@ -6,7 +6,7 @@ import thousandify from 'thousandify'
 import { IoIosClose } from "react-icons/io";
 
 const Store = () => {
-    const params = useParams()
+  const params = useParams()
   const [products, setProducts] = useState([]);
   const [currentProductIndex, setCurrentProductIndex] = useState({})
   const [showProductModal, setShowProductModal] = useState(false)
@@ -39,6 +39,10 @@ const Store = () => {
     getStore()
   }, [])
 
+  const addToCart = (i)=>{
+    localStorage.setItem(JSON.stringify(products[1]), 'cart')
+  }
+
   return (
     // loader 
     <div className="bg-gray-50 min-h-screen">
@@ -50,19 +54,19 @@ const Store = () => {
                 </div>
             <img src={displayImage} alt="" className="lg:max-h-150 lg:max-w-270 px-2 max-h-[80vh] py-2 lg:px-0" />
           </div>}
-      {/* View Image Modal  */}
+      {/* View Image Modal end */}
 
         {/* View Prouct Modal  */}
           {showProductModal && <section>
             <div className={`fixed inset-0 z-50 px-2 md:px-0 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}>
               <div className="w-full h-full absolute -z-1" onClick={()=> setShowProductModal(false)}></div>
-              <div className="bg-white w-100 max-h-170 rounded-2xl boder border-gray-300 relative px-4 py-4 flex flex-col justify-between">
+              <div className="zoom bg-white w-100 max-h-170 rounded-2xl boder border-gray-300 relative px-4 py-4 flex flex-col justify-between">
                 <div className="absolute right-2 top-2 text-4xl text-gray-500 hover:text-gray-700 cursor-pointer" onClick={()=> setShowProductModal(false)}>
                           <IoIosClose />
                 </div>
 
                <div>
-                 <div className="mt-6 rounded-md overflow-hidden max-h-55">
+                 <div className="mt-6 rounded-md overflow-hidden max-h-55 cursor-pointer">
                   <img src={products[currentProductIndex].imageUrl || ''} alt=""
                   onClick={()=> setDisplayImage(products[currentProductIndex].imageUrl)}
                   />
@@ -106,16 +110,16 @@ const Store = () => {
 
      {/* Store Info Hero  */}
       <div className="bg-green-600 text-white py-5 lg:py-12 px-6 text-center">
-        <div className=" rounded-4xl overflow-hidden w-fit mx-auto"><img src={store.storeLogo} alt="" className="w-35 h-35"/></div>
+        <div className=" rounded-4xl overflow-hidden w-fit mx-auto"><img src={store.storeLogo} alt="" className="w-30 h-30 md:w-35 md:h-35"/></div>
         <h1 className="text-2xl md:text-3xl lg:text-4xl font-medium lg:font-bold">{store.storeName}</h1>
-        <p className="mt-2 ">
+        <p className="md:mt-2 ">
           {store.storeBio}
         </p>
           <p className="mt-1 text-xs text-lg opacity-90">
           /{store.handle}
         </p>
       </div>
-     {/* Store Info Hero  */}
+     {/* Store Info Hero end */}
 
       
 
@@ -144,7 +148,10 @@ const Store = () => {
               </h3>
               <p className="text-green-600 font-medium text-sm md:text-base mt-1">₦
                 {thousandify(product.price)}</p>
-              <button className="cursor-pointer mt-3 w-full bg-gray-300/60 hover:text-white text-xs md:text-sm lg:text-base py-1 md:py-2 rounded-sm hover:bg-green-600 transition" onClick={(e)=> e.stopPropagation()}>
+              <button className="cursor-pointer mt-3 w-full bg-gray-300/60 hover:text-white text-xs md:text-sm lg:text-base py-1 md:py-2 rounded-sm hover:bg-green-600 transition" onClick={(e)=> {
+                e.stopPropagation()
+                addToCart(i)
+              }}>
                 Add to Cart
               </button>
             </div>
