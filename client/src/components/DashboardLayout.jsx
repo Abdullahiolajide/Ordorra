@@ -76,7 +76,7 @@ const DashboardLayout = () => {
 </section>
 
       <div className='h-14 bg-transparent'></div>
-        <header className='p-3 border border-gray-300 flex justify-center lg:hidden fixed w-full top-0 bg-white/70'>
+        <header className='p-3 border border-gray-300 flex justify-center lg:hidden fixed z-10 w-full top-0 bg-white/70'>
           {/* <div className='text-2xl font-medium md:text-3xl'>{capitalize(path[path.length -1])} </div> */}
           <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
         </header>
@@ -90,6 +90,8 @@ const DashboardLayout = () => {
 
 
       </main>
+
+      {/* mobile below */}
       <nav className="lg:hidden bg-white border-t border-gray-200 fixed w-full bottom-0 shadow-sm">
       <ul className="max-w-xl mx-auto flex justify-around py-1">
         <NavLink

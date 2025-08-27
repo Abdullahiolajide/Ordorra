@@ -43,6 +43,12 @@ function App() {
           <Route path='add-products' element={<AddProducts />}/>
         </Route>
         <Route path='/store/:handle' element={<Store />} />
+        <Route path='*' element={<div className='flex items-center justify-center h-100'>
+          <div className='text-4xl'>
+            <p>Ordorra Error 404</p>
+            Page not found
+          </div>
+        </div>} />
 
       </Routes>
       <ToastContainer />

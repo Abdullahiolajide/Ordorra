@@ -4,6 +4,9 @@ import { backendurl } from "../../global";
 import { useParams } from "react-router-dom";
 import thousandify from 'thousandify'
 import { IoIosClose } from "react-icons/io";
+import { HiOutlineShoppingBag } from 'react-icons/hi'
+import { FiShoppingCart } from "react-icons/fi";
+// import { Icon } from "../..Icon";
 
 const Store = () => {
   const params = useParams()
@@ -107,17 +110,36 @@ const Store = () => {
             </div>
       </div>}
       {/* // loader  */}
+      <nav className="bg-gray-100 px-10 py-4 shadow fixed w-full">
+       <div className="max-w-[1100px]  flex justify-between mx-auto">
+         <h1 className="flex items-center md:text-xl">
+          <div className='text-green-800'>
+            <HiOutlineShoppingBag />
+          </div>
+          {store.storeName}
+          </h1>
+        <div className="flex items-center text-xl md:text-2xl relative ">
+          <div className="text-xs w-4 h-4 flex items-center justify-center absolute bg-red-400 text-white rounded-3xl top-0 right-0 -mr-2">2</div>
+          <FiShoppingCart />
+          </div>
+       </div>
+      </nav>
+      <div className="h-12"></div>
 
      {/* Store Info Hero  */}
-      <div className="bg-green-600 text-white py-5 lg:py-12 px-6 text-center">
-        <div className=" rounded-4xl overflow-hidden w-fit mx-auto"><img src={store.storeLogo} alt="" className="w-30 h-30 md:w-35 md:h-35"/></div>
-        <h1 className="text-2xl md:text-3xl lg:text-4xl font-medium lg:font-bold">{store.storeName}</h1>
-        <p className="md:mt-2 ">
-          {store.storeBio}
-        </p>
-          <p className="mt-1 text-xs text-lg opacity-90">
+      <div className="py-12  px-6 flex flex-col lg:flex-row mb-10 bg-green00 max-w-6xl mx-auto">
+       <div>
+         <h1 className="text-lg pb-3 md:text-3xl lg:text-2xl text-center lg:text-left">{store.storeName}</h1>
+          <p className="md:mt-2 text-3xl md:text-5xl lg:text-6xl max-w-2xl mx-auto text-center lg:text-left">
+            {store.storeBio}
+          </p>
+       </div>
+        <div className=" rounde-4xl overflow-hidden w-fi mx-auto mt-10 lg:mt-0">
+          <img src={store.storeLogo} alt="" className="w-100"/>
+        </div>
+          {/* <p className="mt-1 text-xs text-lg opacity-90">
           /{store.handle}
-        </p>
+        </p> */}
       </div>
      {/* Store Info Hero end */}
 
