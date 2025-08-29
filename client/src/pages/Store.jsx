@@ -255,7 +255,7 @@ const Store = () => {
       }
    
 
-          <main className={`overflow-y-auto w-full h-screen fixed top-0 z-100 bg-white md:max-w-sm w-full absolute top-0 right-0 shadow-2xl flex flex-col duration-300 transition-transform ${showCart ? 'translate-x-0' : 'translate-x-full'}`}>
+          <main className={`overflow-y-auto w-full h-[100dvh] fixed top-0 z-100 bg-white md:max-w-sm w-full absolute top-0 right-0 shadow-2xl flex flex-col duration-300 transition-transform ${showCart ? 'translate-x-0' : 'translate-x-full'}`}>
             {/* Header */}
             <header className="flex items-center justify-between p-5 border-b border-gray-300 sticky top-0 bg-white w-full">
               <h2 className="text-lg font-semibold">Your Cart</h2>
