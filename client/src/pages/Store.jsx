@@ -1,12 +1,13 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { backendurl } from "../../global";
 import { useParams } from "react-router-dom";
 import thousandify from 'thousandify'
 import { IoIosClose } from "react-icons/io";
 import { HiOutlineShoppingBag } from 'react-icons/hi'
 import { FiShoppingCart } from "react-icons/fi";
-// import { Icon } from "../..Icon";
+import { FaTrash, FaWhatsapp } from "react-icons/fa";
+import { CiAirportSign1 } from "react-icons/ci";
 
 const Store = () => {
   const params = useParams()
@@ -16,35 +17,134 @@ const Store = () => {
   const [displayImage, setDisplayImage] = useState('')
   const [store, setStore] = useState({})
   const [loading, setLoading] = useState(false)
+  const [cartArray, setCartArray] = useState([])
+  const [showCart, setShowCart] = useState(false)
+  const [totalPrice, setTodalPrice] = useState(0)
+  
 
 
-  const getStore = async ()=>{
-    setLoading(true)
-    try{
-        const res = await axios.get(`${backendurl}/store/info/${params.handle}`)
-        setProducts(res.data.products)
-        setStore(res.data.store)
-
-    }catch(error){
-        if (error.response) {
-            console.log(error.response.data.message); // <-- "Store does not Exist"
-            console.log(error.response.status); // 404
-        } else {
-            console.error(error.message);
+      const getStore = useCallback(async () => {
+        setLoading(true)
+        try {
+          const res = await axios.get(`${backendurl}/store/info/${params.handle}`)
+          setProducts(res.data.products)
+          setStore(res.data.store)
+        } catch (error) {
+          if (error.response) {
+            console.log(error.response.data.message)
+          } else {
+            console.error(error.message)
+          }
+        } finally {
+          setLoading(false)
         }
-    }finally{
+      }, [backendurl, params.handle]) 
 
-        setLoading(false)
+      useEffect(()=>{
+        getStore()
+      }, [])
+      useEffect(() => {
+      const savedCart = localStorage.getItem('cart')
+      if (savedCart) {
+        setCartArray(JSON.parse(savedCart))
+      }
+    }, [])
+    useEffect(()=>{
+       let total = 0
+      if (cartArray.length > 0){
+        for (let i = 0; i < cartArray.length; i++) {
+          total += cartArray[i].price * cartArray[i].quantity
+          
+        }
+        setTodalPrice(total)
+      }else{
+        setTodalPrice(0)
+      }
+    }, [cartArray])
+
+
+
+    const addToCart = (i, ci) => {
+      setCartArray(prev => {
+        let currentCart = [...prev]
+        let productIndex = ci !== null && ci !== undefined && ci > -1 ? ci : currentCart.findIndex(item => item.id === products[i]._id)
+
+        if (productIndex !== -1) {
+          currentCart[productIndex].quantity += 1
+        } else {
+          currentCart.push({
+            id: products[i]?._id,
+            price: products[i]?.price,
+            quantity: 1
+          })
+        }
+        localStorage.setItem('cart', JSON.stringify(currentCart))
+
+        return currentCart
+      })
     }
-  }
 
-  useEffect(()=>{
-    getStore()
-  }, [])
+    const substractFromCart =(i, ci)=>{
+      setCartArray(prev => {
+        let currentCart = [...prev]
+        let productIndex = ci !== null && ci !== undefined && ci > -1 ? ci : currentCart.findIndex(item => item.id === products[i]._id)
 
-  const addToCart = (i)=>{
-    localStorage.setItem(JSON.stringify(products[1]), 'cart')
-  }
+        if (productIndex !== -1) {
+          currentCart[productIndex].quantity -= 1
+          if(currentCart[productIndex].quantity < 1){
+            currentCart.splice(productIndex, 1)
+          }
+
+        } else {
+        return null
+        }
+        localStorage.setItem('cart', JSON.stringify(currentCart))
+        return currentCart
+      })
+
+    }
+
+    const removeFromCart =(ci)=>{
+      setCartArray(prev => {
+        let currentCart = [...prev]
+        currentCart.splice(ci, 1)
+        localStorage.setItem('cart', JSON.stringify(currentCart))
+        return currentCart
+      })
+
+    }
+
+   const orderOnWhatsApp = () => {
+      if (!store.phoneNumber) return
+
+      // Build cart summary
+      let message = `Hello ${store.storeName},\nI would like to order:\n\n`
+      cartArray.forEach(item => {
+        const product = products.find(p => p._id === item.id)
+        if (product) {
+          message += `• ${product.name} (x${item.quantity}) - ₦${item.price * item.quantity}\n`
+        }
+      })
+
+      // Add total
+      const total = cartArray.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      )
+      message += `\nTotal: ₦${total}\n\nPlease confirm availability.`
+
+      // Encode message for WhatsApp
+      const encoded = encodeURIComponent(message)
+
+      // Vendor’s number (e.g. from store data)
+      const phone = '234' + Number(store.phoneNumber) // format: 2348165852818
+      console.log(phone)
+
+      // Open WhatsApp
+     window.open(`https://wa.me/${phone}?text=${encoded}`, "_blank")
+    }
+
+
 
   return (
     // loader 
@@ -88,10 +188,43 @@ const Store = () => {
                </div>
 
                 <div className="sticky" >
-                    <button className="cursor-pointer mt-3 w-full bg-green-500 text-xs md:text-sm lg:text-base text-white py-1 md:py-2 rounded-4xl hover:bg-green-600 transition">
+                    {/* <button className="cursor-pointer mt-3 w-full bg-green-500 text-xs md:text-sm lg:text-base text-white py-2 md:py-2 rounded-4xl hover:bg-green-600 transition">
                      Add to Cart
-                  </button>
+                  </button> */}
+                {!cartArray.find(cart=> cart.id == products[currentProductIndex]._id)?.quantity ?
+               <button className="cursor-pointer mt-3 w-full bg-gray-300/60 hover:text-white text-xs md:text-sm lg:text-base py-2 md:py-2 rounded-sm hover:bg-green-600 transition" onClick={(e)=> {
+                e.stopPropagation()
+                addToCart(currentProductIndex, null)
+              }}>
+                Add to Cart
+              </button>
+              :
+              <div className="w-4/6 flex felx-col justify-between mt-3 mx-auto">
+                <button className="w-8 h-8 md:h-9 md:w-9 text-xs p-2 rounded md:px-4 py-1 md:py-2 md:text-sm flex items-center justify-center bg-gray-300/60 hover:bg-green-600 hover:text-white cursor-pointer"
+                    onClick={(e)=>{
+                      e.stopPropagation()
+                      addToCart(currentProductIndex)
+                    }}
+                    >
+                    + 
+                </button>
+
+                <div className="text-xs md:text-sm flex items-center justify-center">
+                  {cartArray.find(cart=> cart.id == products[currentProductIndex]._id)?.quantity}
                 </div>
+
+                <button className="w-8 h-8 md:h-9 md:w-9 text-xs p-2 rounded md:px-4 py-1 md:py-2 md:text-sm flex items-center justify-center bg-gray-300/60 hover:bg-green-600 hover:text-white cursor-pointer" 
+                  onClick={(e)=>{
+                    e.stopPropagation()
+                    substractFromCart(currentProductIndex, null)
+                  }}
+                  >
+                    - 
+                </button>
+              </div>
+              }
+              </div>
+                
 
 
               </div>
@@ -100,48 +233,158 @@ const Store = () => {
           </section>}
         {/* View Prouct Modal end  */}
 
-
+      {/* loader  */}
          {loading && <div
-            className={`fixed inset-0 z-50 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}
+            className={`fixed inset-0 z-110 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}
             >
 
             <div className="h-13 w-13 border absolute border-5 rounded-4xl border-b-transparent border-green-600 animate-spin">
 
             </div>
       </div>}
-      {/* // loader  */}
-      <nav className="bg-gray-100 px-10 py-4 shadow fixed w-full">
-       <div className="max-w-[1100px]  flex justify-between mx-auto">
-         <h1 className="flex items-center md:text-xl">
-          <div className='text-green-800'>
-            <HiOutlineShoppingBag />
-          </div>
-          {store.storeName}
-          </h1>
-        <div className="flex items-center text-xl md:text-2xl relative ">
-          <div className="text-xs w-4 h-4 flex items-center justify-center absolute bg-red-400 text-white rounded-3xl top-0 right-0 -mr-2">2</div>
-          <FiShoppingCart />
-          </div>
-       </div>
-      </nav>
-      <div className="h-12"></div>
+      {/* loader  */}
 
-     {/* Store Info Hero  */}
-      <div className="py-12  px-6 flex flex-col lg:flex-row mb-10 bg-green00 max-w-6xl mx-auto">
-       <div>
-         <h1 className="text-lg pb-3 md:text-3xl lg:text-2xl text-center lg:text-left">{store.storeName}</h1>
-          <p className="md:mt-2 text-3xl md:text-5xl lg:text-6xl max-w-2xl mx-auto text-center lg:text-left">
-            {store.storeBio}
-          </p>
-       </div>
-        <div className=" rounde-4xl overflow-hidden w-fi mx-auto mt-10 lg:mt-0">
-          <img src={store.storeLogo} alt="" className="w-100"/>
+
+
+        {/* backdrop  */}
+      {showCart && 
+          <div className="bg-black/40 h-[100vh] fixed w-full" 
+          onClick={() => setShowCart(prev=> !prev)}
+          
+          />
+      }
+   
+
+          <main className={`overflow-y-auto w-full h-screen fixed top-0 z-100 bg-white md:max-w-sm w-full absolute top-0 right-0 shadow-2xl flex flex-col duration-300 transition-transform ${showCart ? 'translate-x-0' : 'translate-x-full'}`}>
+            {/* Header */}
+            <header className="flex items-center justify-between p-5 border-b border-gray-300 sticky top-0 bg-white w-full">
+              <h2 className="text-lg font-semibold">Your Cart</h2>
+                    <div
+                        className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 text-3xl cursor-pointer transition"
+                      onClick={() => {
+                        setShowCart(prev=> !prev)
+                          }}
+                        >
+                      <IoIosClose />
+                    </div>
+            </header>
+
+            {
+              cartArray.map((cart, ci)=>{
+                let cartProduct = products.find(product=> product._id == cart.id)
+                return(
+                // {/* Cart Items */}
+                <div className="px-5 py-3 space-y-4" key={cart.id}>
+                  <div className="flex items-center gap-4 border-b border-gray-300 pb-3">
+                    <img
+                      src={cartProduct?.imageUrl}
+                      alt="Product"
+                      className="w-16 h-16 object-cover rounded"
+                    />
+                    <div className="flex-1">
+                      <h3 className="font-medium">{cartProduct?.name}</h3>
+                      <p className="text-sm text-gray-500">₦{thousandify(cartProduct?.price)}</p>
+                      <div className="flex items-center gap-2 mt-1">
+
+                        <div className="w-4/6 flex felx-col justify-between mt-3">
+                          <button className="w-8 h-8 md:h-9 md:w-9 text-xs p-2 rounded md:px-4 py-1 md:py-2 md:text-sm flex items-center justify-center bg-gray-300/60 hover:bg-green-600 hover:text-white cursor-pointer"
+                              onClick={()=>{
+                                addToCart(null, ci)
+                              }}
+                              >
+                              + 
+                          </button>
+
+                          <div className="text-xs md:text-sm flex items-center justify-center">
+                            {cart.quantity}
+                          </div>
+
+                          <button className="w-8 h-8 md:h-9 md:w-9 text-xs p-2 rounded md:px-4 py-1 md:py-2 md:text-sm flex items-center justify-center bg-gray-300/60 hover:bg-green-600 hover:text-white cursor-pointer" 
+                            onClick={()=>{
+                              substractFromCart(null, ci)
+                            }}
+                            >
+                              - 
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <button className="text-red-500 hover:text-red-700 cursor-pointer" onClick={()=> removeFromCart(ci)}><FaTrash /></button>
+                  </div>
+                </div>
+
+                )
+              })
+            }
+
+            {cartArray.length < 1 &&
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="flex flex-col justify-center space-y-3">
+                  <p className="text-xl text-gray-400">Your cart is empty</p>
+                  <button className="py-2 px-4 bg-green-600 text-white rounded cursor-pointer mx-auto"
+                  onClick={() => {
+                        setShowCart(prev=> !prev)
+                          }}
+                  >
+                    Shop
+                  </button>
+                </div>
+              </div>
+            }
+
+
+            {/* Checkout */}
+            <footer className="px-5 py-4 border-t border-gray-300 sticky bottom-0 mt-auto bg-white w-full">
+              <div className="flex justify-between mb-3">
+                <span className="font-medium text-gray-800">Total</span>
+                <span className="font-semibold text-gray-800">₦{thousandify(totalPrice)}</span>
+              </div>
+              <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 flex items-center justify-center rounded-lg font-medium cursor-pointer" onClick={orderOnWhatsApp}>
+                <FaWhatsapp className="text-2xl me-2"/><span>Order on WhatsApp</span>
+              </button>
+            </footer>
+          </main>
+        
+
+
+
+      {/* // loader  */}
+      <nav className="z-10 bg-white/80 backdrop-blur-md px-10 py-4 shadow-md fixed w-full">
+        <div className="max-w-[1100px] flex justify-between items-center mx-auto">
+          <h1 className="flex items-center gap-2 font-semibold text-lg md:text-xl text-green-900">
+            <HiOutlineShoppingBag className="text-green-700 text-xl" />
+            {store.storeName}
+          </h1>
+          <button className="relative flex items-center cursor-pointer hover:bg-gray-100 p-2 rounded-3xl" 
+          onClick={()=> setShowCart(prev=> !prev)}>
+            <FiShoppingCart className="text-2xl" />
+            
+              <div className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow">
+                {cartArray.length}
+              </div>
+          </button>
         </div>
-          {/* <p className="mt-1 text-xs text-lg opacity-90">
-          /{store.handle}
-        </p> */}
-      </div>
-     {/* Store Info Hero end */}
+      </nav>
+      <div className="h-18"></div>
+
+        {/* Store Hero */}
+        <div className="py-12 px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-12 mb-12 max-w-6xl mx-auto">
+          {/* Text */}
+          <div className="flex-1 text-center lg:text-left">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{store.storeName}</h1>
+            <p className="mt-4 text-xl md:text-2xl lg:text-3xl text-gray-700 leading-snug">
+              {store.storeBio}
+            </p>
+          </div>
+
+          {/* Logo */}
+          <div className="flex-1 flex justify-center lg:justify-end">
+            <div className="rounded-2xl overflow-hidden shadow-lg w-40 h-40 flex items-center justify-center bg-gray-50">
+              <img src={store.storeLogo} alt="" className="w-full h-full object-contain" />
+            </div>
+          </div>
+        </div>
+
 
       
 
@@ -152,30 +395,58 @@ const Store = () => {
           <div
             key={product._id}
             className="bg-white rounded-lg  border border-gray-300 transition overflow-hidden cursor-pointer"
-            onClick={()=> {
-              
-              setCurrentProductIndex(i)
-              setShowProductModal(true)
-            }}
+           
           >
             <img
               src={product.imageUrl}
               alt={product.name}
               className="w-full h-32 md:h-42 lg:h-48 object-cover"
+               onClick={()=> {
+              
+              setCurrentProductIndex(i)
+              setShowProductModal(true)
+            }}
               
             />
             <div className="p-2 md:p-4">
               <h3 className="text-xs md:text-sm lg:text-base font-medium text-gray-800">
                 {product.name}
               </h3>
-              <p className="text-green-600 font-medium text-sm md:text-base mt-1">₦
+              <p className="text-green-600 fo nt-medium text-sm md:text-base mt-1">₦
                 {thousandify(product.price)}</p>
-              <button className="cursor-pointer mt-3 w-full bg-gray-300/60 hover:text-white text-xs md:text-sm lg:text-base py-1 md:py-2 rounded-sm hover:bg-green-600 transition" onClick={(e)=> {
+
+              {!cartArray.find(cart=> cart.id == product._id)?.quantity ?
+               <button className="cursor-pointer mt-3 w-full bg-gray-300/60 hover:text-white text-xs md:text-sm lg:text-base py-2 md:py-2 rounded-sm hover:bg-green-600 transition" onClick={(e)=> {
                 e.stopPropagation()
-                addToCart(i)
+                addToCart(i, null)
               }}>
                 Add to Cart
               </button>
+              :
+              <div className="w-4/6 flex felx-col justify-between mt-3 mx-auto">
+                <button className="w-8 h-8 md:h-9 md:w-9 text-xs p-2 rounded md:px-4 py-1 md:py-2 md:text-sm flex items-center justify-center bg-gray-300/60 hover:bg-green-600 hover:text-white cursor-pointer"
+                    onClick={(e)=>{
+                      e.stopPropagation()
+                      addToCart(i)
+                    }}
+                    >
+                    + 
+                </button>
+
+                <div className="text-xs md:text-sm flex items-center justify-center">
+                  {cartArray.find(cart=> cart.id == product._id)?.quantity}
+                </div>
+
+                <button className="w-8 h-8 md:h-9 md:w-9 text-xs p-2 rounded md:px-4 py-1 md:py-2 md:text-sm flex items-center justify-center bg-gray-300/60 hover:bg-green-600 hover:text-white cursor-pointer" 
+                  onClick={(e)=>{
+                    e.stopPropagation()
+                    substractFromCart(i, null)
+                  }}
+                  >
+                    - 
+                </button>
+              </div>
+              }
             </div>
           </div>
         ))}
