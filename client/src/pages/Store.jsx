@@ -122,7 +122,7 @@ const Store = () => {
       cartArray.forEach(item => {
         const product = products.find(p => p._id === item.id)
         if (product) {
-          message += `• ${product.name} (x${item.quantity}) - ₦${item.price * item.quantity}\n`
+          message += `• ${product.name} (x${item.quantity}) - ₦${thousandify(item.price * item.quantity)}\n`
         }
       })
 
@@ -131,7 +131,7 @@ const Store = () => {
         (sum, item) => sum + item.price * item.quantity,
         0
       )
-      message += `\nTotal: ₦${total}\n\nPlease confirm availability.`
+      message += `\nTotal: ₦${thousandify(total)}\n\nPlease confirm availability.`
 
       // Encode message for WhatsApp
       const encoded = encodeURIComponent(message)
