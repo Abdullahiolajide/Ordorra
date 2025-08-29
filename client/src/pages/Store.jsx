@@ -117,7 +117,7 @@ const Store = () => {
    const orderOnWhatsApp = () => {
       if (!store.phoneNumber) return
 
-      // Build cart summary
+      //Cary Summary
       let message = `Hello ${store.storeName},\nI would like to order:\n\n`
       cartArray.forEach(item => {
         const product = products.find(p => p._id === item.id)
@@ -126,23 +126,27 @@ const Store = () => {
         }
       })
 
-      // Add total
       const total = cartArray.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
       )
       message += `\nTotal: ₦${thousandify(total)}\n\nPlease confirm availability.`
 
-      // Encode message for WhatsApp
       const encoded = encodeURIComponent(message)
 
-      // Vendor’s number (e.g. from store data)
-      const phone = '234' + Number(store.phoneNumber) // format: 2348165852818
-      console.log(phone)
-
-      // Open WhatsApp
-     window.open(`https://wa.me/${phone}?text=${encoded}`, "_blank")
+      // Phone number formattign 
+      let phone = store.phoneNumber.trim().replace(/\D/g, "")
+      if (phone.startsWith("0")) {
+        phone = "234" + phone.slice(1)
+      } else if (phone.startsWith("+")) {
+        phone = phone.slice(1)
+      } else if (!phone.startsWith("234")) {
+        phone = "234" + phone
+      }
+    
+      window.open(`https://wa.me/${phone}?text=${encoded}`, "_blank")
     }
+
 
 
 
