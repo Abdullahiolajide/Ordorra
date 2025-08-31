@@ -10,7 +10,6 @@ router.post("/paystack/webhook", express.json({ type: "*/*" }), async (req, res)
     .digest("hex");
 
   if (hash !== req.headers["x-paystack-signature"]) {
-    return res.sendStatus(401); // invalid request, reject
   }
 
   const event = req.body;
@@ -40,7 +39,6 @@ router.post("/paystack/webhook", express.json({ type: "*/*" }), async (req, res)
       );
 
     } else if (event.event === "charge.success") {
-      // optional: handle successful payment charge
       console.log("Charge successful for:", event.data.customer.email);
 
     } else {
@@ -51,6 +49,9 @@ router.post("/paystack/webhook", express.json({ type: "*/*" }), async (req, res)
   } catch (err) {
     console.error(err);
     res.sendStatus(500);
+  }
+  finally{
+    console.log('Wehook was used')
   }
 });
 

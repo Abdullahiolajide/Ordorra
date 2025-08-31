@@ -89,11 +89,12 @@ const Products = () => {
     <div className="text-2xl font-semibold text-gray-800 md:py-8 py-2">Products</div>
 
     {/* Search & Add */}
-    <div className="md:my-5 my-3 flex text-sm gap-2">
+    <div className='rounded shadow'>
+      <div className="p-2 flex text-sm flex justify-between bg-white">
       <input
         type="text"
         placeholder="Search Product"
-        className="border border-gray-300 rounded-lg py-2 px-3 w-full focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+        className=" w-fit border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
       />
       <button
         className="whitespace-nowrap flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg px-4 py-3 transition"
@@ -107,7 +108,7 @@ const Products = () => {
     {/* Table */}
     <div className="rounded-lg border border-gray-200">
       <table className="w-full text-sm md:text-base">
-        <thead className="bg-gray-100 text-gray-700">
+        <thead className="bg-white text-gray-700">
           <tr>
             <th className="px-3 py-3 text-left w-1">ID</th>
             <th className="px-3 py-3 text-left w-1">Image</th>
@@ -116,11 +117,11 @@ const Products = () => {
             <th className="px-3 py-3 text-center w-1"></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className='bg-white font-light'>
           {userProducts.map((product, index) => (
             <tr
               key={index}
-              className="border-t border-gray-200 hover:bg-gray-50 transition"
+              className="border-t border-gray-100 hover:bg-gray-50 transition"
             >
               <td className="px-3 py-2">{index + 1}</td>
               <td className="px-3 py-2">
@@ -130,7 +131,7 @@ const Products = () => {
                   className="w-12 h-12 object-cover rounded"
                 />
               </td>
-              <td className="px-3 py-2">{product.name}</td>
+              <td className="px-3 py-7 ">{product.name}</td>
               <td className="px-3 py-2">{thousandify(product.price)}</td>
               <td className="px-3 py-2 text-center relative">
                 <button
@@ -141,7 +142,7 @@ const Products = () => {
                     setActions((prev) => (prev === null ? index : null))
                   }
                 >
-                  <SlOptionsVertical className="text-gray-600" />
+                  <SlOptionsVertical className="text-gray-400" />
                 </button>
 
                 {/* Dropdown menu */}
@@ -172,6 +173,7 @@ const Products = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
 
     {/* Adding slide  */}

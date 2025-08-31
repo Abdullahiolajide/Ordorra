@@ -3,7 +3,7 @@ const User = require("../models/User.js");
 
 const startSubscription = async (req, res) => {
   try {
-    const planCode = 'PLN_1a0anpb9m9vmgu8'; // ⚡ expect Paystack's plan_code from frontend
+    const planCode = 'PLN_1a0anpb9m9vmgu8'; 
     const user = await User.findById(req.user.userId);
 
     if (!user) {
@@ -20,7 +20,7 @@ const startSubscription = async (req, res) => {
       body: JSON.stringify({
         email: user.email,
         amount:100000,
-        plan: planCode, // ✅ must be plan_code from Paystack dashboard
+        plan: planCode, 
       }),
     });
 
@@ -31,7 +31,6 @@ const startSubscription = async (req, res) => {
     }
     console.log(data)
 
-    // Save subscription with status "pending"
     const subscription = new Subscription({
       userId: user._id,
       email: user.email,
