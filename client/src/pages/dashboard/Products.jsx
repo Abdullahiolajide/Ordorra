@@ -78,16 +78,15 @@ const Products = () => {
         setShow(false);
       }}
     ></div>
-     {loading && <div
-            className={`fixed inset-0 min-h-screen z-50 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}
-            >
-
+     {loading && 
+     <div className={`fixed inset-0 min-h-screen z-50 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}>
             <div className="h-13 w-13 border absolute border-5 rounded-4xl border-b-transparent border-green-600 animate-spin">
 
             </div>
-      </div>}
+      </div>
+      }
 
-    <div className="text-2xl font-semibold text-gray-800 md:py-4 py-2">Products</div>
+    <div className="text-2xl font-semibold text-gray-800 md:py-8 py-2">Products</div>
 
     {/* Search & Add */}
     <div className="md:my-5 my-3 flex text-sm gap-2">

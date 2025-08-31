@@ -19,6 +19,7 @@ import Dashboard from './pages/dashboard/Dashboard'
 import AddProducts from './pages/dashboard/AddProducts'
 import StoreInfo from './pages/dashboard/StoreInfo'
 import Store from './pages/Store'
+import Pricing from './pages/dashboard/Pricing'
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
           <Route path='store-info' element={<StoreInfo />}/>
           <Route path='settings' element={<Settings />}/>
           <Route path='add-products' element={<AddProducts />}/>
+          <Route path='pricing' element={<Pricing />} />
         </Route>
         <Route path='/store/:handle' element={<Store />} />
         <Route path='*' element={<div className='flex items-center justify-center h-100'>

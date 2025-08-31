@@ -45,14 +45,31 @@ const StoreInfo = () => {
     fetchStoreInfo();
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === 'storeLogo' && files[0]) {
-      uploadImage(files[0]);
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
+      const handleChange = (e) => {
+      const { name, value, files } = e.target;
+
+      if (name === "storeLogo" && files[0]) {
+        uploadImage(files[0]);
+      } else {
+        let newValue = value;
+
+        if (name === "handle") {
+          newValue = newValue
+            .replace(/[^a-zA-Z0-9\s-]/g, "") // allow only letters, numbers, spaces, and dashes
+            .replace(/\s+/g, "-")            // replace spaces with -
+            .replace(/-+/g, "-")             // collapse multiple dashes
+            .replace(/^-+|-+$/g, "-")         // trim leading/trailing -
+            .toLowerCase();                  // make lowercase
+        }
+
+        setFormData({
+          ...formData,
+          [name]: newValue,
+        });
+      }
+    };
+
+
 
   const uploadImage = async (file) => {
     setUploading(true);
@@ -102,7 +119,7 @@ const StoreInfo = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto md:p-6">
+    <div className="max-w-6xl mx-auto md:py-6">
        {loading && <div
             className={`fixed inset-0 z-50 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}
             >
@@ -111,7 +128,7 @@ const StoreInfo = () => {
 
             </div>
       </div>}
-      <h2 className="text-3xl font-bold mb-8 mt-4 text-gray-800">Store Information</h2>
+      <h2 className="text-2xl font-bold mb-4 mt-4 text-gray-800">Store Information</h2>
       <div className="grid lg:grid-cols-2 gap-10">
         
         {/* Left: Polished Form */}
@@ -130,22 +147,25 @@ const StoreInfo = () => {
                   name="fullname"
                   value={formData.fullname}
                   onChange={handleChange}
-                  placeholder="Ex. Ige Abdullahi Olajide"
+                  placeholder="Your Full Name"
                   required
                   className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-600 mb-1">WhatsApp Number</label>
-                <input
-                  type="tel"
-                  name="whatsappNumber"
-                  value={formData.whatsappNumber}
-                  onChange={handleChange}
-                  placeholder="Ex. 09039848284"
-                  required
-                  className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
-                />
+               <input
+                type="tel"
+                name="whatsappNumber"
+                value={formData.whatsappNumber}
+                minLength={11}
+                maxLength={15} 
+                onChange={handleChange}
+                placeholder="Ex. 09039848284"
+                required
+                className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+              />
+
               </div>
             </div>
           </div>
@@ -158,6 +178,8 @@ const StoreInfo = () => {
               type="tel"
               name="phoneNumber"
               value={formData.phoneNumber}
+              minLength={11}
+              maxLength={15} 
               onChange={handleChange}
               placeholder="Ex. 09039848284"
               required
@@ -175,7 +197,7 @@ const StoreInfo = () => {
                 name="storeName"
                 value={formData.storeName}
                 onChange={handleChange}
-                placeholder="Ex. Your Highnesse's Wears"
+                placeholder="Ex. Ordorra store"
                 required
                 className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
               />
@@ -185,12 +207,13 @@ const StoreInfo = () => {
                 name="handle"
                 value={formData.handle}
                 onChange={handleChange}
-                placeholder="Ex. your-highnesses-wears"
+                placeholder="Ex. ordorra-store"
                 required
                 disabled={isEditing}
                 className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-60 transition"
               />
-              <label className="block text-sm font-medium text-gray-600 mb-1">Description</label>
+              <div className='-mt-3 text-gray-500'><small>{`${window.location.origin}/store/${formData.handle}`}</small></div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">Tagline</label>
               <textarea
                 name="storeBio"
                 value={formData.storeBio}

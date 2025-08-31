@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const auth = require('./routes/auth')
 const productRoutes = require('./routes/products');
 const storeInfos = require('./routes/storeInfos');
+const subscriptionRoutes = require("./routes/subscription");
 app.use(cors())
 app.use(express.json())
 
@@ -18,6 +19,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/auth', auth)
 app.use('/api/products', productRoutes);
 app.use('/api/store', storeInfos);
+app.use("/api/subscription", subscriptionRoutes);
 app.use((req, res)=>{
     res.status(404).send('Page Not Found')
 })

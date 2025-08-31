@@ -85,7 +85,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-gray-50 p-4 md:p-8">
+    <div className="min-h-[100dvh] bg-gray-50 py-4 md:py-8">
       {/* Backdrop */}
       <div
         className={`fixed inset-0 bg-black/30 transition-opacity duration-300 ${
@@ -93,17 +93,25 @@ const Dashboard = () => {
         }`}
         onClick={() => setShow(false)}
       ></div>
+      {loading && 
+     <div className={`fixed inset-0 min-h-screen z-50 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}>
+            <div className="h-13 w-13 border absolute border-5 rounded-4xl border-b-transparent border-green-600 animate-spin">
+
+            </div>
+      </div>
+      }
 
       {/* Header */}
       <section className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
         <button
-          className="cursor-pointer flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg px-4 py-2 shadow transition"
+          className="text-sm cursor-pointer flex items-center md:gap-2 gap-1 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg px-2md: px-4 py-2 shadow transition"
           onClick={() => setShow(true)}
         >
-          <span className="text-lg">+</span> Add Product
+          <span className="md:text-lg flex items-center">+</span> Add Product
         </button>
       </section>
+      
 
       {/* Store Link */}
       
@@ -126,7 +134,7 @@ const Dashboard = () => {
         </section>
       {/* )} */}
       {!loading && (
-        <section className="mb-8 p-4 bg-white border border-gray-300 rounded-lg shadow-sm flex items-center justify-between">
+        <section className="md:w-fit mb-8 p-4 bg-white border border-gray-300 rounded-lg shadow-sm flex items-center justify-between">
           
           {storeInfo ? (
             <>
@@ -136,7 +144,7 @@ const Dashboard = () => {
                   href={`${window.location.origin}/store/${handle}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-green-600 hover:underline break-all"
+                  className="text-green-600 hover:underline break-all text-sm md:text-base"
                 >
                   {`${window.location.origin}/store/${handle}`}
                 </a>
@@ -167,7 +175,7 @@ const Dashboard = () => {
 
       {/* Add Product Modal */}
       <section
-        className={`fixed top-0 right-0 bg-white p-4 md:p-6 h-[100dvh] w-full md:w-[400px] shadow-xl transform transition-transform duration-300 overflow-y-auto h-full  ${
+        className={`fixed top-0 right-0 bg-white p-4 md:p-6 h-[100dvh] w-full md:w-[400px] shadow-xl transform transition-transform duration-300 overflow-y-auto h-full z-10  ${
           show ? "translate-x-0" : "translate-x-full"
         }`}
       >

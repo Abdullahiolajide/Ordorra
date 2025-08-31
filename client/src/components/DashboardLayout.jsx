@@ -6,7 +6,7 @@ import { AiFillHome } from 'react-icons/ai';
 import { IoIosSettings } from 'react-icons/io';
 import capitalize from 'just-capitalize';
 import { MdBrandingWatermark } from 'react-icons/md';
-import { IoLogOut } from 'react-icons/io5';
+import { IoLogOut, IoPersonCircle } from 'react-icons/io5';
 
 const RefreshContext = createContext()
 
@@ -26,7 +26,7 @@ const DashboardLayout = () => {
   }, []);
 
   return (
-    <div className="dashboard-container lg:flex bg-gray-50 ">
+    <div className="dashboard-container lg:flex bg-gray-50 text-sm md:text-base">
        <div className="h-16 w-64 bg-transparent hidden lg:block"></div>
       <section className='hidden lg:block border border-gray-300 h-[100vh] w-52 px-2 py-4 fixed bg-white'>
   <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
@@ -75,14 +75,24 @@ const DashboardLayout = () => {
   </ul>
 </section>
 
-      <div className='h-14 bg-transparent'></div>
-        <header className='p-3 border border-gray-300 flex justify-center lg:hidden fixed z-10 w-full top-0 bg-white/70'>
+       <div className='h-14'></div>
+        <header className='p-3 border border-gray-300 flex justify-between idden fixed z-10 w-full top-0 bg-white'>
           {/* <div className='text-2xl font-medium md:text-3xl'>{capitalize(path[path.length -1])} </div> */}
           <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
+          <div className='flex'>
+            <div className="mb-2 flex items-center h-full">
+              <Link to={'pricing'}>
+                <button className='text-green-600 px-2 cursor-pointer hover:text-green-800'>Upgrade plan</button>
+              </Link>
+            </div>
+            <div className='flex items-center text-3xl'><IoPersonCircle /></div>
+          </div>
+        
         </header>
+     
       <main className='px-4 w-full'>
 
-       <div className="mb-20 min-h-screen">
+       <div className="mb-20 min-h-screen lg:mt-10 text-sm md:text-base">
         <RefreshContext.Provider value={{ refresh, setRefresh }}>
           <Outlet />
         </RefreshContext.Provider>

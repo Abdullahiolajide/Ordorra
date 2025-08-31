@@ -8,6 +8,7 @@ import { HiOutlineShoppingBag } from 'react-icons/hi'
 import { FiShoppingCart } from "react-icons/fi";
 import { FaTrash, FaWhatsapp } from "react-icons/fa";
 import { CiAirportSign1 } from "react-icons/ci";
+import { MdAddShoppingCart } from "react-icons/md";
 
 const Store = () => {
   const params = useParams()
@@ -398,13 +399,13 @@ const Store = () => {
         {products.map((product, i) => (
           <div
             key={product._id}
-            className="bg-white rounded-lg  border border-gray-300 transition overflow-hidden cursor-pointer"
+            className="bg-white rounded-lg  border border-gray-300 transition overflow-hidden "
            
           >
             <img
               src={product.imageUrl}
               alt={product.name}
-              className="w-full h-32 md:h-42 lg:h-48 object-cover"
+              className="w-full h-32 md:h-42 lg:h-48 object-cover cursor-pointer"
                onClick={()=> {
               
               setCurrentProductIndex(i)
@@ -413,18 +414,24 @@ const Store = () => {
               
             />
             <div className="p-2 md:p-4">
-              <h3 className="text-xs md:text-sm lg:text-base font-medium text-gray-800">
+              <h3 className="text-xs md:text-sm lg:text-base font-medium text-gray-800 cursor-pointer"
+                onClick={()=> {
+              
+              setCurrentProductIndex(i)
+              setShowProductModal(true)
+            }}
+              >
                 {product.name}
               </h3>
               <p className="text-green-600 fo nt-medium text-sm md:text-base mt-1">₦
                 {thousandify(product.price)}</p>
 
               {!cartArray.find(cart=> cart.id == product._id)?.quantity ?
-               <button className="cursor-pointer mt-3 w-full bg-gray-300/60 hover:text-white text-xs md:text-sm lg:text-base py-2 md:py-2 rounded-sm hover:bg-green-600 transition" onClick={(e)=> {
+               <button className="cursor-pointer mt-3 w-full text-white hover:text-white text-xs md:text-sm lg:text-base py-2 md:py-2 rounded-sm bg-green-500 hover:bg-green-600 transition flex items-center justify-center " onClick={(e)=> {
                 e.stopPropagation()
                 addToCart(i, null)
               }}>
-                Add to Cart
+                <MdAddShoppingCart className="text-md md:text-xl me-1 md:me-3"/>Add to Cart
               </button>
               :
               <div className="w-4/6 flex felx-col justify-between mt-3 mx-auto">
