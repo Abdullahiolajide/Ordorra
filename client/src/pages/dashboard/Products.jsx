@@ -90,14 +90,14 @@ const Products = () => {
 
     {/* Search & Add */}
     <div className='rounded shadow'>
-      <div className="p-2 flex text-sm flex justify-between bg-white">
+      <div className="p-2 flex text-sm flex gap-2 justify-between bg-white">
       <input
         type="text"
         placeholder="Search Product"
-        className=" w-fit border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+        className="w-4/6 md:w-fit border border-gray-300 rounded-lg py-2 px-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition"
       />
       <button
-        className="whitespace-nowrap flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg px-4 py-3 transition"
+        className="whitespace-nowrap flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg px-2 md:px-4 py-2 md:py-3  transition"
         onClick={() => setShow(true)}
       >
         <IoAddOutline className="text-xl whitespace-nowrap
