@@ -15,7 +15,9 @@ const AddProducts = ({productInfo = null}) => {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false)
   const fileInputRef = useRef(null);
-  const {setRefresh} = useContext(RefreshContext)
+  
+  //  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false)
+  const {setRefresh, pl, isSubscribed, setShowSModal} = useContext(RefreshContext)
 
   useEffect(()=>{
     if (productInfo) {
@@ -29,6 +31,8 @@ const AddProducts = ({productInfo = null}) => {
       })
     }
   }, [productInfo])
+
+  
   
 
   const handleChange = (e) => {
@@ -70,6 +74,18 @@ const uploadImageToCloudinary = async (file) => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
+  console.log('started', pl)
+      if (!isSubscribed && pl >= 4) {
+        console.log(isSubscribed)
+        setShowSModal(true)
+        return
+      }
+      console.log('continued')
+  //  if (subscription.status != 'active' && userProducts.length >= 4){
+  //         toast.info('You have exceeded your product limit')
+  //         return setShowSubscriptionModal(true)
+  //       }
+
   const { name, price, description, imageUrl } = formData;
   setSaving(true)
   if(productInfo){

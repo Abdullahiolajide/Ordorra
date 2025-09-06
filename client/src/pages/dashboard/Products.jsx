@@ -7,6 +7,7 @@ import { IoIosClose } from 'react-icons/io'
 import AddProducts from './AddProducts'
 import { RefreshContext } from '../../components/DashboardLayout'
 import { SlOptionsVertical } from 'react-icons/sl'
+import { toast } from 'react-toastify'
 
 const Products = () => {
   const [userProducts, setUserProducts] = useState([])
@@ -14,11 +15,14 @@ const Products = () => {
   const [actions, setActions] = useState(null)
   const [productInfo, setProductInfo] = useState(null)
   const [loading, setLoading] = useState(false)
-  const { refresh } = useContext(RefreshContext)
+  const [subscription, setSubscription] = useState({})
+  // const [showSubscriptionModal, setShowSubscriptionModal] = useState(false)
+  const { refresh, isSubscribed, setShowSModal } = useContext(RefreshContext)
 
   useEffect(()=>{
     getProducts()
   }, [refresh])
+ 
 
     const getProducts = async () => {
       const token = localStorage.getItem('token'); 
@@ -60,6 +64,24 @@ const Products = () => {
       }
     };
 
+    
+    // const showAddSlider = ()=>{
+    //   // if (subscription.status != 'active' && userProducts.length >= 4){
+    //   //   toast.info('You have exceeded your product limit')
+    //   //   return setShowSubscriptionModal(true)
+    //   // }
+
+    //   setShow(true)
+    // }
+    const paywallCheck = ()=>{
+      if (!isSubscribed && userProducts.length >= 4) {
+        console.log(isSubscribed)
+        setShowSModal(true)
+        return false
+      }
+      return true
+    }
+
 
 
 
@@ -98,7 +120,7 @@ const Products = () => {
       />
       <button
         className="whitespace-nowrap flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg px-2 md:px-4 py-2 md:py-3  transition"
-        onClick={() => setShow(true)}
+        onClick={()=> paywallCheck() ? setShow(true) : ''}
       >
         <IoAddOutline className="text-xl whitespace-nowrap
 " /> Add Product

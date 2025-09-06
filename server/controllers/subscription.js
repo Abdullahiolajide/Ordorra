@@ -5,18 +5,18 @@ const startSubscription = async (req, res) => {
   try {
     const planCode = 'PLN_1a0anpb9m9vmgu8'; 
     const user = await User.findById(req.user.userId);
-    const hasActiveSubscription = await Subscription.findOne({
-      userId: req.user.userId,
-      status: "active",
-    });
+    // const hasActiveSubscription = await Subscription.findOne({
+    //   userId: req.user.userId,
+    //   status: "active",
+    // });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-    if(hasActiveSubscription){
-      return res.status(401).json({ error: "You already have an active subscription" });
+    // if(hasActiveSubscription){
+    //   return res.status(409).json({ error: "You already have an active subscription" });
 
-    }
+    // }
   
 
     // Initialize transaction with Paystack
@@ -91,7 +91,7 @@ const cancelSubscription = async (req, res) => {
 
 const getSubscriptionStatus = async (req, res) => {
   try {
-    const subscription = await Subscription.findOne({ userId: req.user.id }).sort({ createdAt: -1 });
+    const subscription = await Subscription.findOne({ userId: req.user.userId }).sort({ createdAt: -1 });
 
     if (!subscription) {
       return res.status(404).json({ success: false, message: "No subscription found" });

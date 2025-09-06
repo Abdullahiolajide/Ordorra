@@ -2,11 +2,13 @@ import React, { createContext, useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Icon from './Icon';
 import { TbLayoutDashboardFilled, TbPackages } from 'react-icons/tb';
-import { AiFillHome } from 'react-icons/ai';
+import { AiFillHome, AiOutlineClose } from 'react-icons/ai';
 import { IoIosSettings } from 'react-icons/io';
 import capitalize from 'just-capitalize';
 import { MdBrandingWatermark } from 'react-icons/md';
 import { IoLogOut, IoPersonCircle } from 'react-icons/io5';
+import axios from 'axios';
+import { backendurl } from '../../global';
 
 const RefreshContext = createContext()
 
@@ -16,17 +18,124 @@ const DashboardLayout = () => {
   const params= useParams()
   const path = location.pathname.split('/')
   const [refresh, setRefresh] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(false)
+  const [showSModal, setShowSModal] = useState(false)
+  const [pl, setPl] = useState(0)
 
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
-      navigate('/signin'); // redirect to login if no token
+      navigate('/signin');
     }
   }, []);
 
+   useEffect(()=>{
+      getSubscriptionStatus()
+    }, [])
+    useEffect(()=>{
+      getProducts()
+    }, [refresh])
+
+  const getSubscriptionStatus = async () => {
+        const token = localStorage.getItem('token'); 
+  
+        try {
+          const res = await axios.get(`${backendurl}/subscription/status`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+  
+          const subscription = res.data.subscription;
+          if (subscription.status == 'active') {
+            setIsSubscribed(true)
+          }else{
+            setIsSubscribed(false)
+          }
+
+        } catch (error) {
+          console.error('Error fetching subscription status:', error.response?.data || error);
+        }
+        
+      };
+      const getProducts = async () => {
+      const token = localStorage.getItem('token'); 
+      // setLoading(true)
+
+      try {
+        const res = await axios.get(`${backendurl}/products/get-products`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setPl(res.data.length)
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+      // finally{
+      //   setLoading(false)
+      // }
+    };
+
   return (
     <div className="dashboard-container lg:flex bg-gray-50 text-sm md:text-base">
+
+      {showSModal && <div className="w-full h-screen bg-black/50 fixed top-0 left-0 z-100 flex items-center justify-center">
+      <div className="w-[450px] bg-white rounded-2xl shadow-lg p-6 relative">
+        {/* Cancel Button */}
+        <button
+          onClick={() => setShowSModal(false)}
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 cursor-pointer"
+        >
+          <AiOutlineClose size={22} />
+        </button>
+
+        {/* Title */}
+        <h2 className="text-2xl font-bold mb-3 text-gray-800">
+          Subscribe to Ordorra
+        </h2>
+
+        {/* Message */}
+        <p className="text-gray-600 mb-5 leading-relaxed">
+          You’ve reached the maximum number of products allowed on your current
+          plan. To keep adding more products and unlock premium features, please
+          upgrade your subscription.
+        </p>
+
+        {/* Features / Benefits */}
+        <ul className="mb-6 space-y-2 text-gray-700">
+          <li className="flex items-center gap-2">
+             ✅ <b>Add unlimited products now!</b>
+          </li>
+          {/* <li className="flex items-center gap-2">
+            ✅ Get a personalized store link
+          </li> */}
+          {/* <li className="flex items-center gap-2">
+            ✅ Priority customer support
+          </li> */}
+        </ul>
+
+        {/* Action Buttons */}
+        <div className="flex gap-3">
+          <button
+            onClick={() => setShowSModal(false)}
+            className="cursor-pointer w-1/2 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-100 transition"
+          >
+            Maybe Later
+          </button>
+          <Link to={'pricing'} className='w-1/2'>
+          <button
+            className="cursor-pointer w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition"
+            onClick={() => setShowSModal(false)}
+          >
+            Upgrade Now
+          </button></Link>
+        </div>
+      </div>
+    </div>}
+
        <div className="h-16 w-64 bg-transparent hidden lg:block"></div>
       <section className='hidden lg:block border border-gray-300 h-[100vh] w-52 px-2 py-4 fixed bg-white'>
   <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
@@ -93,7 +202,7 @@ const DashboardLayout = () => {
       <main className='px-4 w-full'>
 
        <div className="mb-20 min-h-screen lg:mt-10 text-sm md:text-base">
-        <RefreshContext.Provider value={{ refresh, setRefresh }}>
+        <RefreshContext.Provider value={{ refresh, setRefresh, isSubscribed, setShowSModal, pl }}>
           <Outlet />
         </RefreshContext.Provider>
       </div>

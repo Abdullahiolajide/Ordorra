@@ -25,11 +25,10 @@ const Pricing = () => {
   const handleSubscribe = async () => {
   try {
     const token = localStorage.getItem("token");
-    console.log("Token:", token);
 
     const res = await axios.post(
       `${backendurl}/subscription/start`,
-      {}, // request body (empty since you don’t send data here)
+      {},
       {
         headers: { Authorization: `Bearer ${token}` }
       }
@@ -37,13 +36,14 @@ const Pricing = () => {
 
     if (res.data.authorization_url) {
       window.location.href = res.data.authorization_url;
-    } else {
-      alert("Failed to start subscription");
     }
   } catch (err) {
-    console.log(err.response?.data || err.message);
-    toast.error('You already have an active Subscription')
-    alert("Error starting subscription");
+    // console.log(err.response?.data || err.message);
+    toast.error(
+      <div>
+        <h1>{err.response?.data.error || err.message}</h1>
+      </div>
+      )
   }
 };
 

@@ -14,7 +14,7 @@ const createProduct = async (req, res) => {
       price,
       description,
       imageUrl,
-      ownerId: req.user.userId, // assuming you're using authentication middleware
+      ownerId: req.user.userId,
     });
 
     await product.save();
