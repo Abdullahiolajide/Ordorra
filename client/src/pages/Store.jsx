@@ -198,7 +198,7 @@ const Store = () => {
                      Add to Cart
                   </button> */}
                 {!cartArray.find(cart=> cart.id == products[currentProductIndex]._id)?.quantity ?
-               <button className="cursor-pointer mt-3 w-full bg-gray-300/60 hover:text-white text-xs md:text-sm lg:text-base py-2 md:py-2 rounded-sm hover:bg-green-600 transition" onClick={(e)=> {
+               <button className="cursor-pointer mt-3 w-full bg-gray-300/60 hover:text-white md:text-sm lg:text-base py-2 md:py-2 rounded-sm hover:bg-green-600 transition" onClick={(e)=> {
                 e.stopPropagation()
                 addToCart(currentProductIndex, null)
               }}>
@@ -206,7 +206,7 @@ const Store = () => {
               </button>
               :
               <div className="w-4/6 flex felx-col justify-between mt-3 mx-auto">
-                <button className="w-8 h-8 md:h-9 md:w-9 text-xs p-2 rounded md:px-4 py-1 md:py-2 md:text-sm flex items-center justify-center bg-gray-300/60 hover:bg-green-600 hover:text-white cursor-pointer"
+                <button className="w-8 h-8 md:h-9 md:w-9  p-2 rounded md:px-4 py-1 md:py-2 md:text-sm flex items-center justify-center bg-gray-300/60 hover:bg-green-600 hover:text-white cursor-pointer"
                     onClick={(e)=>{
                       e.stopPropagation()
                       addToCart(currentProductIndex)
@@ -215,11 +215,11 @@ const Store = () => {
                     + 
                 </button>
 
-                <div className="text-xs md:text-sm flex items-center justify-center">
+                <div className=" md:text-sm flex items-center justify-center">
                   {cartArray.find(cart=> cart.id == products[currentProductIndex]._id)?.quantity}
                 </div>
 
-                <button className="w-8 h-8 md:h-9 md:w-9 text-xs p-2 rounded md:px-4 py-1 md:py-2 md:text-sm flex items-center justify-center bg-gray-300/60 hover:bg-green-600 hover:text-white cursor-pointer" 
+                <button className="w-8 h-8 md:h-9 md:w-9 p-2 rounded md:px-4 py-1 md:py-2 md:text-sm flex items-center justify-center bg-gray-300/60 hover:bg-green-600 hover:text-white cursor-pointer" 
                   onClick={(e)=>{
                     e.stopPropagation()
                     substractFromCart(currentProductIndex, null)
@@ -260,6 +260,7 @@ const Store = () => {
           />
       }
    
+          {/* Slider  */}
 
           <main className={`overflow-y-auto w-full h-[100dvh] fixed top-0 z-100 bg-white md:max-w-sm w-full absolute top-0 right-0 shadow-2xl flex flex-col duration-300 transition-transform ${showCart ? 'translate-x-0' : 'translate-x-full'}`}>
             {/* Header */}
@@ -354,11 +355,13 @@ const Store = () => {
 
 
 
-      {/* // loader  */}
-      <nav className="z-10 bg-white/80 backdrop-blur-md px-10 py-4 shadow-md fixed w-full">
+      <nav className="z-10 bg-white/80 backdrop-blur-md px-10 py-4 shadow-sm fixed w-full">
         <div className="max-w-[1100px] flex justify-between items-center mx-auto">
           <h1 className="flex items-center gap-2 font-semibold text-lg md:text-xl text-green-900">
-            <HiOutlineShoppingBag className="text-green-700 text-xl" />
+            {/* <HiOutlineShoppingBag className="text-green-700 text-xl" /> */}
+            <div className="w-10 h-10 rounded-3xl border overflow-hidden">
+              <img src={store.storeLogo} alt="" className="w-10" />
+            </div>
             {store.storeName}
           </h1>
           <button className="relative flex items-center cursor-pointer hover:bg-gray-100 p-2 rounded-3xl" 
@@ -374,33 +377,35 @@ const Store = () => {
       <div className="h-18"></div>
 
         {/* Store Hero */}
-        <div className="py-12 px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-12 mb-12 max-w-6xl mx-auto">
+        {/* <div className="py-12 px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-12 mb-12 mx-auto  bg-red-500"> */}
+        <div className="bg-green-500/70 py-30">
           {/* Text */}
-          <div className="flex-1 text-center lg:text-left">
+          {/* <div className="flex-1 text-center lg:text-left">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{store.storeName}</h1>
             <p className="mt-4 text-xl md:text-2xl lg:text-3xl text-gray-700 leading-snug">
               {store.storeBio}
             </p>
-          </div>
+          </div> */}
+          <p className="lg:text-4xl md:text-3xl text-2xl font-medium text-center">{store.storeBio || "Welcome"}</p>
 
           {/* Logo */}
-          <div className="flex-1 flex justify-center lg:justify-end">
+          {/* <div className="flex-1 flex justify-center lg:justify-end">
             <div className="rounded-2xl overflow-hidden shadow-lg w-40 h-40 flex items-center justify-center bg-gray-50">
               <img src={store.storeLogo} alt="" className="w-full h-full object-contain" />
             </div>
-          </div>
+          </div> */}
         </div>
 
 
       
 
-   
+            <div className="max-w-6xl mx-auto px-6 lg:text-3xl md:text-2xl text-xl mt-10">Feaured Products</div>
       <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6 gap-2">
         
         {products.map((product, i) => (
           <div
             key={product._id}
-            className="bg-white rounded-lg  border border-gray-300 transition overflow-hidden "
+            className="bg-white rounded-xl hover:scale-105  borde border-gray-300 transition overflow-hidden "
            
           >
             <img
@@ -415,7 +420,7 @@ const Store = () => {
               
             />
             <div className="p-2 md:p-4">
-              <h3 className="text-xs md:text-sm lg:text-base font-medium text-gray-800 cursor-pointer"
+              <h3 className="text-sm md:text-sm lg:text-base font-medium text-gray-800 cursor-pointer"
                 onClick={()=> {
               
               setCurrentProductIndex(i)
@@ -428,11 +433,11 @@ const Store = () => {
                 {thousandify(product.price)}</p>
 
               {!cartArray.find(cart=> cart.id == product._id)?.quantity ?
-               <button className="cursor-pointer mt-3 w-full text-white hover:text-white text-xs md:text-sm lg:text-base py-2 md:py-2 rounded-sm bg-green-500 hover:bg-green-600 transition flex items-center justify-center " onClick={(e)=> {
+               <button className="cursor-pointer mt-3 w-full text-white hover:text-white text-sm md:text-sm lg:text-base py-2 md:py-2 rounded-sm bg-green-500 hover:bg-green-600 transition flex items-center justify-center " onClick={(e)=> {
                 e.stopPropagation()
                 addToCart(i, null)
               }}>
-                <MdAddShoppingCart className="text-md md:text-xl me-1 md:me-3"/>Add to Cart
+                <MdAddShoppingCart className=" md:text-xl me-1 md:me-3"/>Add to Cart
               </button>
               :
               <div className="w-4/6 flex felx-col justify-between mt-3 mx-auto">
