@@ -26,6 +26,12 @@ app.use((req, res)=>{
     res.status(404).send('Page Not Found')
 })
 
-app.listen(PORT, ()=>{
-    console.log(`Server is running at port ${PORT}`)
-})
+const start = async ()=>{
+    try{
+        await mongoose.connect(process.env.MONGO_URI)
+        app.listen(PORT, ()=> console.log(`server is listeneing  at ${PORT}`))
+    }catch(error){
+        console.log(error)
+    }
+}
+start()
