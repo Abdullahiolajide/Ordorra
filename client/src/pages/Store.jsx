@@ -83,6 +83,7 @@ const Store = () => {
 
         return currentCart
       })
+      setShowCart(true)
     }
 
     const substractFromCart =(i, ci)=>{

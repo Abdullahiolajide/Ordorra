@@ -11,7 +11,7 @@ const Pricing = () => {
     const plans = [
       {
         name: "Free",
-        price: "₦0",
+        price: "0",
         description: "Basic access with limited features",
       },
       {
@@ -59,7 +59,7 @@ if (!planIndex) {
             className="p-6 bg-white shadow-lg rounded-2xl text-center"
           >
             <h3 className="text-xl font-semibold">{plan.name}</h3>
-            <p className="text-2xl font-semibold my-4">{plan.price} <span className="text-base">/month</span></p>
+            <p className="text-2xl font-semibold my-4">₦{thousandify(plan.price)} <span className="text-base">/month</span></p>
             <p className="text-gray-600 mb-6">{plan.description}</p>
             <button
               onClick={()=> setPlanIndex(i)}
