@@ -52,7 +52,7 @@ const Store = () => {
     }, [])
     useEffect(()=>{
        let total = 0
-      if (cartArray.length > 0){
+      if (cartArray.filter(cart=> cart.ownerId == store.user).length > 0){
         for (let i = 0; i < cartArray.length; i++) {
           total += cartArray[i].price * cartArray[i].quantity
           
@@ -74,6 +74,7 @@ const Store = () => {
           currentCart[productIndex].quantity += 1
         } else {
           currentCart.push({
+            ownerId: products[i]?.ownerId,
             id: products[i]?._id,
             price: products[i]?.price,
             quantity: 1
@@ -277,8 +278,12 @@ const Store = () => {
             </header>
 
             {
-              cartArray.map((cart, ci)=>{
+          
+              // cartArray.map((cart, ci)=>{
+              cartArray.filter(cart=> cart.ownerId == store.user).map((cart, ci)=>{
                 let cartProduct = products.find(product=> product._id == cart.id)
+                console.log(store)
+                console.log(cartArray)
                 return(
                 // {/* Cart Items */}
                 <div className="px-5 py-3 space-y-4" key={cart.id}>
@@ -324,7 +329,7 @@ const Store = () => {
               })
             }
 
-            {cartArray.length < 1 &&
+            {cartArray.filter(cart=> cart.ownerId == store.user).length < 1 &&
               <div className="w-full h-full flex items-center justify-center">
                 <div className="flex flex-col justify-center space-y-3">
                   <p className="text-xl text-gray-400">Your cart is empty</p>
@@ -369,7 +374,7 @@ const Store = () => {
             <FiShoppingCart className="text-2xl" />
             
               <div className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow">
-                {cartArray.length}
+                {cartArray.filter(cart=> cart.ownerId == store.user).length}
               </div>
           </button>
         </div>
@@ -378,7 +383,7 @@ const Store = () => {
 
         {/* Store Hero */}
         {/* <div className="py-12 px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-12 mb-12 mx-auto  bg-red-500"> */}
-        <div className="bg-green-500/70 py-30">
+        <div className="py-30 relative overflow-hidden">
           {/* Text */}
           {/* <div className="flex-1 text-center lg:text-left">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{store.storeName}</h1>
@@ -386,7 +391,9 @@ const Store = () => {
               {store.storeBio}
             </p>
           </div> */}
-          <p className="lg:text-4xl md:text-3xl text-2xl font-medium text-center">{store.storeBio || "Welcome"}</p>
+          <img src={store.storeLogo} alt="" className="absolute top-0 h-ful top-0 w-full"/>
+          <div className="absolute w-full h-full bg-black/60 top-0 "></div>
+          <p className="absolute flex w-full h-full items-center justify-center top-0 lg:text-4xl md:text-3xl text-2xl font-medium text-white ">{store.storeBio || "Welcome"}</p>
 
           {/* Logo */}
           {/* <div className="flex-1 flex justify-center lg:justify-end">

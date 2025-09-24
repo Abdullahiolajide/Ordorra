@@ -54,6 +54,7 @@ const Dashboard = () => {
         }
       };
   
+    //  if (stats.products > 0) fetchStoreInfo();
       fetchStoreInfo();
     }, []);
 
