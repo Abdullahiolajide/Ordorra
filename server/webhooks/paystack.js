@@ -26,6 +26,7 @@ router.post("/paystack/webhook", express.json({ type: "application/json"}), asyn
           status: event.data.status, // e.g. "active"
           subscriptionCode: event.data.subscription_code,
           emailToken: event.data.email_token,
+          subscriptionUrl: event.data.subscription_url,
         },
         { upsert: true, new: true }
       );

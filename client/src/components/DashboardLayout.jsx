@@ -48,6 +48,7 @@ const DashboardLayout = () => {
           });
   
           const subscription = res.data.subscription;
+          console.log(subscription)
           if (subscription.status == 'active') {
             setIsSubscribed(true)
           }else{

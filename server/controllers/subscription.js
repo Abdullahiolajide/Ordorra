@@ -91,7 +91,7 @@ const cancelSubscription = async (req, res) => {
 
 const getSubscriptionStatus = async (req, res) => {
   try {
-    const subscription = await Subscription.findOne({ userId: req.user.userId }).sort({ createdAt: -1 });
+    const subscription = await Subscription.findOne({ userId: req.user.userId });
 
     if (!subscription) {
       return res.status(404).json({ success: false, message: "No subscription found" });
