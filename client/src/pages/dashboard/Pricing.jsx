@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { backendurl } from "../../../global";
 import axios from "axios";
 import thousandify from 'thousandify'
 import { FaRegCircleCheck } from "react-icons/fa6";
 import { toast } from "react-toastify";
+import { RefreshContext } from "../../components/DashboardLayout";
 
 
 const Pricing = () => {
   const [planIndex, setPlanIndex] = useState(null)
+  const {isSubscribed} =  useContext(RefreshContext)
     const plans = [
       {
         name: "Free",
@@ -65,7 +67,10 @@ if (!planIndex) {
               onClick={()=> setPlanIndex(i)}
               className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer"
             >
-              {plan.name === "Free" ? "Current Plan" : "Select Plan"}
+              {/* {plan.name == 'Free' && !isSubscribed ? "Free Plan" : "Select Plan"} */}
+              {plan.name == "Free" ? "Free Plan" :''}
+              {plan.name != 'Free' && isSubscribed ? "Current Plan" : ""}
+              {plan.name!= "Free" && !isSubscribed ? 'Select Plan' :''}
             </button>
           </div>
         ))}

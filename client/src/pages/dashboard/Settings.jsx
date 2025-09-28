@@ -111,6 +111,20 @@ const Settings = () => {
             Log Out 
           </button>
         </section>
+        <section className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+          <div className="flex items-center mb-4">
+            <FaLock className="text-green-500 text-lg mr-2" />
+            <h2 className="text-lg font-semibold">Subscription</h2>
+          </div>
+          <button className="cursor-pointer bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition"
+          onClick={()=> {
+            localStorage.removeItem('token')
+            navigate('/signin', {replace: true})
+          }}
+              >
+            Manage Subscription 
+          </button>
+        </section>
       </div>
     </div>
   );

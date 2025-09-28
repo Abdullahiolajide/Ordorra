@@ -383,7 +383,7 @@ const Store = () => {
 
         {/* Store Hero */}
         {/* <div className="py-12 px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-12 mb-12 mx-auto  bg-red-500"> */}
-        <div className="py-30 relative overflow-hidden">
+        <div className="py-40 relative overflow-hidden">
           {/* Text */}
           {/* <div className="flex-1 text-center lg:text-left">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{store.storeName}</h1>
