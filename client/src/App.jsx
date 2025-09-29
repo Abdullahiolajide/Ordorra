@@ -20,6 +20,7 @@ import AddProducts from './pages/dashboard/AddProducts'
 import StoreInfo from './pages/dashboard/StoreInfo'
 import Store from './pages/Store'
 import Pricing from './pages/dashboard/Pricing'
+import Subscriptions from './pages/dashboard/Subscriptions'
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
           <Route path='orders' element={<Orders />}/>
           <Route path='store-info' element={<StoreInfo />}/>
           <Route path='settings' element={<Settings />}/>
+          <Route path='settings/subscribtions/' element={<Subscriptions />}/>
           <Route path='add-products' element={<AddProducts />}/>
           <Route path='pricing' element={<Pricing />} />
         </Route>

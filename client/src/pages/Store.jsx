@@ -52,9 +52,10 @@ const Store = () => {
     }, [])
     useEffect(()=>{
        let total = 0
-      if (cartArray.filter(cart=> cart.ownerId == store.user).length > 0){
-        for (let i = 0; i < cartArray.length; i++) {
-          total += cartArray[i].price * cartArray[i].quantity
+       const ac = cartArray.filter(cart=> cart.ownerId == store.user)
+      if (ac.length > 0){
+        for (let i = 0; i < ac.length; i++) {
+          total += ac[i].price * ac[i].quantity
           
         }
         setTodalPrice(total)

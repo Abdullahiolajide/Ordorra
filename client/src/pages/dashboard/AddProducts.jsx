@@ -92,7 +92,7 @@ const handleSubmit = async (e) => {
     return updateProduct(productInfo._id, { name, price, description, imageUrl })
   }
 
-  if (!name || !price || !description || !imageUrl) {
+  if (!name || !price || !imageUrl) {
     return toast.info('All fields are required and image must be uploaded');
   }
 

@@ -20,6 +20,7 @@ const DashboardLayout = () => {
   const [refresh, setRefresh] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [showSModal, setShowSModal] = useState(false)
+  const [subscribtion, setSubscribtion] = useState('')
   const [pl, setPl] = useState(0)
 
 
@@ -48,6 +49,7 @@ const DashboardLayout = () => {
           });
   
           const subscription = res.data.subscription;
+          setSubscribtion(subscribtion)
           console.log(subscription)
           if (subscription.status == 'active') {
             setIsSubscribed(true)
@@ -192,7 +194,7 @@ const DashboardLayout = () => {
           <div className='flex'>
             <div className="mb-2 flex items-center h-full">
               <Link to={'pricing'}>
-                <button className='text-green-600 px-2 cursor-pointer hover:text-green-800'>Upgrade plan</button>
+                <button className='text-green-00 px-2 cursor-pointer hover:text-green-800'>Upgrade plan</button>
               </Link>
             </div>
             <div className='flex items-center text-3xl'><IoPersonCircle /></div>
@@ -202,8 +204,8 @@ const DashboardLayout = () => {
      
       <main className='px-4 w-full'>
 
-       <div className="mb-20 min-h-screen lg:mt-10 text-sm md:text-base">
-        <RefreshContext.Provider value={{ refresh, setRefresh, isSubscribed, setShowSModal, pl }}>
+       <div className=" min-h-screen lg:mt-10 text-sm md:text-base">
+        <RefreshContext.Provider value={{ refresh, setRefresh, isSubscribed, setShowSModal, pl, subscribtion }}>
           <Outlet />
         </RefreshContext.Provider>
       </div>

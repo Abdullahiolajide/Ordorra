@@ -116,10 +116,9 @@ const Settings = () => {
             <FaLock className="text-green-500 text-lg mr-2" />
             <h2 className="text-lg font-semibold">Subscription</h2>
           </div>
-          <button className="cursor-pointer bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition"
+          <button className="cursor-pointer bg-green-50 text-green-600 px-4 py-2 rounded-lg hover:bg-green-100 transition"
           onClick={()=> {
-            localStorage.removeItem('token')
-            navigate('/signin', {replace: true})
+            navigate('subscribtions')
           }}
               >
             Manage Subscription 

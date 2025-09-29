@@ -5,7 +5,7 @@ const createProduct = async (req, res) => {
   try {
     const { name, price, description, imageUrl } = req.body;
 
-    if (!name || !price || !description || !imageUrl) {
+    if (!name || !price || !imageUrl) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
