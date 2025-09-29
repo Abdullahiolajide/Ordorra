@@ -78,7 +78,7 @@ const ResetPassword = () => {
             <div className='flex flex-col my-4 '>
                 <label htmlFor="" className='text-sm py-1'>Reset Code</label>
                 <input 
-                type="text"
+                type="number"
                 name='code'
                 value={user?.code || ''}
                 className={`border ${clicked && !user.code ? 'border-red-600' : 'border-gray-400'} rounded px-3 py-2 w-full`} 
