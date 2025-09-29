@@ -3,11 +3,12 @@ const Product = require('../models/Product');
 // Create new product
 const createProduct = async (req, res) => {
   try {
-    const { name, price, description, imageUrl } = req.body;
+    let { name, price, description, imageUrl } = req.body;
 
     if (!name || !price || !imageUrl) {
       return res.status(400).json({ message: 'All fields are required' });
     }
+    // if (!description) description = ""
 
     const product = new Product({
       name,

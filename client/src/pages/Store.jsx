@@ -394,7 +394,7 @@ const Store = () => {
           </div> */}
           <img src={store.storeLogo} alt="" className="absolute top-0 h-ful top-0 w-full"/>
           <div className="absolute w-full h-full bg-black/60 top-0 "></div>
-          <p className="absolute flex w-full h-full items-center justify-center top-0 lg:text-4xl md:text-3xl text-2xl font-medium text-white ">{store.storeBio || "Welcome"}</p>
+          <p className="absolute flex w-full h-full items-center justify-center top-0 lg:text-4xl md:text-3xl text-2xl font-medium text-white text-center">{store.storeBio || "Welcome"}</p>
 
           {/* Logo */}
           {/* <div className="flex-1 flex justify-center lg:justify-end">
