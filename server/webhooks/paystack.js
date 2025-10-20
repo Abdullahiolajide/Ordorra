@@ -14,7 +14,7 @@ router.post("/paystack/webhook", express.json({ type: "application/json" }), asy
   }
 
   const event = req.body;
-  res.sendStatus(200); // ✅ Always acknowledge first
+  res.sendStatus(200);
 
   try {
     if (event.event === "subscription.create") {
@@ -22,19 +22,24 @@ router.post("/paystack/webhook", express.json({ type: "application/json" }), asy
       await Subscription.findOneAndUpdate(
         { email: event.data.customer.email },
         {
-          status: event.data.status, // usually "active"
+          status: event.data.status,
           subscriptionCode: event.data.subscription_code,
           emailToken: event.data.email_token,
           subscriptionUrl: event.data.subscription_url,
         },
+        {nextPaymentDate: event.data.next_payment_date},
         { new: true }
       );
       console.log("📌 Subscription created for:", event.data.customer.email);
-
+      
     } else if (event.event === "charge.success") {
-      // Mark subscription active if payment succeeded
+      const currentDate = new Date(event.data.created_at)
+      const nextPaymentDate = new Date(currentDate)
+      nextPaymentDate.setDate(currentDate.getDate() + 30)
+
       await Subscription.findOneAndUpdate(
         { email: event.data.customer.email },
+        {nextPaymentDate: nextPaymentDate},
         { status: "active" },
         { new: true }
       );

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 const Subscriptions = ()=>{
     const {Subscription, isSubscribed} = useContext(RefreshContext)
+    console.log(Subscription)
     if (isSubscribed){
         return (
             <div className='mt-20'>

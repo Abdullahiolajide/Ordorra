@@ -5,15 +5,16 @@ const subscriptionSchema = new mongoose.Schema(
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     email: { type: String, required: true },
 
-    // Paystack plan code (from your dashboard)
+
     planCode: { type: String, required: true },
 
     // Paystack subscription details
-    reference: { type: String, required: true }, // initial transaction reference
-    subscriptionCode: { type: String }, // returned by Paystack on successful subscription
-    emailToken: { type: String }, // needed to manage/cancel subscription
+    reference: { type: String, required: true },
+    subscriptionCode: { type: String }, 
+    emailToken: { type: String },
     subscriptionUrl: { type: String },
-    authorizationUrl: { type: String }, // needed to manage/cancel subscription
+    authorizationUrl: { type: String },
+    nextPaymentDate: {type: String},
 
     status: {
       type: String,

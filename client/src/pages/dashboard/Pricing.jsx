@@ -52,9 +52,9 @@ const Pricing = () => {
 
 if (!planIndex) {
   return (
-    <div className=" flex flex-col items-center p-6 bg-gray-50">
+    <div className=" min-h-[91vh] flex flex-col items-center p-6 bg-gray-50 mb-10">
       <h2 className="text-3xl font-bold mb-8 mt-10">Choose Your Plan</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl ">
         {plans.map((plan, i) => (
           <div
             key={plan.name}

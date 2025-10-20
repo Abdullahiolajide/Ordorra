@@ -204,7 +204,7 @@ const DashboardLayout = () => {
      
       <main className='px-4 w-full'>
 
-       <div className=" min-h-screen lg:mt-10 text-sm md:text-base">
+       <div className="min-h-sreen lg:t-10 text-sm md:text-base">
         <RefreshContext.Provider value={{ refresh, setRefresh, isSubscribed, setShowSModal, pl, subscribtion }}>
           <Outlet />
         </RefreshContext.Provider>

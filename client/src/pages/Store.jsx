@@ -119,18 +119,19 @@ const Store = () => {
     }
 
    const orderOnWhatsApp = () => {
+    const ac = cartArray.filter(cart=> cart.ownerId == store.user)
       if (!store.phoneNumber) return
 
       //Cary Summary
       let message = `Hello ${store.storeName},\nI would like to order:\n\n`
-      cartArray.forEach(item => {
+      ac.forEach(item => {
         const product = products.find(p => p._id === item.id)
         if (product) {
           message += `• ${product.name} (x${item.quantity}) - ₦${thousandify(item.price * item.quantity)}\n`
         }
       })
 
-      const total = cartArray.reduce(
+      const total = ac.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
       )
@@ -196,9 +197,6 @@ const Store = () => {
                </div>
 
                 <div className="sticky" >
-                    {/* <button className="cursor-pointer mt-3 w-full bg-green-500 text-xs md:text-sm lg:text-base text-white py-2 md:py-2 rounded-4xl hover:bg-green-600 transition">
-                     Add to Cart
-                  </button> */}
                 {!cartArray.find(cart=> cart.id == products[currentProductIndex]._id)?.quantity ?
                <button className="cursor-pointer mt-3 w-full bg-gray-300/60 hover:text-white md:text-sm lg:text-base py-2 md:py-2 rounded-sm hover:bg-green-600 transition" onClick={(e)=> {
                 e.stopPropagation()
@@ -383,25 +381,14 @@ const Store = () => {
       <div className="h-18"></div>
 
         {/* Store Hero */}
-        {/* <div className="py-12 px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-12 mb-12 mx-auto  bg-red-500"> */}
         <div className="py-40 relative overflow-hidden">
-          {/* Text */}
-          {/* <div className="flex-1 text-center lg:text-left">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{store.storeName}</h1>
-            <p className="mt-4 text-xl md:text-2xl lg:text-3xl text-gray-700 leading-snug">
-              {store.storeBio}
-            </p>
-          </div> */}
+        
           <img src={store.storeLogo} alt="" className="absolute top-0 h-ful top-0 w-full"/>
           <div className="absolute w-full h-full bg-black/60 top-0 "></div>
           <p className="absolute flex w-full h-full items-center justify-center top-0 lg:text-4xl md:text-3xl text-2xl font-medium text-white text-center">{store.storeBio || "Welcome"}</p>
 
-          {/* Logo */}
-          {/* <div className="flex-1 flex justify-center lg:justify-end">
-            <div className="rounded-2xl overflow-hidden shadow-lg w-40 h-40 flex items-center justify-center bg-gray-50">
-              <img src={store.storeLogo} alt="" className="w-full h-full object-contain" />
-            </div>
-          </div> */}
+  
+          
         </div>
 
 

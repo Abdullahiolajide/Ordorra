@@ -96,7 +96,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-[100dvh] bg-gray-50 py-4 md:py-8">
+    <div className="min-h-[91vh] bg-gray-50 py-4 md:py-6 lg:py-18">
       {/* Backdrop */}
       <div
         className={`fixed inset-0 bg-black/30 transition-opacity duration-300 ${
