@@ -26,8 +26,8 @@ router.post("/paystack/webhook", express.json({ type: "application/json" }), asy
           subscriptionCode: event.data.subscription_code,
           emailToken: event.data.email_token,
           subscriptionUrl: event.data.subscription_url,
+          nextPaymentDate: event.data.next_payment_date
         },
-        {nextPaymentDate: event.data.next_payment_date},
         { new: true }
       );
       console.log("📌 Subscription created for:", event.data.customer.email);
