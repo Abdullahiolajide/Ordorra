@@ -39,8 +39,11 @@ router.post("/paystack/webhook", express.json({ type: "application/json" }), asy
 
       await Subscription.findOneAndUpdate(
         { email: event.data.customer.email },
-        {nextPaymentDate: nextPaymentDate},
-        { status: "active" },
+        {
+          nextPaymentDate: nextPaymentDate,
+          status: "active"
+
+        },
         { new: true }
       );
       console.log("✅ Charge successful for:", event.data.customer.email);

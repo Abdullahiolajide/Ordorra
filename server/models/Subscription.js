@@ -14,7 +14,7 @@ const subscriptionSchema = new mongoose.Schema(
     emailToken: { type: String },
     subscriptionUrl: { type: String },
     authorizationUrl: { type: String },
-    nextPaymentDate: {type: String},
+    nextPaymentDate: {type: Date},
 
     status: {
       type: String,
