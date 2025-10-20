@@ -20,7 +20,7 @@ const DashboardLayout = () => {
   const [refresh, setRefresh] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [showSModal, setShowSModal] = useState(false)
-  const [subscribtion, setSubscribtion] = useState('')
+  const [subscription, setSubscription] = useState('')
   const [pl, setPl] = useState(0)
 
 
@@ -48,10 +48,11 @@ const DashboardLayout = () => {
             },
           });
   
-          const subscription = res.data.subscription;
-          setSubscribtion(subscribtion)
-          console.log(subscription)
-          if (subscription.status == 'active') {
+           ;
+          setSubscription(res.data.subscription)
+          // console.log(subscription)
+          if (res.data.subscription.status == 'active') {
+            console.log('e')
             setIsSubscribed(true)
           }else{
             setIsSubscribed(false)
@@ -205,7 +206,7 @@ const DashboardLayout = () => {
       <main className='px-4 w-full'>
 
        <div className="min-h-sreen lg:t-10 text-sm md:text-base">
-        <RefreshContext.Provider value={{ refresh, setRefresh, isSubscribed, setShowSModal, pl, subscribtion }}>
+        <RefreshContext.Provider value={{ refresh, setRefresh, isSubscribed, setShowSModal, pl, subscription }}>
           <Outlet />
         </RefreshContext.Provider>
       </div>

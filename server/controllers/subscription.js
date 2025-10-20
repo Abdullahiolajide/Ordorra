@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const Subscription = require("../models/Subscription");
 const User = require("../models/User.js");
 
@@ -97,8 +98,8 @@ const cancelSubscription = async (req, res) => {
       }
     );
 
-    subscription.status = "cancelled";
-    await subscription.save();
+    // subscription.status = "cancelled";
+    // await subscription.save();
 
     res.json({ success: true, message: "Subscription cancelled successfully" });
   } catch (err) {
@@ -113,7 +114,7 @@ const getSubscriptionStatus = async (req, res) => {
     const subscription = await Subscription.findOne({ userId: req.user.userId });
 
     if (!subscription) {
-      return res.status(404).json({ success: false, message: "No subscription found" });
+      return res.status(200).json({ success: false, message: "No subscription found" });
     }
 
     res.json({

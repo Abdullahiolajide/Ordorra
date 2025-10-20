@@ -32,7 +32,9 @@ router.post("/paystack/webhook", express.json({ type: "application/json" }), asy
       );
       console.log("📌 Subscription created for:", event.data.customer.email);
       
-    } else if (event.event === "charge.success") {
+    } 
+    
+    else if (event.event === "charge.success") {
       const currentDate = new Date(event.data.created_at)
       const nextPaymentDate = new Date(currentDate)
       nextPaymentDate.setDate(currentDate.getDate() + 30)
@@ -40,25 +42,38 @@ router.post("/paystack/webhook", express.json({ type: "application/json" }), asy
       await Subscription.findOneAndUpdate(
         { email: event.data.customer.email },
         {
-          nextPaymentDate: nextPaymentDate,
-          status: "active"
+          status: "active",
+          nextPaymentDate: nextPaymentDate
 
         },
         { new: true }
       );
       console.log("✅ Charge successful for:", event.data.customer.email);
 
-    } else if (event.event === "subscription.disable") {
+    } 
+    
+    else if (event.event === "subscription.disable") {
       await Subscription.findOneAndUpdate(
         { subscriptionCode: event.data.subscription_code },
-        { status: "disabled" }
+        { status: "cancelled" }
       );
       console.log("🚫 Subscription disabled");
 
-    } else if (event.event === "subscription.enable") {
+    } 
+    
+    else if (event.event === "subscription.enable") {
       await Subscription.findOneAndUpdate(
         { subscriptionCode: event.data.subscription_code },
         { status: "active" }
+      );
+      console.log("🔄 Subscription re-enabled");
+
+    }
+    
+    else if (event.event === "subscription.not_renew") {
+      await Subscription.findOneAndUpdate(
+        { subscriptionCode: event.data.subscription_code },
+        { status: "non-renewing" }
       );
       console.log("🔄 Subscription re-enabled");
 
