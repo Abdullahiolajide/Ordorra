@@ -29,19 +29,26 @@ const Subscriptions = ()=>{
     } 
     const enableSubscription = async()=>{
         try {
-            const token = localStorage.getItem('token');
-            const res = await axios.post(`${backendurl}/subscription/enable`, 
-                {},
-                {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                console.log(res)
-                
-            }catch(err){
-                console.log(err.response?.data.error || err.message)
-            }finally{
-            window.location.href = `${window.location.origin}/dashboard/settings/subscribtions`
-            // setRefresh(prev=> !prev)
+            const token = localStorage.getItem("token");
+
+            const res = await axios.post(
+            `${backendurl}/subscription/start`,
+            {},
+            {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+            );
+
+            if (res.data.authorization_url) {
+            window.location.href = res.data.authorization_url;
+            }
+        } catch (err) {
+            // console.log(err.response?.data || err.message);
+            toast.error(
+            <div>
+                <h1>{err.response?.data.error || err.message}</h1>
+            </div>
+            )
         }
     }
 
@@ -75,7 +82,7 @@ const Subscriptions = ()=>{
 
                            {subscription?.status == "cancelled" && <button 
                             onClick={enableSubscription}
-                            className='cursor-pointer bg-green-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition mt-3'>
+                            className='cursor-pointer bg-green-50 text-green-600 px-4 py-2 rounded-lg hover:bg-green-100 transition mt-3'>
                                 Enable Subscription
                             </button>}
 

@@ -111,8 +111,9 @@ const enableSubscription = async (req, res) => {
   try {
     const subscription = await Subscription.findOne({
       userId: req.user.userId,
-      status: "non-renewing",
+      status: "cancelled",
     });
+    console.log(subscription)
     if (!subscription) {
       return res.status(404).json({ success: false, message: "No active subscription found" });
     }
@@ -127,8 +128,9 @@ const enableSubscription = async (req, res) => {
         headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}` },
       }
     );
+    console.log("ran")
 
-    subscription = await Subscription.findOneAndUpdate(
+     await Subscription.findOneAndUpdate(
       { userId: req.user.userId }, 
       {
         status: "active",

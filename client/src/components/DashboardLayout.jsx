@@ -51,7 +51,7 @@ const DashboardLayout = () => {
            ;
           setSubscription(res.data.subscription)
           // console.log(subscription)
-          if (res.data.subscription.status != 'cancelled') {
+          if (res.data.subscription.status != 'pending') {
             console.log('e')
             setIsSubscribed(true)
           }else{
