@@ -4,7 +4,8 @@ const User = require("../models/User.js");
 
 const startSubscription = async (req, res) => {
   try {
-    const planCode = "PLN_1a0anpb9m9vmgu8"; 
+    // const planCode = "PLN_1a0anpb9m9vmgu8"; 
+    const planCode = "PLN_olv9y44m246ivgp"; 
     const user = await User.findById(req.user.userId);
 
     if (!user) {
@@ -98,13 +99,48 @@ const cancelSubscription = async (req, res) => {
       }
     );
 
-    // subscription.status = "cancelled";
-    // await subscription.save();
 
     res.json({ success: true, message: "Subscription cancelled successfully" });
   } catch (err) {
     console.error(err.response?.data || err.message);
     res.status(500).json({ success: false, message: "Failed to cancel subscription" });
+  }
+};
+
+const enableSubscription = async (req, res) => {
+  try {
+    const subscription = await Subscription.findOne({
+      userId: req.user.userId,
+      status: "non-renewing",
+    });
+    if (!subscription) {
+      return res.status(404).json({ success: false, message: "No active subscription found" });
+    }
+
+    await axios.post(
+      "https://api.paystack.co/subscription/enable",
+      {
+        code: subscription.subscriptionCode,
+        token: subscription.emailToken,
+      },
+      {
+        headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}` },
+      }
+    );
+
+    subscription = await Subscription.findOneAndUpdate(
+      { userId: req.user.userId }, 
+      {
+        status: "active",
+      },
+      { new: true }
+    );
+
+
+    res.json({ success: true, message: "Subscription enabled successfully" });
+  } catch (err) {
+    console.error(err.response?.data || err.message);
+    res.status(500).json({ success: false, message: "Failed to enable subscription" });
   }
 };
 
@@ -128,4 +164,4 @@ const getSubscriptionStatus = async (req, res) => {
 };
 
 
-module.exports = { startSubscription, cancelSubscription, getSubscriptionStatus };
+module.exports = { startSubscription, cancelSubscription, getSubscriptionStatus, enableSubscription };

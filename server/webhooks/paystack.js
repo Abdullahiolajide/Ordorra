@@ -19,7 +19,8 @@ router.post("/paystack/webhook", express.json({ type: "application/json" }), asy
   try {
     if (event.event === "subscription.create") {
       // Update existing pending subscription
-      await Subscription.findOneAndUpdate(
+      console.log(event.data)
+      const news = await Subscription.findOneAndUpdate(
         { email: event.data.customer.email },
         {
           status: event.data.status,
@@ -72,10 +73,14 @@ router.post("/paystack/webhook", express.json({ type: "application/json" }), asy
     
     else if (event.event === "subscription.not_renew") {
       await Subscription.findOneAndUpdate(
-        { subscriptionCode: event.data.subscription_code },
+        { 
+          subscriptionCode: event.data.subscription_code,
+          emailToken: event.data.email_token,
+
+         },
         { status: "non-renewing" }
       );
-      console.log("🔄 Subscription re-enabled");
+      console.log("🔄 Subscription not-renewing");
 
     } else {
       console.log("⚠️ Unhandled event:", event.event);
