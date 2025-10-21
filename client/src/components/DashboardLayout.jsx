@@ -51,8 +51,8 @@ const DashboardLayout = () => {
            ;
           setSubscription(res.data.subscription)
           // console.log(subscription)
-          if (res.data.subscription.status != 'pending') {
-            console.log('e')
+          const status = res.data.subscription.status 
+          if (status == 'active' | status == 'non-renewing') {
             setIsSubscribed(true)
           }else{
             setIsSubscribed(false)
@@ -87,7 +87,7 @@ const DashboardLayout = () => {
     <div className="dashboard-container lg:flex bg-gray-50 text-sm md:text-base">
 
       {showSModal && <div className="w-full h-screen bg-black/50 fixed top-0 left-0 z-100 flex items-center justify-center">
-      <div className="w-[450px] bg-white rounded-2xl shadow-lg p-6 relative">
+      <div className="w-[450px] mx-5 bg-white rounded-2xl shadow-lg p-6 relative">
         {/* Cancel Button */}
         <button
           onClick={() => setShowSModal(false)}
@@ -97,7 +97,7 @@ const DashboardLayout = () => {
         </button>
 
         {/* Title */}
-        <h2 className="text-2xl font-bold mb-3 text-gray-800">
+        <h2 className="text-xl lg:text-2xl font-bold mb-3 text-gray-800">
           Subscribe to Ordorra
         </h2>
 

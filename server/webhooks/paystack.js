@@ -82,7 +82,16 @@ router.post("/paystack/webhook", express.json({ type: "application/json" }), asy
       );
       console.log("🔄 Subscription not-renewing");
 
-    } else {
+    } 
+     else if (event.event === "invoice.payment_failed") {
+      await Subscription.findOneAndUpdate(
+        { subscriptionCode: event.data.subscription.subscription_code },
+        { status: "failed" }
+      );
+      console.log("🔄 Subscription re-enabled");
+
+    }
+    else {
       console.log("⚠️ Unhandled event:", event.event);
     }
   } catch (err) {

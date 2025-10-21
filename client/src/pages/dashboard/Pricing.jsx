@@ -9,7 +9,7 @@ import { RefreshContext } from "../../components/DashboardLayout";
 
 const Pricing = () => {
   const [planIndex, setPlanIndex] = useState(null)
-  const {isSubscribed} =  useContext(RefreshContext)
+  const {isSubscribed, subscription} =  useContext(RefreshContext)
     const plans = [
       {
         name: "Free",
@@ -64,8 +64,11 @@ if (!planIndex) {
             <p className="text-2xl font-semibold my-4">₦{thousandify(plan.price)} <span className="text-base">/month</span></p>
             <p className="text-gray-600 mb-6">{plan.description}</p>
             <button
+            disabled={subscription?.status == "active" || subscription?.status == "non-renewing"}
               onClick={()=> setPlanIndex(i)}
-              className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer"
+              className={`px-6 py-2  text-white rounded-lg  
+                ${subscription?.status == "active" || subscription?.status == "non-renewing" ? "bg-gray-600 cursor-not-allowed" :"bg-green-600 cursor-pointer hover:bg-green-700"}
+                `}
             >
               {/* {plan.name == 'Free' && !isSubscribed ? "Free Plan" : "Select Plan"} */}
               {plan.name == "Free" ? "Free Plan" :''}
@@ -136,7 +139,7 @@ else{
               <span className="font-medium text-green-600">₦{thousandify(plans[planIndex].price)}</span>
             </p>
 
-            <button className="bg-green-600 hover:bg-green-700 cursor-pointer text-white w-full rounded-md py-3 font-bold"
+            <button className={`bg-green-600 hover:bg-green-700 cursor-pointer text-white w-full rounded-md py-3 font-bold`}
             onClick={handleSubscribe}
             >Pay ₦{thousandify(plans[planIndex].price)}</button>
 

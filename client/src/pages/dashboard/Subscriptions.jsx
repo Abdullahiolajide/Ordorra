@@ -3,9 +3,11 @@ import { RefreshContext } from '../../components/DashboardLayout';
 import { Link } from 'react-router-dom';
 import { backendurl } from '../../../global';
 import axios from 'axios';
+import { AiOutlineClose } from 'react-icons/ai';
 
 const Subscriptions = ()=>{
     const {subscription, isSubscribed, setRefresh} = useContext(RefreshContext)
+    const [showModal, setShowModal] = useState(false)
     console.log(subscription)
     const npdate = new Date(subscription?.nextPaymentDate)
 
@@ -52,9 +54,47 @@ const Subscriptions = ()=>{
         }
     }
 
-    if (isSubscribed){
+    if (subscription){
         return (
             <div className='lg:mt-18 mt-6 min-h-[91vh]'>
+                {showModal && <div className="w-full  h-screen bg-black/50 fixed top-0 left-0 z-100 flex items-center justify-center">
+                      <div className="w-[450px] mx-5 bg-white rounded-2xl shadow-lg p-6 relative">
+                        {/* Cancel Button */}
+                        <button
+                          onClick={() => setShowModal(false)}
+                          className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 cursor-pointer"
+                        >
+                          <AiOutlineClose size={22} />
+                        </button>
+                
+                        {/* Title */}
+                        <h2 className="text-xl lg:text-2xl font-bold mb-3 text-gray-800">
+                          Cancel Subscribtion
+                        </h2>
+                
+                        {/* Message */}
+                        <p className="text-gray-600 mb-5 leading-relaxed">
+                          Your Subscription will be cancelled and you will lose access to ordorra basic features at the end of your subscription cycle
+                        </p>
+                        <div className='flex gap-3'>
+                            <button 
+                            onClick={cancelSubscription}
+                            className='cursor-pointer bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition mt-3'>
+                                Cancel Subscription
+                            </button> 
+                            <button 
+                            onClick={()=> setShowModal(prev=> !prev)}
+                            className='cursor-pointer bg-green-100 text-green-600 px-4 py-2 rounded-lg hover:bg-green-200 transition mt-3'>
+                                Stay
+                            </button> 
+
+
+                        </div>
+                
+                        {/* Features / Benefits */}
+                        
+                      </div>
+                    </div>}
                 <section className='bg-white p-3 rounded-md'>
                     <Link to={'/dashboard/settings'}><div className='text-green-500'>back</div></Link>
                    <div className=' p-3 w-fit mt-5'>
@@ -70,17 +110,17 @@ const Subscriptions = ()=>{
                             </div>
                             <div>
                                 <label htmlFor="">Next Payment Date</label>
-                                <p className='text-gray-400 text-sm'>{npdate?.toDateString()} ({npdate?.toLocaleDateString()})</p>
+                                <p className='text-gray-400 text-sm'>{npdate?.toDateString() || "-"} ({npdate?.toLocaleDateString() || "-"})</p>
                             </div>
                         </div>
                         <div className='flex flex-col mt-4'>
                             { subscription?.status == "active" && <button 
-                            onClick={cancelSubscription}
+                            onClick={()=> setShowModal(prev=> !prev)}
                             className='cursor-pointer bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition mt-3'>
                                 Cancel Subscription
                             </button> }
 
-                           {subscription?.status == "cancelled" && <button 
+                           {subscription?.status == "cancelled" || subscription?.status == "pending" && <button 
                             onClick={enableSubscription}
                             className='cursor-pointer bg-green-50 text-green-600 px-4 py-2 rounded-lg hover:bg-green-100 transition mt-3'>
                                 Enable Subscription

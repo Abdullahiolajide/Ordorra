@@ -128,7 +128,7 @@ const Products = () => {
     </div>
 
     {/* Table */}
-    <div className="rounded-lg border border-gray-200">
+    <div className="rounded-lg border border-gray-200 mb-20">
       <table className="w-full text-sm md:text-base">
         <thead className="bg-white text-gray-700">
           <tr>
