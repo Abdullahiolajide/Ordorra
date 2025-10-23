@@ -15,6 +15,10 @@ const subscriptionSchema = new mongoose.Schema(
     subscriptionUrl: { type: String },
     authorizationUrl: { type: String },
     nextPaymentDate: {type: Date},
+    paymentType: {
+      type: String,
+      enum: ["subsciption", "one-time"]
+    },
 
     status: {
       type: String,

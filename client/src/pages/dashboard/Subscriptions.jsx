@@ -6,7 +6,7 @@ import axios from 'axios';
 import { AiOutlineClose } from 'react-icons/ai';
 
 const Subscriptions = ()=>{
-    const {subscription, isSubscribed, setRefresh} = useContext(RefreshContext)
+    const {subscription, subWarning} = useContext(RefreshContext)
     const [showModal, setShowModal] = useState(false)
     console.log(subscription)
     const npdate = new Date(subscription?.nextPaymentDate)
@@ -59,15 +59,12 @@ const Subscriptions = ()=>{
             <div className='lg:mt-18 mt-6 min-h-[91vh]'>
                 {showModal && <div className="w-full  h-screen bg-black/50 fixed top-0 left-0 z-100 flex items-center justify-center">
                       <div className="w-[450px] mx-5 bg-white rounded-2xl shadow-lg p-6 relative">
-                        {/* Cancel Button */}
                         <button
                           onClick={() => setShowModal(false)}
                           className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 cursor-pointer"
                         >
                           <AiOutlineClose size={22} />
                         </button>
-                
-                        {/* Title */}
                         <h2 className="text-xl lg:text-2xl font-bold mb-3 text-gray-800">
                           Cancel Subscribtion
                         </h2>
@@ -90,8 +87,6 @@ const Subscriptions = ()=>{
 
 
                         </div>
-                
-                        {/* Features / Benefits */}
                         
                       </div>
                     </div>}
@@ -105,8 +100,12 @@ const Subscriptions = ()=>{
                                 <p className='text-gray-400 text-sm'>{subscription?.email}</p>
                             </div>
                             <div>
-                                <label htmlFor="">Subscription Status</label>
-                                <p className='text-gray-400 text-sm'>{subscription?.status}</p>
+                                <label htmlFor="">Payment Type</label>
+                                <p className='text-gray-400 text-sm'>{subscription?.paymentType}</p>
+                            </div>
+                            <div>
+                                <label htmlFor="">Status</label>
+                                <p className='text-gray-400 text-sm'>{!subWarning ? subscription?.status : "calcelled"}</p>
                             </div>
                             <div>
                                 <label htmlFor="">Next Payment Date</label>
@@ -114,27 +113,37 @@ const Subscriptions = ()=>{
                             </div>
                         </div>
                         <div className='flex flex-col mt-4'>
-                            { subscription?.status == "active" && <button 
+                            {subscription?.paymentType != "one-time" ? <span>
+                                { subscription?.status == "active" && <button 
                             onClick={()=> setShowModal(prev=> !prev)}
                             className='cursor-pointer bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition mt-3'>
                                 Cancel Subscription
                             </button> }
 
-                           {subscription?.status == "cancelled" || subscription?.status == "pending" && <button 
+                           {subscription?.status == "cancelled" || subscription?.status == "pending" ? <button 
                             onClick={enableSubscription}
                             className='cursor-pointer bg-green-50 text-green-600 px-4 py-2 rounded-lg hover:bg-green-100 transition mt-3'>
                                 Enable Subscription
-                            </button>}
+                            </button> : null}
 
                            {subscription?.status === "non-renewing" && (
                             <p className="text-sm text-gray-700">
                                 <span>You have disabled your subscription. You will not be charged again this cycle.</span>
                                 <br />
                                 <span>
-                                You will be able to re-enable your subscription after this billing period ends ({npdate?.toDateString()}).
+                                You will be able to re-enable your subscription after this subscription period ends ({npdate?.toDateString()}).
                                 </span>
                             </p>
                             )}
+                            </span> : 
+                            
+                            <p className='text-sm text-gray-700'>
+                              <span>You are on a One-time plan</span>
+                                <br />
+                                <span>
+                                You will be able to change your payment type after this payment period ends({npdate?.toDateString()}).
+                                </span> 
+                            </p>}
 
                         </div>
                    </div>

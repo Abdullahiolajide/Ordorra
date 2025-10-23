@@ -2,14 +2,18 @@ import React, { useContext, useState } from "react";
 import { backendurl } from "../../../global";
 import axios from "axios";
 import thousandify from 'thousandify'
-import { FaRegCircleCheck } from "react-icons/fa6";
+import { FaInfo, FaRegCircleCheck } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import { RefreshContext } from "../../components/DashboardLayout";
+import { AiOutlineClose } from "react-icons/ai";
 
 
 const Pricing = () => {
   const [planIndex, setPlanIndex] = useState(null)
-  const {isSubscribed, subscription} =  useContext(RefreshContext)
+  const [showModal, setShowModal] = useState(false)
+  const [paying, setPaying] = useState(false)
+  const [subscribing, setSubscribing] = useState(false)
+  const {isSubscribed, subscription, subWarning} =  useContext(RefreshContext)
     const plans = [
       {
         name: "Free",
@@ -48,6 +52,30 @@ const Pricing = () => {
       )
   }
 };
+ const oneTimeSubscribe = async () => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.post(
+      `${backendurl}/subscription/start-one-time`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    );
+
+    if (res.data.authorization_url) {
+      window.location.href = res.data.authorization_url;
+    }
+  } catch (err) {
+    // console.log(err.response?.data || err.message);
+    toast.error(
+      <div>
+        <h1>{err.response?.data.error || err.message}</h1>
+      </div>
+      )
+  }
+};
 
 
 if (!planIndex) {
@@ -64,10 +92,10 @@ if (!planIndex) {
             <p className="text-2xl font-semibold my-4">₦{thousandify(plan.price)} <span className="text-base">/month</span></p>
             <p className="text-gray-600 mb-6">{plan.description}</p>
             <button
-            disabled={subscription?.status == "active" || subscription?.status == "non-renewing"}
+            disabled={!subWarning  && subscription?.status == "active" || subscription?.status == "non-renewing"}
               onClick={()=> setPlanIndex(i)}
               className={`px-6 py-2  text-white rounded-lg  
-                ${subscription?.status == "active" || subscription?.status == "non-renewing" ? "bg-gray-600 cursor-not-allowed" :"bg-green-600 cursor-pointer hover:bg-green-700"}
+                ${!subWarning  && subscription?.status == "active" || subscription?.status == "non-renewing" ? "bg-gray-600 cursor-not-allowed" :"bg-green-600 cursor-pointer hover:bg-green-700"}
                 `}
             >
               {/* {plan.name == 'Free' && !isSubscribed ? "Free Plan" : "Select Plan"} */}
@@ -84,6 +112,60 @@ if (!planIndex) {
 else{
   return(
     <div className="flex flex-col items-cente pt-8 pb-6 bg-gray-50">
+      {showModal && <div className="w-full  h-screen bg-black/50 fixed top-0 left-0 z-100 flex items-center justify-center">
+          <div className="w-[450px] mx-5 bg-white rounded-2xl shadow-lg p-6 relative">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 cursor-pointer"
+            >
+              <AiOutlineClose size={22} />
+            </button>
+          <h2 className="text-xl lg:text-2xl font-bold mb-3 text-gray-800">
+            Choose Payment Method
+          </h2>
+
+          <div className="text-gray-600 mb-5 leading-relaxed">
+            How would you like to pay for this plan?
+
+            <div className="border rounded-full w-fit p-1 text-xs mt-3">
+              <FaInfo />
+            </div>
+
+            <small>
+              <span className="text-green-600 font-medium">Subscribe</span> — you’ll be billed automatically every month (you can cancel anytime).
+            </small><br />
+
+            <small>
+              <span className="text-green-600 font-medium">Pay Once</span> — you’ll be charged only once and will renew manually if you want to continue later.
+            </small>
+          </div>
+
+          <div className='flex gap-3'>
+            <button 
+             onClick={()=>{
+              setPaying(true)
+              oneTimeSubscribe()
+            }}
+              className='cursor-pointer bg-gray-100 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200 transition mt-3'>
+             
+              {!paying ? "Pay Once" : "Paying..."}
+            </button> 
+
+            <button 
+            onClick={()=>{
+              setSubscribing(true)
+              handleSubscribe()
+            }}
+            disabled={subscribing}
+              className='cursor-pointer bg-green-100 text-green-600 px-4 py-2 rounded-lg hover:bg-green-200 transition mt-3'>
+             {!subscribing ? " Subscribe" : "Subscribing..."}
+            </button> 
+
+                    </div>
+
+            
+          </div>
+        </div>}
 
       <div className="flex justify-between mb-8">
        <div>
@@ -140,7 +222,7 @@ else{
             </p>
 
             <button className={`bg-green-600 hover:bg-green-700 cursor-pointer text-white w-full rounded-md py-3 font-bold`}
-            onClick={handleSubscribe}
+            onClick={()=> setShowModal(prev=> !prev)}
             >Pay ₦{thousandify(plans[planIndex].price)}</button>
 
           </div>
