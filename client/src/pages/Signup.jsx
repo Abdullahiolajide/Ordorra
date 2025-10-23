@@ -48,6 +48,10 @@ const Signup = () => {
                               <button className='mt-2 p-2 bg-green-700 text-white rounded mx-auto'>Okay</button>
                     </div>
                 )
+                if (window.gtag) {
+                    window.gtag('event', 'sign_up', { method: 'Email' });
+                    }
+
             navigate('/verify-email')
 
             // or show toast

@@ -190,7 +190,9 @@ const Store = () => {
       } else if (!phone.startsWith("234")) {
         phone = "234" + phone
       }
-    
+      if (window.gtag) {
+                    window.gtag('event', 'checkout_to_whatsapp', { cart: cartArray.filter(cart=> cart.ownerId == store.user).length });
+          }
       window.open(`https://wa.me/${phone}?text=${encoded}`, "_blank")
     }
 

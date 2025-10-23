@@ -33,6 +33,9 @@ const verifyEmail = () => {
                 )
                 // console.log(res.data);
                 localStorage.removeItem('ouseremail')
+                if (window.gtag) {
+                    window.gtag('event', 'verify_email', { method: 'OTP' });
+                }
                 navigate('/signin')
             // or show toast
 

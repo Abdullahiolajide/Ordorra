@@ -121,6 +121,9 @@ const handleSubmit = async (e) => {
         imageUrl: '',
       })
       fileInputRef.current.value = null;
+      if (window.gtag) {
+                    window.gtag('event', 'added_product');
+                }
   } catch (err) {
     console.error(err);
     toast.error(err.response?.data?.message || 'Failed to create product');
