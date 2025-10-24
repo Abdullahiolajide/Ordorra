@@ -5,6 +5,7 @@ import { backendurl } from '../../global'
 import axios from 'axios'
 import { myToast } from '../components/myToast'
 import { toast } from 'react-toastify'
+import { Helmet } from 'react-helmet'
 
 const Signin = () => {
     const [user, setUser] = useState({})
@@ -12,6 +13,7 @@ const Signin = () => {
     const [errMsg, setErrMsg] = useState('')
     const navigate = useNavigate()
     const [clicked, setClicked] = useState(false)
+   
 
     const handleChange = (e)=>{
         setUser(prevUser=>(
@@ -62,7 +64,14 @@ const Signin = () => {
         <section className=' mt-10 w-full max-w-xs  md:max-w-md'>
             <div><img src="images/store.png" alt="" width={50} className='mx-auto'/></div>
            <div className='text-center'>
-             <h1 className='text-2xl'>Sign In to Ordorra</h1>
+            <Helmet>
+                <title>Ordorra - Sign In to your account</title>
+                <meta
+                name="description"
+                content="Sign In to your account or create an account to get started"
+                />
+            </Helmet>
+             <h1 className='text-2xl'>Sign In</h1>
             <p className='text-sm'>Welcome back </p>
             <p><small className='text-red-500'>{errMsg && errMsg}</small></p>
            </div>

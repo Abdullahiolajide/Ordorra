@@ -128,20 +128,20 @@ const StoreInfo = () => {
 
             </div>
       </div>}
-      <h2 className="text-2xl font-bold mb-4 mt-4 text-gray-800">Store Information</h2>
+      <h2 className="text-2xl font-bold mb-4 mt-4 md:mt-14 text-gray-800">Store Information</h2>
       <div className="grid lg:grid-cols-2 gap-10">
         
         {/* Left: Polished Form */}
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-xl shadow-lg px-4 py-8 md:p-8 border border-gray-100 space-y-6"
+          className="bg-white rounded-xl shadow-lg px-4 py-8 md:p-8 border border-gray-100 space-y-2"
         >
           {/* Section: Personal Info */}
-          <div className="pb-4 border-b border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">Personal Information</h3>
+          <div className=" border- border-gray-100">
+            {/* <h3 className="text-lg font-semibold text-gray-700 mb-2">Personal Information</h3> */}
             <div className="grid md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Full Name</label>
                 <input
                   type="text"
                   name="fullname"
@@ -153,7 +153,7 @@ const StoreInfo = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-600 mb-1">WhatsApp Number</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">WhatsApp Number</label>
                <input
                 type="tel"
                 name="whatsappNumber"
@@ -171,9 +171,8 @@ const StoreInfo = () => {
           </div>
 
           {/* Section: Contact */}
-          <div className="pb-4 border-b border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">Contact</h3>
-            <label className="block text-sm font-medium text-gray-600 mb-1">Phone</label>
+          <div className=" border-b border-gray-100">
+            <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Phone</label>
             <input
               type="tel"
               name="phoneNumber"
@@ -189,9 +188,9 @@ const StoreInfo = () => {
 
           {/* Section: Store Info */}
           <div className="pb-4 border-b border-gray-100">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">Store details</h3>
+            {/* <h3 className="text-lg font-semibold text-gray-700 mb-4">Store details</h3> */}
             <div className="space-y-4">
-              <label className="block text-sm font-medium text-gray-600 mb-1">Store name</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Store name</label>
               <input
                 type="text"
                 name="storeName"
@@ -201,7 +200,7 @@ const StoreInfo = () => {
                 required
                 className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
               />
-              <label className="block text-sm font-medium text-gray-600 mb-1">Handle</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Handle</label>
               <input
                 type="text"
                 name="handle"
@@ -213,7 +212,7 @@ const StoreInfo = () => {
                 className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-60 transition"
               />
               <div className='-mt-3 text-gray-500'><small>{`${window.location.origin}/store/${formData.handle}`}</small></div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">Tagline</label>
+              <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Tagline</label>
               <textarea
                 name="storeBio"
                 value={formData.storeBio}
@@ -228,7 +227,7 @@ const StoreInfo = () => {
          
             {/* store logo  */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">Store Logo</h3>
+            {/* <h3 className="text-lg font-semibold text-gray-700 mb-4">Store Logo</h3> */}
          <label className="block text-sm font-medium text-gray-700 mb-2">Store Logo (optional)</label>
            <input
              type="file"

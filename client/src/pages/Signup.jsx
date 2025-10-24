@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { backendurl } from '../../global'
 import axios from 'axios'
 import { myToast } from '../components/myToast'
+import { Helmet } from 'react-helmet'
 
 const Signup = () => {
     const [user, setUser] = useState({})
@@ -11,6 +12,7 @@ const Signup = () => {
     const [loading, setLoading] = useState(false)
     const [clicked, setClicked] = useState(false)
     const navigate = useNavigate()
+  
 
     const handleChange = (e)=>{
         const {name, value} = e.target
@@ -74,9 +76,16 @@ const Signup = () => {
         <section className=' mt-10 w-full max-w-xs  md:max-w-md'>
             <div><img src="images/store.png" alt="" width={50} className='mx-auto'/></div>
            <div className='text-center'>
-             <h1 className='text-2xl'>Sign Up to Ordorra</h1>
-            <p className='text-sm'>Create your WhatsApp commerce Storefront </p>
-            <p><small className='text-red-500'>{errMsg && errMsg}</small></p>
+               <Helmet>
+                    <title>Ordorra - Create an account</title>
+                    <meta
+                    name="description"
+                    content="Create an account on ordorra to start receiving orders"
+                    />
+                </Helmet>
+                <h1 className='text-2xl'>Create an account</h1>
+                <p className='text-sm'>Create your WhatsApp commerce Storefront </p>
+                <p><small className='text-red-500'>{errMsg && errMsg}</small></p>
            </div>
 
             <div className='flex flex-col my-4 '>

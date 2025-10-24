@@ -1,4 +1,5 @@
 import React from 'react'
+import { Helmet } from 'react-helmet'
 import { FaStore, FaShieldAlt, FaGlobe } from 'react-icons/fa'
 import { FiUpload } from 'react-icons/fi'
 import { HiMiniLink } from 'react-icons/hi2'
@@ -11,8 +12,15 @@ const LandingPage = () => {
       {/* Hero */}
       <section className='overflow-y-hidden'>
         <div className='h-[90dvh] flex flex-col items-center'>
+             <Helmet>
+                <title>Ordorra - Launch Your WhatsApp Store in Seconds</title>
+                <meta
+                name="description"
+                content="Ordorra lets you create a store to showcase all your products, share your links on different social media platforms and receive orders directly on WhatsApp"
+                />
+            </Helmet>
           <h1 className='text-5xl mx-2 md:text-6xl font-medium max-w-4xl text-center mt-20 md:mt-24'>
-            Create your store on WhatsApp with ease
+            Create a store for your business on WhatsApp
           </h1>
           <h3 className='text-center max-w-4xl md:text-xl my-4 mx-4'>
             Build a simple online storefront and manage your orders right from WhatsApp
