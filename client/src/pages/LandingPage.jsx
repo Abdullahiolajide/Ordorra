@@ -28,7 +28,7 @@ const LandingPage = () => {
           </div>
 
           <div>
-            <img src="images/whatsappm.png" alt="" className='w-100' />
+            <img src="images/whatsappm.png" alt="" className='w-70' />
           </div>
         </div>
       </section>
@@ -71,7 +71,7 @@ const LandingPage = () => {
           <div className='p-8 border border-green-500 rounded-lg bg-gray-100/30 hover:bg-gray-200/50 text-center'>
             <FaGlobe className='mx-auto text-2xl mb-4 text-green-400' />
             <h3 className='font-medium text-lg mb-2'>Custom Link</h3>
-            <p>Get a unique subdomain like <span className='italic'>ordorra.com/store/mystore</span></p>
+            <p>Get a unique subdomain like <span className='italic'>ordorra.app/store/mystore</span></p>
           </div>
           <div className='p-8 border border-green-500 rounded-lg bg-gray-100/30 hover:bg-gray-200/50 text-center'>
             <FaShieldAlt className='mx-auto text-2xl mb-4 text-green-400' />
