@@ -12,19 +12,7 @@ const LandingPage = () => {
       {/* Hero */}
       <section className='overflow-y-hidden'>
         <div className='h-[90dvh] flex flex-col items-center'>
-             <Helmet>
-                <title>Ordorra - Launch Your WhatsApp Store in Minutes</title>
-                <meta
-                name="description"
-                content="Ordorra lets you create a store to showcase all your products, share your links on different social media platforms and receive orders directly on WhatsApp"
-                />
-
-                  <meta property="og:title" content="Ordorra — Launch Your WhatsApp Store in Minutes" />
-                  <meta property="og:description" content="Create a mobile storefront, add products, and receive orders directly on WhatsApp in minutes." />
-                  <meta property="og:image" content="https://ordorra.app/ordorra-og-image.png" />
-                  <meta property="og:url" content="https://ordorra.app" />
-                  <meta property="og:type" content="website" />
-            </Helmet>
+             
           <h1 className='text-5xl mx-2 md:text-6xl font-medium max-w-4xl text-center mt-20 md:mt-24'>
             Create a store for your business on WhatsApp
           </h1>
