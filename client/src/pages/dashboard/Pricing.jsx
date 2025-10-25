@@ -110,7 +110,7 @@ if (!planIndex) {
 }
 else{
   return(
-    <div className="flex flex-col items-cente pt-8 pb-6 bg-gray-50">
+    <div className="flex flex-col items-cente pt-8 pb-6 bg-gray-50 min-h-[110vh]">
       {showModal && <div className="w-full  h-screen bg-black/50 fixed top-0 left-0 z-100 flex items-center justify-center">
           <div className="w-[450px] mx-5 bg-white rounded-2xl shadow-lg p-6 relative">
             <button
