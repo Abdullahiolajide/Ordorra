@@ -5,7 +5,7 @@ const User = require("../models/User.js");
 const startSubscription = async (req, res) => {
   try {
     // const planCode = "PLN_1a0anpb9m9vmgu8"; 
-    const planCode = "PLN_olv9y44m246ivgp"; 
+    const planCode = "PLN_zn8ledck323v0kl"; 
     const user = await User.findById(req.user.userId);
 
     if (!user) {
