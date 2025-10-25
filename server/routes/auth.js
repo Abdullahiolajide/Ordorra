@@ -13,6 +13,6 @@ router.post('/reset-password', resetPassword);
 
 router.post("/logout", logout)
 router.use(protect)
-router.get("/me", checkAuth);
+router.get("/me", checkAuth);   
 
 module.exports = router
