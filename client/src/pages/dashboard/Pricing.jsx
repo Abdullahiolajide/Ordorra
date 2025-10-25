@@ -99,8 +99,7 @@ if (!planIndex) {
             >
               {/* {plan.name == 'Free' && !isSubscribed ? "Free Plan" : "Select Plan"} */}
               {plan.name == "Free" ? "Free Plan" :''}
-              {plan.name != 'Free' && isSubscribed ? "Current Plan" : ""}
-              {plan.name!= "Free" && !isSubscribed ? 'Select Plan' :''}
+              {plan.name!= "Free" ? 'Select Plan' :''}
             </button>
           </div>
         ))}
