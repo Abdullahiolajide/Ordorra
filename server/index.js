@@ -18,9 +18,13 @@ app.use('/api/products', productRoutes);
 app.use('/api/store', storeInfos);
 app.use("/api/subscription", subscriptionRoutes);
 app.use("/api/webhooks", paystackWebhook);
+app.get('/ping', (req, res) => {
+  res.status(200).send('pong');
+});
 app.use((req, res)=>{
     res.status(404).send('Page Not Found')
 })
+
 
 const start = async ()=>{
     try{
