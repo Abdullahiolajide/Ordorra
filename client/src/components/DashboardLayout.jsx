@@ -27,7 +27,6 @@ useEffect(() => {
     try {
       const auth = await axios.get(`${backendurl}/auth/me`);
       if (!auth.data.ok) navigate('/signin')
-        console.log(auth)
     } catch (err) {
       navigate("/signin")
       console.log(err)

@@ -9,7 +9,6 @@ const Settings = () => {
    const logout = async () => {
       try {
         await axios.post(`${backendurl}/auth/logout`);
-        console.log("the hell")
         navigate("/signin");
       } catch (err) {
         console.log(err);
