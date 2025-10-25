@@ -7,16 +7,14 @@ const Settings = () => {
 
   const navigate = useNavigate()
    const logout = async () => {
-    try {
-      const auth = await axios.get(`${backendurl}/auth/me`);
-      if (!auth.data.ok) navigate('/signin')
-        console.log(auth)
-    } catch (err) {
-      navigate("/signin")
-      console.log(err)
-      
+      try {
+        await axios.post(`${backendurl}/auth/logout`);
+        console.log("the hell")
+        navigate("/signin");
+      } catch (err) {
+        console.log(err);
+      }
     }
-  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-sm mt-10 lg:mt-20">

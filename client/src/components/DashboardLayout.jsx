@@ -89,7 +89,7 @@ useEffect(() => {
       if (diffInDays <= -2) {
         setSubWarning(true); 
         setIsSubscribed(false);
-      }else if(diffInDays >= -2 && npd) {
+      }else if(diffInDays >= -2 && npd && status != "pending") {
 
         setIsSubscribed(true)
         console.log("jj")
@@ -99,7 +99,6 @@ useEffect(() => {
     };
     const logout = async () => {
       try {
-        console.log("what")
         await axios.post(`${backendurl}/auth/logout`);
         console.log("the hell")
         navigate("/signin");
