@@ -7,9 +7,16 @@ const Settings = () => {
 
   const navigate = useNavigate()
    const logout = async () => {
-        await axios.post(`${backendurl}api/auth/logout`, {}, { withCredentials: true }); // ✅ clear cookie at backend
-        navigate('/signin', { replace: true });
-      }
+    try {
+      const auth = await axios.get(`${backendurl}/auth/me`);
+      if (!auth.data.ok) navigate('/signin')
+        console.log(auth)
+    } catch (err) {
+      navigate("/signin")
+      console.log(err)
+      
+    }
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-sm mt-10 lg:mt-20">

@@ -9,12 +9,13 @@ const checkAuth = (req, res) => {
   res.json({ ok: true});
 };
 
-const logout =  (req, res) => {
+const logout = (req, res) => {
   res.clearCookie("ord_token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax"
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
+  console.log("logged out");
   res.json({ success: true });
 };
 
@@ -108,7 +109,7 @@ const signIn = async (req, res) => {
     res.cookie("ord_token", token, {
       httpOnly: true,
       secure: isProd,             // ✅ true only in production
-      sameSite: isProd ? "strict" : "lax", // ✅ local dev still works
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // ✅ local dev still works
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 

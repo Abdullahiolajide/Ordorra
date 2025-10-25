@@ -23,15 +23,15 @@ const Pricing = () => {
       {
         name: "Basic",
         price: "1000",
-        planCode: 'PLN_1a0anpb9m9vmgu8',
+        planCode: 'PLN_zn8ledck323v0kl',
         description: "Unlock more products and features",
       },
     ];
 
   const handleSubscribe = async () => {
   try {
-    const token = localStorage.getItem("token");
-
+    setSubscribing(true)
+    
     const res = await axios.post(
       `${backendurl}/subscription/start`,
       {}
@@ -47,17 +47,19 @@ const Pricing = () => {
         <h1>{err.response?.data.error || err.message}</h1>
       </div>
       )
-  }
+    }finally{
+
+      setSubscribing(false)
+    }
 };
  const oneTimeSubscribe = async () => {
   try {
-    const token = localStorage.getItem("token");
-
+    setPaying(true)
     const res = await axios.post(
       `${backendurl}/subscription/start-one-time`,
       {}
     );
-
+    
     if (res.data.authorization_url) {
       window.location.href = res.data.authorization_url;
     }
@@ -68,7 +70,10 @@ const Pricing = () => {
         <h1>{err.response?.data.error || err.message}</h1>
       </div>
       )
-  }
+    }finally{
+      setPaying(true)
+    }
+      
 };
 
 
@@ -137,7 +142,7 @@ else{
           <div className='flex gap-3'>
             <button 
              onClick={()=>{
-              setPaying(true)
+              
               oneTimeSubscribe()
             }}
               className='cursor-pointer bg-gray-100 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200 transition mt-3'>
@@ -147,7 +152,7 @@ else{
 
             <button 
             onClick={()=>{
-              setSubscribing(true)
+              
               handleSubscribe()
             }}
             disabled={subscribing}

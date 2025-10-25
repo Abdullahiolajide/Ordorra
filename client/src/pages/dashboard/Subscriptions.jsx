@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { backendurl } from '../../../global';
 import axios from 'axios';
 import { AiOutlineClose } from 'react-icons/ai';
+import { toast } from 'react-toastify';
 
 const Subscriptions = ()=>{
     const {subWarning} = useContext(RefreshContext)
@@ -15,8 +16,7 @@ const Subscriptions = ()=>{
          getSubscriptionStatus()
        }, [])
     
-      const getSubscriptionStatus = async () => {
-            const token = localStorage.getItem('token'); 
+      const getSubscriptionStatus = async () => { 
       
             try {
                 setLoading(true)
@@ -51,14 +51,11 @@ const Subscriptions = ()=>{
     } 
     const enableSubscription = async()=>{
         try {
-            const token = localStorage.getItem("token");
 
             const res = await axios.post(
             `${backendurl}/subscription/start`,
             {},
-            {
-                headers: { Authorization: `Bearer ${token}` }
-            }
+           
             );
 
             if (res.data.authorization_url) {

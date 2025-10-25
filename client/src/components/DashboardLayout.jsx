@@ -27,7 +27,9 @@ useEffect(() => {
     try {
       const auth = await axios.get(`${backendurl}/auth/me`);
       if (!auth.data.ok) navigate('/signin')
+        console.log(auth)
     } catch (err) {
+      navigate("/signin")
       console.log(err)
       
     }
@@ -61,7 +63,6 @@ useEffect(() => {
         
       };
       const getProducts = async () => {
-      const token = localStorage.getItem('token'); 
       // setLoading(true)
 
       try {
@@ -97,9 +98,16 @@ useEffect(() => {
     
     };
     const logout = async () => {
-        await axios.post(`${backendurl}/auth/logout`, {}, { withCredentials: true }); // ✅ clear cookie at backend
-        navigate('/signin', { replace: true });
+      try {
+        console.log("what")
+        await axios.post(`${backendurl}/auth/logout`);
+        console.log("the hell")
+        navigate("/signin");
+      } catch (err) {
+        console.log(err);
       }
+    };
+
 
 
   return (
