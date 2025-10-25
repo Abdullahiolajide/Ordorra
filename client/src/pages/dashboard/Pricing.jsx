@@ -34,10 +34,7 @@ const Pricing = () => {
 
     const res = await axios.post(
       `${backendurl}/subscription/start`,
-      {},
-      {
-        headers: { Authorization: `Bearer ${token}` }
-      }
+      {}
     );
 
     if (res.data.authorization_url) {
@@ -58,10 +55,7 @@ const Pricing = () => {
 
     const res = await axios.post(
       `${backendurl}/subscription/start-one-time`,
-      {},
-      {
-        headers: { Authorization: `Bearer ${token}` }
-      }
+      {}
     );
 
     if (res.data.authorization_url) {

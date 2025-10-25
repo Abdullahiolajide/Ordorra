@@ -6,20 +6,40 @@ import axios from 'axios';
 import { AiOutlineClose } from 'react-icons/ai';
 
 const Subscriptions = ()=>{
-    const {subscription, subWarning} = useContext(RefreshContext)
+    const {subWarning} = useContext(RefreshContext)
     const [showModal, setShowModal] = useState(false)
-    console.log(subscription)
+    const [subscription, setSubscription] = useState()
+    const [loading, setLoading] = useState(false)
     const npdate = new Date(subscription?.nextPaymentDate)
+    useEffect(()=>{
+         getSubscriptionStatus()
+       }, [])
+    
+      const getSubscriptionStatus = async () => {
+            const token = localStorage.getItem('token'); 
+      
+            try {
+                setLoading(true)
+                const res = await axios.get(`${backendurl}/subscription/status`);
+                
+                ;
+                setSubscription(res.data.subscription)
+                
+            } catch (error) {
+                console.error('Error fetching subscription status:', error.response?.data || error);
+            }finally{
+                
+                setLoading(false)
+            }
+            
+          };
 
     const cancelSubscription = async()=>{
         try {
             const token = localStorage.getItem('token');
             const res = await axios.post(`${backendurl}/subscription/cancel`, 
-                {},
-                {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            console.log(res)
+                {});
+            // console.log(res)
 
         }catch(err){
             console.log(err.response?.data.error || err.message)
@@ -52,6 +72,13 @@ const Subscriptions = ()=>{
             </div>
             )
         }
+    }
+    if (loading) {
+        return (
+            <div className='h-[60vh] flex items-center justify-center w-full'>
+                <div className='border border-4 border-green-500 h-10 w-10 rounded-full animate-spin border-b-transparent'></div>
+            </div>
+        )
     }
 
     if (subscription){

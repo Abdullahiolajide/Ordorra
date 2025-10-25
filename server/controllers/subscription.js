@@ -188,7 +188,7 @@ const oneTimeSubscription = async (req, res)=>{
       body: JSON.stringify({
         email: user.email,
         amount: 100000, // kobo (₦1000)
-        callback_url: "http://localhost:5173/dashboard/payment/subscribtions/verify/"
+        callback_url: `${process.env.FRONTEND_URL}dashboard/settings/subscribtions`
       }),
     });
 

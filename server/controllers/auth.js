@@ -2,37 +2,48 @@ const nodemailer = require('nodemailer');
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
+const {Resend} = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const sendVerificationCode = async(req, res, code, email)=>{
-
-        
-        const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        secure:true,
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASS
-        }
-    });
-    
-    const mailOptions = {
-        from: `"Ordorra" <${process.env.EMAIL}>`,
-        to: email,
-        subject: 'Your Ordorra Verification Code',
-        html: `
-            <div style="font-family:sans-serif">
-            <h2>Verify your email</h2>
-            <p>Use the verification code below to complete your sign up:</p>
-            <h1 style="letter-spacing: 4px;">${code}</h1>
-            <p>This code will expire in 30 minutes.</p>
-            </div>
-        `
+const checkAuth = (req, res) => {
+  res.json({ ok: true});
 };
 
-await transporter.sendMail(mailOptions);
+const logout =  (req, res) => {
+  res.clearCookie("ord_token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax"
+  });
+  res.json({ success: true });
+};
 
 
-}
+
+
+const sendVerificationCode = async (req, res, code, email) => {
+  try {
+    await resend.emails.send({
+      from: `"Ordorra" <no-reply@ordorra.app>`, // ✅ can change to custom later (e.g. no-reply@ordorra.app)
+      to: email,
+      subject: "Your Ordorra Verification Code",
+      html: `
+        <div style="font-family:sans-serif">
+          <h2>Verify your email</h2>
+          <p>Use the verification code below to complete your sign up:</p>
+          <h1 style="letter-spacing: 4px;">${code}</h1>
+          <p>This code will expire in 30 minutes.</p>
+        </div>
+      `,
+    });
+
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: "Email failed" });
+  }
+};
+
 
 const signUp = async (req, res)=>{
      const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit
@@ -92,15 +103,17 @@ const signIn = async (req, res) => {
       { userId: user._id },
       process.env.JWT_SECRET,
     );
+    const isProd = process.env.NODE_ENV === "production";
 
-    res.status(200).json({
-      message: 'Login successful',
-      token,
-      user: {
-        id: user._id,
-        email: user.email
-      }
+    res.cookie("ord_token", token, {
+      httpOnly: true,
+      secure: isProd,             // ✅ true only in production
+      sameSite: isProd ? "strict" : "lax", // ✅ local dev still works
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
+
+    res.status(200).json({ success: true });
+
 
   } catch (err) {
     console.error(err);
@@ -147,17 +160,8 @@ const resendVerificationCode = async (req, res) => {
     user.codeExpires = expires;
     await user.save();
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      secure:true,
-      auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASS
-      }
-    });
-
-    const mailOptions = {
-      from: `"Ordorra" <${process.env.EMAIL}>`,
+    await resend.emails.send({
+      from: `"Ordorra" <no-reply@ordorra.app>`, // change to no-reply@ordorra.app later if you want
       to: email,
       subject: 'Your new Ordorra Verification Code',
       html: `
@@ -166,10 +170,8 @@ const resendVerificationCode = async (req, res) => {
           <h1 style="letter-spacing: 4px;">${code}</h1>
           <p>This code will expire in 30 minutes.</p>
         </div>
-      `
-    };
-
-    await transporter.sendMail(mailOptions);
+      `,
+    });
 
     res.status(200).json({ message: 'Verification code resent' });
   } catch (err) {
@@ -192,19 +194,9 @@ const forgotPassword = async (req, res) => {
     user.resetExpires = expires;
     await user.save();
 
- const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, // TLS
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASS, // should be App Password
-  },
-});
 
-
-    await transporter.sendMail({
-      from: `"Ordorra" <${process.env.EMAIL}>`,
+    await resend.emails.send({
+      from: `"Ordorra" <no-reply@ordorra.app>`,
       to: email,
       subject: 'Password Reset Code',
       html: `
@@ -260,5 +252,7 @@ module.exports = {
     resendVerificationCode,
     signIn,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    checkAuth,
+    logout
 }

@@ -19,6 +19,8 @@ const AddProducts = ({productInfo = null}) => {
   //  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false)
   const {setRefresh, pl, isSubscribed, setShowSModal} = useContext(RefreshContext)
 
+
+
   useEffect(()=>{
     if (productInfo) {
       setFormData(productInfo)
@@ -48,7 +50,8 @@ const uploadImageToCloudinary = async (file) => {
   try {
     const res = await axios.post(
       'https://api.cloudinary.com/v1_1/dsr9rtryb/image/upload',
-      data
+      data,
+      { withCredentials: false }
     );
     setFormData(prev => ({ ...prev, imageUrl: res.data.secure_url }));
   } catch (err) {
@@ -74,13 +77,11 @@ const uploadImageToCloudinary = async (file) => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-  console.log('started', pl)
       if (!isSubscribed && pl >= 4) {
         console.log(isSubscribed)
         setShowSModal(true)
         return
       }
-      console.log('continued')
   //  if (subscription.status != 'active' && userProducts.length >= 4){
   //         toast.info('You have exceeded your product limit')
   //         return setShowSubscriptionModal(true)
@@ -96,20 +97,11 @@ const handleSubmit = async (e) => {
     return toast.info('All fields are required and image must be uploaded');
   }
 
-  const token = localStorage.getItem('token');
-  if (!token) {
-    return toast.error('User not authenticated');
-  }
 
   try {
     const res = await axios.post(
       `${backendurl}/products/create-product`, // Replace with your backend URL
-      { name, price, description, imageUrl },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
+      { name, price, description, imageUrl }
     );
 
     toast.success('Product created!');
@@ -138,11 +130,7 @@ const handleSubmit = async (e) => {
       const token = localStorage.getItem('token'); // or however you're storing it
 
       try {
-        const res = await axios.put(`${backendurl}/products/update/${id}`, updatedData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await axios.put(`${backendurl}/products/update/${id}`, updatedData);
 
         toast.success('Product updated successfully');
         setSaving(false)

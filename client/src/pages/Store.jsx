@@ -23,8 +23,13 @@ const Store = () => {
   const [totalPrice, setTodalPrice] = useState(0)
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [subWarning, setSubWarning] = useState(true)
+  const [exist, setExists] = useState(true)
 
+  const currentUserCart = cartArray.filter(cart=> cart.ownerId == store.user)
 
+    useEffect(()=>{
+    document.title = store.storeName
+  }, [store])
 
     useEffect(()=>{
      getSubscriptionStatus()
@@ -75,6 +80,10 @@ const Store = () => {
         } catch (error) {
           if (error.response) {
             console.log(error.response.data.message)
+            if(error.response.data.message == "Store does not exist"){
+              console.log("f")
+             setExists(false)
+            }
           } else {
             console.error(error.message)
           }
@@ -94,7 +103,7 @@ const Store = () => {
     }, [])
     useEffect(()=>{
        let total = 0
-       const ac = cartArray.filter(cart=> cart.ownerId == store.user)
+       const ac = currentUserCart
       if (ac.length > 0){
         for (let i = 0; i < ac.length; i++) {
           total += ac[i].price * ac[i].quantity
@@ -127,7 +136,7 @@ const Store = () => {
 
         return currentCart
       })
-      setShowCart(true)
+      setShowCart(currentUserCart.length < 1)
     }
 
     const substractFromCart =(i, ci)=>{
@@ -161,7 +170,7 @@ const Store = () => {
     }
 
    const orderOnWhatsApp = () => {
-    const ac = cartArray.filter(cart=> cart.ownerId == store.user)
+    const ac = currentUserCart
       if (!store.phoneNumber) return
 
       //Cary Summary
@@ -191,13 +200,19 @@ const Store = () => {
         phone = "234" + phone
       }
       if (window.gtag) {
-                    window.gtag('event', 'checkout_to_whatsapp', { cart: cartArray.filter(cart=> cart.ownerId == store.user).length });
+                    window.gtag('event', 'checkout_to_whatsapp', { cart: currentUserCart.length });
           }
       window.open(`https://wa.me/${phone}?text=${encoded}`, "_blank")
     }
 
 
-
+  if(!exist){
+    return (
+      <div>
+        Store does not exist please check your url or ask the vendor for the correct url
+      </div>
+    )
+  }
 
   return (
     // loader 
@@ -323,10 +338,8 @@ const Store = () => {
             {
           
               // cartArray.map((cart, ci)=>{
-              cartArray.filter(cart=> cart.ownerId == store.user).map((cart, ci)=>{
+              currentUserCart.map((cart, ci)=>{
                 let cartProduct = products.find(product=> product._id == cart.id)
-                console.log(store)
-                console.log(cartArray)
                 return(
                 // {/* Cart Items */}
                 <div className="px-5 py-3 space-y-4" key={cart.id}>
@@ -372,7 +385,7 @@ const Store = () => {
               })
             }
 
-            {cartArray.filter(cart=> cart.ownerId == store.user).length < 1 &&
+            {currentUserCart.length < 1 &&
               <div className="w-full h-full flex items-center justify-center">
                 <div className="flex flex-col justify-center space-y-3">
                   <p className="text-xl text-gray-400">Your cart is empty</p>
@@ -417,7 +430,7 @@ const Store = () => {
             <FiShoppingCart className="text-2xl" />
             
               <div className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow">
-                {cartArray.filter(cart=> cart.ownerId == store.user).length}
+                {currentUserCart.length}
               </div>
           </button>
         </div>

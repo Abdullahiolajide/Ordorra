@@ -1,4 +1,5 @@
-import { StrictMode } from 'react'
+import axios from "axios";
+axios.defaults.withCredentials = true;
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'

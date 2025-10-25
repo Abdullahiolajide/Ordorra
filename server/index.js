@@ -8,9 +8,29 @@ const auth = require('./routes/auth')
 const productRoutes = require('./routes/products');
 const storeInfos = require('./routes/storeInfos');
 const subscriptionRoutes = require("./routes/subscription");
+const cookieParser = require("cookie-parser");
 const paystackWebhook = require("./webhooks/paystack");
-app.use(cors())
+
+app.use(cookieParser());
 app.use(express.json())
+const allowedOrigins = [
+  "http://localhost:5173",       
+  "https://ordorra.app",          
+  "https://ordorra.vercel.app"    
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true
+  })
+);
 
 
 app.use('/api/auth', auth)

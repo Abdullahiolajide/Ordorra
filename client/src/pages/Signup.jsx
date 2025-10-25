@@ -42,7 +42,6 @@ const Signup = () => {
             password
             });
             localStorage.setItem('ouseremail', email)
-            console.log(res.data);
             myToast(
                      <div className='text-center w-full max-w-xl'>
                               <h1 className='text-xl font-md'>Sign Up Successful</h1>

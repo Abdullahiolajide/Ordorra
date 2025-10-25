@@ -29,11 +29,7 @@ const Products = () => {
       setLoading(true)
 
       try {
-        const res = await axios.get(`${backendurl}/products/get-products`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await axios.get(`${backendurl}/products/get-products`);
 
         // console.log(res.data, );
         setUserProducts(res.data)
@@ -49,13 +45,9 @@ const Products = () => {
       const token = localStorage.getItem('token');
 
       try {
-        const res = await axios.delete(`${backendurl}/products/delete/${productId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await axios.delete(`${backendurl}/products/delete/${productId}`);
 
-        console.log(res.data);
+        
 
         
         getProducts(); 
@@ -75,7 +67,6 @@ const Products = () => {
     // }
     const paywallCheck = ()=>{
       if (!isSubscribed && userProducts.length >= 4) {
-        console.log(isSubscribed)
         setShowSModal(true)
         return false
       }

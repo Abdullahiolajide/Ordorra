@@ -33,9 +33,7 @@ const Dashboard = () => {
         setLoading(true)
         try {
           const token = localStorage.getItem('token');
-          const res = await axios.get(`${backendurl}/store/info`, {
-            headers: { Authorization: `Bearer ${token}` }
-          });
+          const res = await axios.get(`${backendurl}/store/info`);
   
           if (res.data.handle) {
             // setFormData(res.data);
@@ -46,7 +44,7 @@ const Dashboard = () => {
         } catch (err) {
           if (err.response?.status !== 404) {
             console.error('Error fetching store info:', err.response?.data || err.message);
-            toast.error('Failed to fetch store information.');
+            // toast.error('Failed to fetch store information.');
           }
         }
         finally{
@@ -64,11 +62,7 @@ const Dashboard = () => {
       setLoading(true)
 
       try {
-        const res = await axios.get(`${backendurl}/products/get-products`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await axios.get(`${backendurl}/products/get-products`);
 
         setStats(prev=> ({...prev, products: res.data.length}))
       } catch (error) {
@@ -171,7 +165,7 @@ const Dashboard = () => {
           ) : (
             <div className="flex flex-col items-start">
               <p className="text-gray-700 font-medium mb-2">
-                You haven’t set up your store info yet.
+                Setup your store to get your link
               </p>
               <Link
                 to="store-info"

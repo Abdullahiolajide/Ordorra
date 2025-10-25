@@ -1,9 +1,15 @@
+import axios from "axios";
 import { FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { backendurl } from "../../../global";
 
 const Settings = () => {
 
   const navigate = useNavigate()
+   const logout = async () => {
+        await axios.post(`${backendurl}api/auth/logout`, {}, { withCredentials: true }); // ✅ clear cookie at backend
+        navigate('/signin', { replace: true });
+      }
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-sm mt-10 lg:mt-20">
@@ -17,10 +23,7 @@ const Settings = () => {
             <h2 className="text-lg font-semibold">Security</h2>
           </div>
           <button className="cursor-pointer bg-red-50 text-red-600 px-4 py-2 rounded-lg hover:bg-red-100 transition"
-          onClick={()=> {
-            localStorage.removeItem('token')
-            navigate('/signin', {replace: true})
-          }}
+          onClick={logout}
               >
             Log Out 
           </button>

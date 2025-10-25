@@ -37,7 +37,7 @@ const Signin = () => {
             password
             });
             toast.success("Signed In Successfully")
-            localStorage.setItem('token', res.data.token)
+            // localStorage.setItem('token', res.data.token)
             // console.log(res.data);
             if (window.gtag) {
                     window.gtag('event', 'sign_in');

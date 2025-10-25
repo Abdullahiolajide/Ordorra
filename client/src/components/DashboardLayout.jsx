@@ -22,12 +22,18 @@ const DashboardLayout = () => {
   const [pl, setPl] = useState(0)
 
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/signin');
+useEffect(() => {
+  (async () => {
+    try {
+      const auth = await axios.get(`${backendurl}/auth/me`);
+      if (!auth.data.ok) navigate('/signin')
+    } catch (err) {
+      console.log(err)
+      
     }
-  }, []);
+  })();
+}, []);
+
 
   useEffect(()=>{
     getProducts()
@@ -41,11 +47,7 @@ const DashboardLayout = () => {
         const token = localStorage.getItem('token'); 
   
         try {
-          const res = await axios.get(`${backendurl}/subscription/status`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const res = await axios.get(`${backendurl}/subscription/status`);
   
            ;
           setSubscription(res.data.subscription)
@@ -63,11 +65,7 @@ const DashboardLayout = () => {
       // setLoading(true)
 
       try {
-        const res = await axios.get(`${backendurl}/products/get-products`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await axios.get(`${backendurl}/products/get-products`);
 
         setPl(res.data.length)
       } catch (error) {
@@ -79,7 +77,6 @@ const DashboardLayout = () => {
       const npd = new Date(nextPaymentDate);
       const currentDate = new Date();
       const diffInDays = (npd - currentDate) / (1000 * 60 * 60 * 24);
-      console.log(diffInDays)
 
       if (status === "active" || status === "non-renewing") {
         setIsSubscribed(true);
@@ -91,12 +88,18 @@ const DashboardLayout = () => {
       if (diffInDays <= -2) {
         setSubWarning(true); 
         setIsSubscribed(false);
-      }else{
+      }else if(diffInDays >= -2 && npd) {
+
         setIsSubscribed(true)
+        console.log("jj")
       }
 
     
     };
+    const logout = async () => {
+        await axios.post(`${backendurl}/auth/logout`, {}, { withCredentials: true }); // ✅ clear cookie at backend
+        navigate('/signin', { replace: true });
+      }
 
 
   return (
@@ -223,10 +226,7 @@ const DashboardLayout = () => {
     {/* Logout at the bottom */}
     <li 
       className='cursor-pointer group flex items-center space-x-2 p-2 mb-10 rounded hover:bg-gray-300/30 hover:text-red-600'
-      onClick={()=> {
-        localStorage.removeItem('token')
-        navigate('/signin', {replace: true})
-      }}>
+      onClick={logout}>
       <span className=' group-hover:text-red-600 text-xl'><IoLogOut /></span>
       <span>Logout</span>
     </li>
