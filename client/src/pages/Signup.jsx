@@ -5,6 +5,7 @@ import { backendurl } from '../../global'
 import axios from 'axios'
 import { myToast } from '../components/myToast'
 import { Helmet } from 'react-helmet'
+import { toast } from 'react-toastify'
 
 const Signup = () => {
     const [user, setUser] = useState({})
@@ -23,7 +24,8 @@ const Signup = () => {
             }
         ))
     }
-    const signUp = async () => {
+    const signUp = async (e) => {
+        e.preventDefault()
         const { email, password, confirm_password } = user;
         if (!email || !password || !confirm_password) {
             return setErrMsg('Fill in all fields')
@@ -60,6 +62,10 @@ const Signup = () => {
         } catch (err) {
             // better error handling
             if (err.response) {
+                if(err.response.data.errCode == 11000){
+                    toast.success('You already have an account, Sign In')
+                    navigate('/signin')
+                }
             setErrMsg(err.response.data.message || 'Something went wrong');
             } else {
             setErrMsg('Network error');
@@ -86,12 +92,14 @@ const Signup = () => {
                 <p className='text-sm'>Create your WhatsApp commerce Storefront </p>
                 <p><small className='text-red-500'>{errMsg && errMsg}</small></p>
            </div>
+            <form action="" onSubmit={(e)=> {signUp(e); setClicked(true)}}>
 
             <div className='flex flex-col my-4 '>
                 <label htmlFor="" className='text-sm py-1'>Email</label>
                 <input 
-                type="text"
+                type="email"
                 name='email'
+                required
                 value={user?.email || ''}
                 className={`border ${clicked && !user.email ? 'border-red-600' : 'border-gray-400'} rounded px-3 py-2 w-full`} 
                 placeholder='Ex. example@gmail.com'
@@ -104,6 +112,7 @@ const Signup = () => {
                 <input 
                 type="password"
                 name='password'
+                required
                 value={user?.password || ''}
                 className={`border ${clicked && !user.password ?'border-red-600' : 'border-gray-400'} rounded px-3 py-2 w-full`} 
                 placeholder='Enter your password'
@@ -115,6 +124,7 @@ const Signup = () => {
                 <label htmlFor="" className='text-sm py-1'>Confirm Password</label>
                 <input 
                 type="password"
+                required
                 name='confirm_password'
                 value={user?.confirm_password || ''}
                 className={`border ${clicked && !user.confirm_password ?'border-red-600' : 'border-gray-400'} rounded px-3 py-2 w-full`} 
@@ -127,7 +137,8 @@ const Signup = () => {
                 <button 
                 className={`w-full py-2 ${loading ? 'bg-gray-300' : 'bg-green-600 active:bg-green-700 hover:bg-green-500'} rounded text-white my-2  cursor-pointer`}
                 disabled={loading}
-                onClick={()=> {signUp(); setClicked(true)}}
+                type='submit'
+                
                 >
                     Sign Up{loading && '...'}
                 </button>
@@ -136,6 +147,7 @@ const Signup = () => {
                 <span>Already have an account?</span> 
                 <Link to={'/signin'}><span className='flex text-green-600 items-center justify-center'>Sign in <MdNavigateNext /></span> </Link>
             </div>
+            </form>
 
         </section>
     </div>

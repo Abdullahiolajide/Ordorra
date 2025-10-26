@@ -32,7 +32,6 @@ const Dashboard = () => {
       const fetchStoreInfo = async () => {
         setLoading(true)
         try {
-          const token = localStorage.getItem('token');
           const res = await axios.get(`${backendurl}/store/info`);
   
           if (res.data.handle) {
@@ -75,7 +74,6 @@ const Dashboard = () => {
 
     const paywallCheck = ()=>{
       if (!isSubscribed && stats.products >= 4) {
-        console.log(isSubscribed)
         setShowSModal(true)
         return false
       }

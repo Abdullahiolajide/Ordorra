@@ -91,7 +91,6 @@ useEffect(() => {
       }else if(diffInDays >= -2 && npd && status != "pending") {
 
         setIsSubscribed(true)
-        console.log("jj")
       }
 
     

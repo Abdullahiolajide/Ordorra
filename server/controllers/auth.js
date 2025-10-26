@@ -26,7 +26,7 @@ const logout = (req, res) => {
 const sendVerificationCode = async (req, res, code, email) => {
   try {
     await resend.emails.send({
-      from: `"Ordorra" <no-reply@ordorra.app>`, // ✅ can change to custom later (e.g. no-reply@ordorra.app)
+      from: `"Ordorra" <no-reply@ordorra.app>`,
       to: email,
       subject: "Your Ordorra Verification Code",
       html: `
@@ -48,8 +48,8 @@ const sendVerificationCode = async (req, res, code, email) => {
 
 
 const signUp = async (req, res)=>{
-     const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit
-      const expires = new Date(Date.now() + 30 * 60 * 1000); // expires in 10 mins
+     const code = Math.floor(100000 + Math.random() * 900000).toString(); 
+      const expires = new Date(Date.now() + 30 * 60 * 1000); 
         
 
    try {
@@ -76,7 +76,7 @@ const signUp = async (req, res)=>{
     });
   } catch (err) {
      if (err.code === 11000 && err.keyPattern.email) {
-      return res.status(400).json({ message: 'Email already exists, go to Sign In' });
+      return res.status(400).json({ message: 'Email already exists, go to Sign In', errCode: err.code });
     }
 
     console.log(err);
@@ -95,7 +95,7 @@ const signIn = async (req, res) => {
       return res.status(400).json({ message: 'Invalid email or password' });
 
     if (!user.verified)
-      return res.status(403).json({ message: 'Please verify your email first' });
+      return res.status(403).json({ message: 'Please verify your email first', verified:false });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)

@@ -1,5 +1,6 @@
 const Product = require("../models/Product");
 const StoreInfos = require("../models/StoreInfos") ;
+const Subscription = require("../models/Subscription");
 
 
 const setStoreInfo = async (req, res) => {
@@ -92,9 +93,31 @@ const editStoreInfo = async (req, res) => {
   }
 };
 
+const getStoreSubscription = async(req, res)=>{
+  try {
+    const store = await StoreInfos.findOne({ handle: req.params.handle });
+    if (!store) {
+      return res.status(404).json({ message: "Store does not exist" });
+    }
+
+    const subscription = await Subscription.findOne({ userId: store.user });
+
+    
+  res.status(200).json({
+      success: true,
+      subscription,
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
 module.exports = {
   setStoreInfo,
   getStoreInfo,
   editStoreInfo,
-  getStore
+  getStore,
+  getStoreSubscription
 }

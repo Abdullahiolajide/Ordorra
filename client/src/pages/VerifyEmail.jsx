@@ -68,10 +68,13 @@ const verifyEmail = () => {
                     />
 
                 </div>
-                    <button 
-                    onClick={verifyEmail}
-                    disabled={loading}
-                    className={`w-full py-2 ${loading ? 'bg-gray-300' : 'bg-green-600 active:bg-green-700 hover:bg-green-500'} rounded text-white my-2  cursor-pointer`}>Verify{loading && '...'}</button>
+                   <div className='flex justify-center'>
+                     <button 
+                        onClick={verifyEmail}
+                        disabled={loading}
+                        className={`w-full mx-auto max-w-xs py-2 ${loading ? 'bg-gray-300' : 'bg-green-600 active:bg-green-700 hover:bg-green-500'} rounded text-white my-2  cursor-pointer`}>Verify{loading && '...'}
+                    </button>
+                   </div>
             </div>
         </section>
     </div>

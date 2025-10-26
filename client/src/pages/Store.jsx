@@ -36,16 +36,10 @@ const Store = () => {
    }, [])
 
   const getSubscriptionStatus = async () => {
-        const token = localStorage.getItem('token'); 
   
         try {
-          const res = await axios.get(`${backendurl}/subscription/status`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          // console.log(subscription)
-          const status = res.data.subscription.status 
+          const res = await axios.get(`${backendurl}/store/subscription/${params.handle}`);
+          const status = res.data.subscription.status
           payWall(status, res.data.subscription.nextPaymentDate)
 
         } catch (error) {
@@ -53,20 +47,28 @@ const Store = () => {
         }
         
       };
+
       const payWall = (status, nextPaymentDate) => {
       const npd = new Date(nextPaymentDate);
       const currentDate = new Date();
       const diffInDays = (npd - currentDate) / (1000 * 60 * 60 * 24);
 
-       if (status === "active" || status === "non-renewing") {
+      if (status === "active" || status === "non-renewing") {
         setIsSubscribed(true);
       }
       if (diffInDays >= -2 && diffInDays <= -1) {
         setSubWarning(true); 
+        // setSubWarningModal(true); 
       }
       if (diffInDays <= -2) {
+        setSubWarning(true); 
         setIsSubscribed(false);
+      }else if(diffInDays >= -2 && npd && status != "pending") {
+
+        setIsSubscribed(true)
       }
+
+    
     };
   
 

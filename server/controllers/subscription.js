@@ -227,7 +227,7 @@ const getSubscriptionStatus = async (req, res) => {
       return res.status(200).json({ success: false, message: "No subscription found" });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       subscription,
     });
