@@ -1,13 +1,11 @@
 import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { backendurl } from "../../global";
 import { useParams } from "react-router-dom";
 import thousandify from 'thousandify'
 import { IoIosClose } from "react-icons/io";
-import { HiOutlineShoppingBag } from 'react-icons/hi'
 import { FiShoppingCart } from "react-icons/fi";
 import { FaTrash, FaWhatsapp } from "react-icons/fa";
-import { CiAirportSign1 } from "react-icons/ci";
 import { MdAddShoppingCart } from "react-icons/md";
 
 const Store = () => {
@@ -418,26 +416,26 @@ const Store = () => {
 
 
 
-      <nav className="z-10 bg-white/80 backdrop-blur-md px-10 py-4 shadow-sm fixed w-full">
+      <nav className="z-10 bg-white backdrop-blu px-4 py-2 md:py-3 shadow-sm fixed w-full">
         <div className="max-w-[1100px] flex justify-between items-center mx-auto">
-          <h1 className="flex items-center gap-2 font-semibold text-lg md:text-xl text-green-900">
+          <h1 className="flex items-center gap-2   md:text-lg">
             {/* <HiOutlineShoppingBag className="text-green-700 text-xl" /> */}
-            <div className="w-10 h-10 rounded-3xl border overflow-hidden">
+            <div className="w-9 h-9 rounded-3xl border overflow-hidden">
               <img src={store.storeLogo} alt="" className="w-10" />
             </div>
             {store.storeName}
           </h1>
           <button className="relative flex items-center cursor-pointer hover:bg-gray-100 p-2 rounded-3xl" 
           onClick={()=> setShowCart(prev=> !prev)}>
-            <FiShoppingCart className="text-2xl" />
+            <FiShoppingCart className="text-xl font-light" />
             
-              <div className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow">
+              <div className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] md:text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full shadow">
                 {currentUserCart.length}
               </div>
           </button>
         </div>
       </nav>
-      <div className="h-18"></div>
+      <div className="h-13 md:15"></div>
 
         {/* Store Hero */}
         <div className="py-40 relative overflow-hidden">
@@ -474,7 +472,7 @@ const Store = () => {
               
             />
             <div className="p-2 md:p-4">
-              <h3 className="text-sm md:text-sm lg:text-base font-medium text-gray-800 cursor-pointer"
+              <h3 className="text-sm md:text-sm lg:text-base font-medium text-gray-800 cursor-pointer truncate"
                 onClick={()=> {
               
               setCurrentProductIndex(i)
