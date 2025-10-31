@@ -9,6 +9,8 @@ import { FiShoppingCart } from "react-icons/fi";
 import { FaTrash, FaWhatsapp } from "react-icons/fa";
 import { CiAirportSign1 } from "react-icons/ci";
 import { MdAddShoppingCart } from "react-icons/md";
+import ViewImageModal from "../components/store-components/ViewImageModal";
+import CoverLoader from "../components/CoverLoader";
 
 const Store = () => {
   const params = useParams()
@@ -35,18 +37,18 @@ const Store = () => {
      getSubscriptionStatus()
    }, [])
 
-  const getSubscriptionStatus = async () => {
-  
-        try {
-          const res = await axios.get(`${backendurl}/store/subscription/${params.handle}`);
-          const status = res.data.subscription.status
-          payWall(status, res.data.subscription.nextPaymentDate)
+      const getSubscriptionStatus = async () => {
+    
+          try {
+            const res = await axios.get(`${backendurl}/store/subscription/${params.handle}`);
+            const status = res.data.subscription.status
+            payWall(status, res.data.subscription.nextPaymentDate)
 
-        } catch (error) {
-          console.error('Error fetching subscription status:', error.response?.data || error);
-        }
-        
-      };
+          } catch (error) {
+            console.error('Error fetching subscription status:', error.response?.data || error);
+          }
+          
+     };
 
       const payWall = (status, nextPaymentDate) => {
       const npd = new Date(nextPaymentDate);
@@ -219,18 +221,16 @@ const Store = () => {
   return (
     // loader 
     <div className="bg-gray-50 min-h-screen">
-      {/* View Image Modal  */}
-          {displayImage && <div className="flex w-full h-full items-center justify-center absolute z-100 fixed bg-black/40 inset-0">
-          <div className="w-full h-full absolute -z-1" onClick={()=> setDisplayImage('')}></div>
-           <div className="absolute right-2 top-2 text-4xl text-gray-300 hover:text-white-700 cursor-pointer" onClick={()=> setDisplayImage('')}>
-                          <IoIosClose />
-                </div>
-            <img src={displayImage} alt="" className="lg:max-h-150 lg:max-w-270 px-2 max-h-[80vh] py-2 lg:px-0" />
-          </div>}
-      {/* View Image Modal end */}
+          <CoverLoader loading={loading}/>
+     
+          <ViewImageModal 
+            displayImage={displayImage}
+            onClick={()=> setDisplayImage('')}
+          />
 
         {/* View Prouct Modal  */}
-          {showProductModal && <section>
+          {showProductModal && 
+          <section>
             <div className={`fixed inset-0 z-50 px-2 md:px-0 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}>
               <div className="w-full h-full absolute -z-1" onClick={()=> setShowProductModal(false)}></div>
               <div className="zoom bg-white w-100 max-h-170 rounded-2xl boder border-gray-300 relative px-4 py-4 flex flex-col justify-between">
@@ -300,16 +300,7 @@ const Store = () => {
           </section>}
         {/* View Prouct Modal end  */}
 
-      {/* loader  */}
-         {loading && <div
-            className={`fixed inset-0 z-110 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}
-            >
-
-            <div className="h-13 w-13 border absolute border-5 rounded-4xl border-b-transparent border-green-600 animate-spin">
-
-            </div>
-      </div>}
-      {/* loader  */}
+      
 
 
 
@@ -439,21 +430,16 @@ const Store = () => {
       </nav>
       <div className="h-18"></div>
 
-        {/* Store Hero */}
         <div className="py-40 relative overflow-hidden">
-        
           <img src={store.storeLogo} alt="" className="absolute top-0 h-ful top-0 w-full"/>
           <div className="absolute w-full h-full bg-black/60 top-0 "></div>
           <p className="absolute flex w-full h-full items-center justify-center top-0 lg:text-4xl md:text-3xl text-2xl font-medium text-white text-center">{store.storeBio || "Welcome"}</p>
-
-  
-          
         </div>
 
 
       
 
-      <div className="max-w-6xl mx-auto px-6 lg:text-3xl md:text-2xl text-xl mt-10">Feaured Products</div>
+      <div className="max-w-6xl mx-auto px-6 lg:text-3xl md:text-2xl text-xl mt-10">Featured Products</div>
       <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6 gap-2">
         
         {products.filter((products, i)=> !isSubscribed ? i < 4 : i >= 0 ).map((product, i) => (
