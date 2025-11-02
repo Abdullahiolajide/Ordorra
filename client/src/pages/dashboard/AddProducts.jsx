@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { backendurl } from '../../../global';
-import thousandify from 'thousandify'
+import { backendurl } from '../../../global'
 import { RefreshContext } from '../../components/DashboardLayout';
 
 const AddProducts = ({productInfo = null}) => {
@@ -11,12 +10,12 @@ const AddProducts = ({productInfo = null}) => {
     price: '',
     description: '',
     imageUrl: '',
+    imagePublicId:''
   });
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false)
   const fileInputRef = useRef(null);
   
-  //  const [showSubscriptionModal, setShowSubscriptionModal] = useState(false)
   const {setRefresh, pl, isSubscribed, setShowSModal} = useContext(RefreshContext)
 
 
@@ -30,6 +29,7 @@ const AddProducts = ({productInfo = null}) => {
         price: '',
         description: '',
         imageUrl: '',
+        imagePublicId:''
       })
     }
   }, [productInfo])
@@ -40,20 +40,28 @@ const AddProducts = ({productInfo = null}) => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  // console.log(formData)
 
 const uploadImageToCloudinary = async (file) => {
-  const data = new FormData();
-  data.append('file', file);
-  data.append('upload_preset', 'ordorra_unsigned'); 
 
-  setUploading(true);
   try {
-    const res = await axios.post(
-      'https://api.cloudinary.com/v1_1/dsr9rtryb/image/upload',
-      data,
-      { withCredentials: false }
-    );
-    setFormData(prev => ({ ...prev, imageUrl: res.data.secure_url }));
+    setUploading(true);
+    if (formData.imagePublicId){
+      await axios.post(`${backendurl}/image/delete`, {public_id:formData.imagePublicId});
+    }
+    const res = await axios.get(`${backendurl}/image/sign`, {withCredentials: true})
+
+    const data = new FormData();
+    data.append('file', file);
+    data.append("api_key", res.data.apiKey);
+    data.append("timestamp", res.data.timestamp);
+    data.append("signature", res.data.signature);
+    data.append("folder", res.data.folder);
+    const result = await axios.post('https://api.cloudinary.com/v1_1/dsr9rtryb/image/upload', data, { withCredentials: false } );
+    
+ 
+    setFormData(prev => ({ ...prev, imageUrl: result.data.secure_url, imagePublicId:result.data.public_id }));
+
   } catch (err) {
     console.error(err);
     toast.error('Image upload failed');
@@ -78,19 +86,15 @@ const uploadImageToCloudinary = async (file) => {
 const handleSubmit = async (e) => {
   e.preventDefault();
       if (!isSubscribed && pl >= 4) {
-        console.log(isSubscribed)
+        // console.log(isSubscribed)
         setShowSModal(true)
         return
       }
-  //  if (subscription.status != 'active' && userProducts.length >= 4){
-  //         toast.info('You have exceeded your product limit')
-  //         return setShowSubscriptionModal(true)
-  //       }
 
-  const { name, price, description, imageUrl } = formData;
+  const { name, price, description, imageUrl, imagePublicId } = formData;
   setSaving(true)
   if(productInfo){
-    return updateProduct(productInfo._id, { name, price, description, imageUrl })
+    return updateProduct(productInfo._id, { name, price, description, imageUrl, imagePublicId })
   }
 
   if (!name || !price || !imageUrl) {
@@ -100,17 +104,18 @@ const handleSubmit = async (e) => {
 
   try {
     const res = await axios.post(
-      `${backendurl}/products/create-product`, // Replace with your backend URL
-      { name, price, description, imageUrl }
+      `${backendurl}/products/create-product`, 
+      { name, price, description, imageUrl, imagePublicId }
     );
 
     toast.success('Product created!');
     setRefresh(prev=> !prev)
     setFormData({
-      name: '',
+        name: '',
         price: '',
         description: '',
         imageUrl: '',
+        imagePublicId:''
       })
       fileInputRef.current.value = null;
       if (window.gtag) {
@@ -127,25 +132,27 @@ const handleSubmit = async (e) => {
 };
 
     const updateProduct = async (id, updatedData) => {
-      const token = localStorage.getItem('token'); // or however you're storing it
 
       try {
         const res = await axios.put(`${backendurl}/products/update/${id}`, updatedData);
 
         toast.success('Product updated successfully');
-        setSaving(false)
         setRefresh(prev=> !prev)
         setFormData({
-        name: '',
-        price: '',
-        description: '',
-        imageUrl: '',
+          name: '',
+          price: '',
+          description: '',
+          imageUrl: '',
+          imagePublicId:''
       })
       fileInputRef.current.value = null;
         return res.data; // updated product
       } catch (error) {
         console.error('Error updating product:', error);
         toast.error('Failed to update product');
+      }finally{
+        setSaving(false)
+        
       }
     };
 

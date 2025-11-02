@@ -22,7 +22,6 @@ const StoreInfo = () => {
     const fetchStoreInfo = async () => {
       setLoading(true)
       try {
-        const token = localStorage.getItem('token');
         const res = await axios.get(`${backendurl}/store/info`);
 
         if (res.data) {

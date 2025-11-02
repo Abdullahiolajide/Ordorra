@@ -16,7 +16,6 @@ const Products = () => {
   const [productInfo, setProductInfo] = useState(null)
   const [loading, setLoading] = useState(false)
   const [subscription, setSubscription] = useState({})
-  // const [showSubscriptionModal, setShowSubscriptionModal] = useState(false)
   const { refresh, isSubscribed, setShowSModal } = useContext(RefreshContext)
 
   useEffect(()=>{
@@ -27,10 +26,10 @@ const Products = () => {
     const getProducts = async () => {
       const token = localStorage.getItem('token'); 
       setLoading(true)
-
+      
       try {
         const res = await axios.get(`${backendurl}/products/get-products`);
-
+        
         // console.log(res.data, );
         setUserProducts(res.data)
       } catch (error) {
@@ -40,31 +39,24 @@ const Products = () => {
         setLoading(false)
       }
     };
-
-    const deleteProduct = async (productId) => {
-      const token = localStorage.getItem('token');
-
+    
+    const deleteProduct = async (productId, imagePublicId) => {
+      
+      setLoading(true)
       try {
+        if (imagePublicId){
+          const res2 = await axios.post(`${backendurl}/image/delete`, {public_id:imagePublicId});
+        }
+
+
         const res = await axios.delete(`${backendurl}/products/delete/${productId}`);
-
-        
-
-        
+ 
         getProducts(); 
       } catch (error) {
         console.error('Error deleting product:', error);
       }
     };
 
-    
-    // const showAddSlider = ()=>{
-    //   // if (subscription.status != 'active' && userProducts.length >= 4){
-    //   //   toast.info('You have exceeded your product limit')
-    //   //   return setShowSubscriptionModal(true)
-    //   // }
-
-    //   setShow(true)
-    // }
     const paywallCheck = ()=>{
       if (!isSubscribed && userProducts.length >= 4) {
         setShowSModal(true)
@@ -72,11 +64,6 @@ const Products = () => {
       }
       return true
     }
-
-
-
-
-  
 
 
   return (
@@ -161,7 +148,7 @@ const Products = () => {
                 {/* Dropdown menu */}
                 {actions === index && (
                   <div
-                    className="absolute right-8 top-5 bg-white border border-gray-200 shadow-lg rounded-md overflow-hidden z-50"
+                    className="absolute right-10 top-5 bg-white border border-gray-200 shadow-lg rounded-md overflow-hidden z-50"
                     onClick={() => setActions(null)}
                   >
                     <div
@@ -175,7 +162,7 @@ const Products = () => {
                     </div>
                     <div
                       className="px-6 py-2 text-red-500 hover:bg-gray-100 cursor-pointer transition"
-                      onClick={() => deleteProduct(product._id)}
+                      onClick={() => deleteProduct(product._id, product.imagePublicId)}
                     >
                       Delete
                     </div>

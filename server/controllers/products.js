@@ -3,7 +3,7 @@ const Product = require('../models/Product');
 // Create new product
 const createProduct = async (req, res) => {
   try {
-    let { name, price, description, imageUrl } = req.body;
+    let { name, price, description, imageUrl, imagePublicId } = req.body;
 
     if (!name || !price || !imageUrl) {
       return res.status(400).json({ message: 'All fields are required' });
@@ -15,6 +15,7 @@ const createProduct = async (req, res) => {
       price,
       description,
       imageUrl,
+      imagePublicId,
       ownerId: req.user.userId,
     });
 
@@ -55,11 +56,11 @@ const deleteProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const { name, price, description, imageUrl } = req.body;
+    const { name, price, description, imageUrl, imagePublicId } = req.body;
 
     const updatedProduct = await Product.findOneAndUpdate(
       { _id: req.params.id, ownerId: req.user.userId },
-      { name, price, description, imageUrl },
+      { name, price, description, imageUrl, imagePublicId },
       { new: true } 
     );
 
@@ -73,6 +74,7 @@ const updateProduct = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 
 module.exports = {

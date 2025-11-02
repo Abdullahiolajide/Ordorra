@@ -8,6 +8,7 @@ const auth = require('./routes/auth')
 const productRoutes = require('./routes/products');
 const storeInfos = require('./routes/storeInfos');
 const subscriptionRoutes = require("./routes/subscription");
+const cloudinaryRoutes = require("./routes/cloudinary")
 const cookieParser = require("cookie-parser");
 const paystackWebhook = require("./webhooks/paystack");
 
@@ -38,6 +39,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/store', storeInfos);
 app.use("/api/subscription", subscriptionRoutes);
 app.use("/api/webhooks", paystackWebhook);
+app.use("/api/image", cloudinaryRoutes)
 app.get('/ping', (req, res) => {
   res.status(200).send('pong');
 });
