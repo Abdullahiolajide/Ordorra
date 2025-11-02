@@ -1,22 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { backendurl } from '../../../global';
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input';
+import countries from '../../data/countries.json'
+import Select from "react-select";
 
 const StoreInfo = () => {
   const [formData, setFormData] = useState({
     fullname: '',
     whatsappNumber: '',
-    phoneNumber: '',
     storeName: '',
     handle: '',
     storeBio: '',
-    storeLogo: ''
+    storeLogo: '',
+    currency:""
   });
   const [uploading, setUploading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(false)
+
+const options = countries
+  .sort((a, b) => a.name.localeCompare(b.name))
+  .map((c) => ({
+    value: c.symbol,
+    label: `${c.name} (${c.symbol} ${c.currency})`,
+  }));
+
+
+console.log(formData)
+
 
   useEffect(() => {
     const fetchStoreInfo = async () => {
@@ -64,9 +79,7 @@ const StoreInfo = () => {
           [name]: newValue,
         });
       }
-    };
-
-
+    }
 
   const uploadImage = async (file) => {
     setUploading(true);
@@ -136,7 +149,7 @@ const StoreInfo = () => {
           {/* Section: Personal Info */}
           <div className=" border- border-gray-100">
             {/* <h3 className="text-lg font-semibold text-gray-700 mb-2">Personal Information</h3> */}
-            <div className="grid md:grid-cols-2 gap-5">
+            <div className="grid md:grid-cols-2 lg:grid-cols-1 gap-3">
               <div>
                 <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Full Name</label>
                 <input
@@ -149,43 +162,45 @@ const StoreInfo = () => {
                   className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
                 />
               </div>
-              <div>
-                <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">WhatsApp Number</label>
-               <input
-                type="tel"
-                name="whatsappNumber"
-                value={formData.whatsappNumber}
-                minLength={11}
-                maxLength={15} 
-                onChange={handleChange}
-                placeholder="Ex. 09039848284"
-                required
-                className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+             
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">WhatsApp Number</label>
+                <PhoneInput 
+                    className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
+                    defaultCountry="NG"
+                    initialValueFormat="national"
+                    placeholder="9076284628"
+                    required
+                    value={formData.whatsappNumber}
+                    onChange={phone => setFormData(prev=> ({...prev, whatsappNumber: phone }))}
+
               />
-
-              </div>
+              <small className='text-xs leading-[0.9]'>Ensure that your number is correct else, you might not receive orders</small>
             </div>
-          </div>
-
-          {/* Section: Contact */}
-          <div className=" border-b border-gray-100">
-            <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Phone</label>
-            <input
-              type="tel"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              minLength={11}
-              maxLength={15} 
-              onChange={handleChange}
-              placeholder="Ex. 09039848284"
-              required
-              className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
-            />
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Country/Currency</label>
+              <Select
+                  options={options}
+                  value={options.find(opt => opt.value === formData.currency)}
+                  placeholder="Select country"
+                  onChange={(selected) => setFormData(prev=> ({...prev, currency:selected.value}))}
+                  className="w-full"
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      borderColor: "#ccc",
+                      boxShadow: "none",
+                      "&:hover": { borderColor: "#999" },
+                    }),
+                  }}
+                />
+              
+            </div>
+            </div>
           </div>
 
           {/* Section: Store Info */}
           <div className="pb-4 border-b border-gray-100">
-            {/* <h3 className="text-lg font-semibold text-gray-700 mb-4">Store details</h3> */}
             <div className="space-y-4">
               <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Store name</label>
               <input
@@ -250,7 +265,7 @@ const StoreInfo = () => {
           <button
             type="submit"
             disabled={uploading || saving}
-            className="cursor-pointer w-full bg-green-600 text-white py-2 rounded-lg font-medium text-lg hover:bg-green-700 focus:ring-4 focus:ring-green-300 transition disabled:bg-green-300"
+            className="cursor-pointer w-full bg-green-600 text-white py-2 rounded-lg font-medium hover:bg-green-700 focus:ring-4 focus:ring-green-300 transition disabled:bg-green-300"
           >
             {isEditing ? 'Update Store Info' : 'Save Store Info'}{saving && '...'}
           </button>

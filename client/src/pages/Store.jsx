@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { backendurl } from "../../global";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import thousandify from 'thousandify'
 import { IoIosClose } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
@@ -9,6 +9,7 @@ import { FaTrash, FaWhatsapp } from "react-icons/fa";
 import { MdAddShoppingCart } from "react-icons/md";
 import ViewImageModal from "../components/store-components/ViewImageModal";
 import CoverLoader from "../components/CoverLoader";
+import { FaShop } from "react-icons/fa6";
 
 const Store = () => {
   const params = useParams()
@@ -173,14 +174,14 @@ const Store = () => {
 
    const orderOnWhatsApp = () => {
     const ac = currentUserCart
-      if (!store.phoneNumber) return
+      if (!store.whatsappNumber) return
 
       //Cary Summary
       let message = `Hello ${store.storeName},\nI would like to order:\n\n`
       ac.forEach(item => {
         const product = products.find(p => p._id === item.id)
         if (product) {
-          message += `• ${product.name} (x${item.quantity}) - ₦${thousandify(item.price * item.quantity)}\n`
+          message += `• ${product.name} (x${item.quantity}) - ${store.currency}${thousandify(item.price * item.quantity)}\n`
         }
       })
 
@@ -188,22 +189,27 @@ const Store = () => {
         (sum, item) => sum + item.price * item.quantity,
         0
       )
-      message += `\nTotal: ₦${thousandify(total)}\n\nPlease confirm availability.`
+      message += `\nTotal: ${store.currency}${thousandify(total)}\n\nPlease confirm availability.`
 
       const encoded = encodeURIComponent(message)
-
+      
       // Phone number formattign 
-      let phone = store.phoneNumber.trim().replace(/\D/g, "")
-      if (phone.startsWith("0")) {
-        phone = "234" + phone.slice(1)
-      } else if (phone.startsWith("+")) {
+      let phone = store.whatsappNumber.trim().replace(/\D/g, "")
+      if (phone.startsWith("+")) {
         phone = phone.slice(1)
-      } else if (!phone.startsWith("234")) {
-        phone = "234" + phone
       }
       if (window.gtag) {
                     window.gtag('event', 'checkout_to_whatsapp', { cart: currentUserCart.length });
           }
+      window.open(`https://wa.me/${phone}?text=${encoded}`, "_blank")
+    }
+    const contact = ()=>{
+      let message = `(Ordorra) Hello! ${store.storeName}`
+       let phone = store.whatsappNumber.trim().replace(/\D/g, "")
+      if (phone.startsWith("+")) {
+        phone = phone.slice(1)
+      }
+      const encoded = encodeURIComponent(message)
       window.open(`https://wa.me/${phone}?text=${encoded}`, "_blank")
     }
 
@@ -225,6 +231,10 @@ const Store = () => {
             displayImage={displayImage}
             onClick={()=> setDisplayImage('')}
           />
+
+          <div className="text-white bg-green-500 w-fit p-2 md:p-3 text-xl md:text-3xl rounded-full fixed bottom-8 right-8 z-10 cursor-pointer active:bg-green-600 " onClick={contact}>
+            <FaWhatsapp />
+          </div>
 
         {/* View Prouct Modal  */}
           {showProductModal && 
@@ -249,7 +259,7 @@ const Store = () => {
                   </p>
                 </div>
                 <div className="mt-6">
-                  <p className="text-green-600 font-medium text-base md:text-lg mt-1">₦
+                  <p className="text-green-600 font-medium text-base md:text-lg mt-1">{store.currency}
                     {thousandify(products[currentProductIndex].price || '')}</p>
 
                 </div>
@@ -342,7 +352,7 @@ const Store = () => {
                     />
                     <div className="flex-1">
                       <h3 className="font-medium">{cartProduct?.name}</h3>
-                      <p className="text-sm text-gray-500">₦{thousandify(cartProduct?.price)}</p>
+                      <p className="text-sm text-gray-500">{store.currency}{thousandify(cartProduct?.price)}</p>
                       <div className="flex items-center gap-2 mt-1">
 
                         <div className="w-4/6 flex felx-col justify-between mt-3">
@@ -396,7 +406,7 @@ const Store = () => {
             <footer className="px-5 py-4 border-t border-gray-300 sticky bottom-0 mt-auto bg-white w-full">
               <div className="flex justify-between mb-3">
                 <span className="font-medium text-gray-800">Total</span>
-                <span className="font-semibold text-gray-800">₦{thousandify(totalPrice)}</span>
+                <span className="font-semibold text-gray-800">{store.currency}{thousandify(totalPrice)}</span>
               </div>
               <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 flex items-center justify-center rounded-lg font-medium cursor-pointer" onClick={orderOnWhatsApp}>
                 <FaWhatsapp className="text-2xl me-2"/><span>Order on WhatsApp</span>
@@ -424,6 +434,7 @@ const Store = () => {
                 {currentUserCart.length}
               </div>
           </button>
+          
         </div>
       </nav>
       <div className="h-13 md:15"></div>
@@ -432,6 +443,11 @@ const Store = () => {
           <img src={store.storeLogo} alt="" className="absolute top-0 h-ful top-0 w-full"/>
           <div className="absolute w-full h-full bg-black/60 top-0 "></div>
           <p className="absolute flex w-full h-full items-center justify-center top-0 lg:text-4xl md:text-3xl text-2xl font-medium text-white text-center">{store.storeBio || "Welcome"}</p>
+          <div className="text-white absolute bottom-4 text-center flex justify-center w-full mx-auto">
+            <Link to={"/signup"}>
+              <small className="flex items-center space-x-2 text-green-500"><span><FaShop /></span><span>Create your own free WhatsApp store</span></small>
+            </Link>
+            </div>
         </div>
 
 
@@ -467,7 +483,7 @@ const Store = () => {
               >
                 {product.name}
               </h3>
-              <p className="text-green-600 fo nt-medium text-sm md:text-base mt-1">₦
+              <p className="text-green-600 fo nt-medium text-sm md:text-base mt-1">{store.currency}
                 {thousandify(product.price)}</p>
 
               {!cartArray.find(cart=> cart.id == product._id)?.quantity ?

@@ -15,9 +15,9 @@ const storeInfosSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  phoneNumber: {
+  currency:{
     type: String,
-    required: false
+    required: true
   },
   storeName: {
     type: String,
