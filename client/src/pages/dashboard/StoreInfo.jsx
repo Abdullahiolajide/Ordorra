@@ -15,7 +15,8 @@ const StoreInfo = () => {
     handle: '',
     storeBio: '',
     storeLogo: '',
-    currency:""
+    currency:"",
+    imagePublicId:""
   });
   const [uploading, setUploading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -30,7 +31,7 @@ const options = countries
   }));
 
 
-console.log(formData)
+
 
 
   useEffect(() => {
@@ -80,25 +81,36 @@ console.log(formData)
         });
       }
     }
+    console.log(formData)
 
   const uploadImage = async (file) => {
-    setUploading(true);
-    const data = new FormData();
-    data.append('file', file);
-    data.append('upload_preset', 'ordorra_unsigned');
-
-    try {
-      const res = await fetch(
-        'https://api.cloudinary.com/v1_1/dsr9rtryb/image/upload',
-        { method: 'POST', body: data }
-      );
-      const imgData = await res.json();
-      setFormData((prev) => ({ ...prev, storeLogo: imgData.secure_url }));
-    } catch (err) {
-      console.error('Image upload failed:', err);
-    } finally {
-      setUploading(false);
-    }
+     try {
+        setUploading(true);
+        if (formData.imagePublicId){
+          await axios.post(`${backendurl}/image/delete`, {public_id:formData.imagePublicId});
+        }
+        const res = await axios.get(`${backendurl}/image/sign`, {withCredentials: true})
+    
+        const data = new FormData();
+        data.append('file', file);
+        data.append("api_key", res.data.apiKey);
+        data.append("timestamp", res.data.timestamp);
+        data.append("signature", res.data.signature);
+        data.append("folder", res.data.folder);
+        const result = await axios.post('https://api.cloudinary.com/v1_1/dsr9rtryb/image/upload', data, { withCredentials: false } );
+        
+     
+        setFormData(prev => ({ ...prev, storeLogo: result.data.secure_url, imagePublicId:result.data.public_id }));
+    
+      } catch (err) {
+        console.error(err);
+        toast.error('Image upload failed');
+        if (fileInputRef.current) {
+          fileInputRef.current.value = null;
+        }
+      } finally {
+        setUploading(false);
+      }
   };
 
   const handleSubmit = async (e) => {
@@ -107,17 +119,10 @@ console.log(formData)
     setSaving(true)
     
     try {
-      const token = localStorage.getItem('token');
       const method = isEditing ? 'put' : 'post';
       await axios[method](
         `${backendurl}/store/info`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
+        formData
       );
       
       setSaving(false)

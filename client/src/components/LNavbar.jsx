@@ -1,12 +1,36 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Icon from './Icon'
 import { RxHamburgerMenu } from 'react-icons/rx'
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
+import InfoModal from './InfoModal'
+import axios from 'axios'
+import { backendurl } from '../../global'
 
 const LNavbar = () => {
     const [show, setShow] = useState(false)
+    const [showModal, setShowModal] = useState(false)
+    const navigate = useNavigate()
+    useEffect(() => {
+      (async () => {
+        try {
+          const auth = await axios.get(`${backendurl}/auth/me`);
+          if (!auth.data.ok) navigate('/signin')
+            setShowModal(true)
+        } catch (err) {
+          
+        }
+      })();
+    }, []);
   return (
     <div>
+      <InfoModal 
+        showModal={showModal}
+        setShowModal={setShowModal}
+        title={"You are logged In"}
+        content={"You are already logged in, would you like to proceed to your dashboard"}
+        actionText={"Go to dashboard"}
+        action={()=> navigate('/dashboard')}
+      />
         <nav className='py-3 md:py-4 px- shadow'>
             <div className='flex  max-w-7xl mx-auto'>
                {/* Desktop  */}
