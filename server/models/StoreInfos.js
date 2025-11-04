@@ -34,7 +34,11 @@ const storeInfosSchema = new mongoose.Schema({
   },
   storeLogo: {
     type: String // cloudinary URL or file name
+  },
+  imagePublicId: {
+    type: String
   }
+  
 }, { timestamps: true });
 
 module.exports = mongoose.model('StoreInfos', storeInfosSchema);

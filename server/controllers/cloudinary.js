@@ -32,6 +32,7 @@ const deleteImage = async (req, res)=>{
       return res.status(400).json({ error: "Missing public_id" });
 
     await cloudinary.uploader.destroy(public_id);
+    console.log("deeleted")
     res.json({ success: true });
   } catch (err) {
     console.error(err);

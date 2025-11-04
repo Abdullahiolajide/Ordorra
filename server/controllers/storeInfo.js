@@ -5,7 +5,7 @@ const Subscription = require("../models/Subscription");
 
 const setStoreInfo = async (req, res) => {
   try {
-    const { fullname, whatsappNumber,currency, storeName, handle, storeBio, storeLogo } = req.body;
+    const { fullname, whatsappNumber,currency, storeName, handle, storeBio, storeLogo, imagePublicId } = req.body;
 
     const exists = await StoreInfos.findOne({ handle });
     if (exists) {
@@ -20,7 +20,8 @@ const setStoreInfo = async (req, res) => {
       storeName,
       handle,
       storeBio,
-      storeLogo
+      storeLogo,
+      imagePublicId
     });
 
     await newInfo.save();
@@ -67,7 +68,7 @@ const getStore = async (req, res) => {
 
 const editStoreInfo = async (req, res) => {
   try {
-    const { fullname, whatsappNumber, currency, storeName, handle, storeBio, storeLogo } = req.body;
+    const { fullname, whatsappNumber, currency, storeName, handle, storeBio, storeLogo, imagePublicId } = req.body;
 
     // check if handle is taken by someone else
     if (handle) {
@@ -79,7 +80,7 @@ const editStoreInfo = async (req, res) => {
 
     const updated = await StoreInfos.findOneAndUpdate(
       { user: req.user.userId },
-      { fullname, whatsappNumber, currency, storeName, handle, storeBio, storeLogo },
+      { fullname, whatsappNumber, currency, storeName, handle, storeBio, storeLogo, imagePublicId },
       { new: true, runValidators: true }
     );
 

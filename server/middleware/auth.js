@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const protect = (req, res, next) => {
-  const token = req.cookies?.ord_token; // ✅ Read from cookie
+  const token = req.cookies?.ord_token;
 
   if (!token) {
     return res.status(401).json({ message: "No token provided" });
