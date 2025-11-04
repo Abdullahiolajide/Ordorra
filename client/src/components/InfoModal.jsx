@@ -2,7 +2,7 @@ import React from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
 
 const InfoModal = ({showModal, setShowModal, title, content, actionText, action}) => {
- if(showModal){
+ if(!showModal) return null
 
      return (
          <div className="w-full  h-screen bg-black/50 fixed top-0 left-0 z-100 flex items-center justify-center">
@@ -28,8 +28,8 @@ const InfoModal = ({showModal, setShowModal, title, content, actionText, action}
                                     {actionText}
                                 </button> 
                                 <button 
-                                onClick={()=> setShowModal(prev=> !prev)}
-                                className='cursor-pointer bg-green-100 text-green-600 px-4 py-2 rounded-lg hover:bg-green-200 transition mt-3'>
+                                onClick={()=> setShowModal(false)}
+                                className='cursor-pointer bg-red-100 text-red-600 px-4 py-2 rounded-lg hover:bg-red-200 transition mt-3'>
                                     cancel
                                 </button> 
     
@@ -40,6 +40,6 @@ const InfoModal = ({showModal, setShowModal, title, content, actionText, action}
                         </div>
   )
 }
-}
+
 
 export default InfoModal

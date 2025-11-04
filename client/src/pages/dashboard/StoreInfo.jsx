@@ -6,6 +6,7 @@ import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input';
 import countries from '../../data/countries.json'
 import Select from "react-select";
+import Help from '../../components/Help';
 
 const StoreInfo = () => {
   const [formData, setFormData] = useState({
@@ -135,6 +136,7 @@ const options = countries
 
   return (
     <div className="max-w-6xl mx-auto md:py-6">
+      <Help />
        {loading && <div
             className={`fixed inset-0 z-50 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}
             >

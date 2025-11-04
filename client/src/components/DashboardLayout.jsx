@@ -8,6 +8,7 @@ import { MdBrandingWatermark } from 'react-icons/md';
 import { IoLogOut, IoPersonCircle, IoWarning } from 'react-icons/io5';
 import axios from 'axios';
 import { backendurl } from '../../global';
+import Help from './Help';
 
 const RefreshContext = createContext()
 
@@ -109,6 +110,7 @@ useEffect(() => {
 
   return (
     <div className="dashboard-container lg:flex bg-gray-50 text-sm md:text-base">
+      
       {subWarningModal && <div className="w-full h-screen bg-black/50 fixed top-0 left-0 z-100 flex items-center justify-center">
       <div className="w-[450px] mx-5 bg-white rounded-2xl shadow-lg p-6 relative">
         {/* Cancel Button */}
@@ -245,7 +247,7 @@ useEffect(() => {
           <div className='flex'>
             <div className="mb-2 flex items-center h-full">
               <Link to={'pricing'}>
-                <button className='text-green-00 px-2 cursor-pointer hover:text-green-800'>Upgrade plan</button>
+                <button className='text-green-700 px-2 cursor-pointer hover:text-green-800'>Upgrade plan</button>
               </Link>
             </div>
             <div className='flex items-center text-3xl'><IoPersonCircle /></div>

@@ -2,6 +2,7 @@ import axios from "axios";
 import { FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { backendurl } from "../../../global";
+import Help from "../../components/Help";
 
 const Settings = () => {
 
@@ -17,6 +18,7 @@ const Settings = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-sm mt-10 lg:mt-20">
+      <Help />
       <h1 className="text-2xl font-bold mb-6 text-gray-800">Settings</h1>
 
       <div className="space-y-6">

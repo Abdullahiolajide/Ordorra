@@ -7,6 +7,7 @@ import { FiCopy } from "react-icons/fi";
 import { backendurl } from "../../../global";
 import { RefreshContext } from "../../components/DashboardLayout";
 import { toast } from "react-toastify";
+import Help from "../../components/Help";
 
 const Dashboard = () => {
   const [show, setShow] = useState(false);
@@ -89,6 +90,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-[91vh] bg-gray-50 py-4 md:py-6 lg:py-18">
+      <Help />
       {/* Backdrop */}
       <div
         className={`fixed inset-0 bg-black/30 transition-opacity duration-300 ${
