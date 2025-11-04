@@ -3,13 +3,14 @@ import { useCallback, useEffect, useState } from "react";
 import { backendurl } from "../../global";
 import { Link, useParams } from "react-router-dom";
 import thousandify from 'thousandify'
-import { IoIosClose } from "react-icons/io";
+import { IoIosClose, IoIosSearch } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
 import { FaTrash, FaWhatsapp } from "react-icons/fa";
 import { MdAddShoppingCart } from "react-icons/md";
 import ViewImageModal from "../components/store-components/ViewImageModal";
 import CoverLoader from "../components/CoverLoader";
 import { FaShop } from "react-icons/fa6";
+import Fuse from "fuse.js";
 
 const Store = () => {
   const params = useParams()
@@ -25,6 +26,7 @@ const Store = () => {
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [subWarning, setSubWarning] = useState(true)
   const [exist, setExists] = useState(true)
+  const [filterVal, setFilterVal] = useState('')
 
   const currentUserCart = cartArray.filter(cart=> cart.ownerId == store.user)
 
@@ -117,21 +119,27 @@ const Store = () => {
         setTodalPrice(0)
       }
     }, [cartArray])
-
+      const productArrayAfterAllFilters = ()=>{
+      const searchTerm = filterVal
+      const limitedProducts = products.filter((product, i)=> !isSubscribed ? i < 4 : i >= 0)
+      const fuse = new Fuse(limitedProducts, { keys: ['name'], threshold: 0.4 });
+      const filteredProducts = searchTerm ? fuse.search(searchTerm).map(res => res.item) : limitedProducts;
+      return filteredProducts
+    }
 
 
     const addToCart = (i, ci) => {
       setCartArray(prev => {
         let currentCart = [...prev]
-        let productIndex = ci !== null && ci !== undefined && ci > -1 ? ci : currentCart.findIndex(item => item.id === products[i]._id)
+        let productIndex = ci !== null && ci !== undefined && ci > -1 ? ci : currentCart.findIndex(item => item.id === productArrayAfterAllFilters()[i]._id)
 
         if (productIndex !== -1) {
           currentCart[productIndex].quantity += 1
         } else {
           currentCart.push({
-            ownerId: products[i]?.ownerId,
-            id: products[i]?._id,
-            price: products[i]?.price,
+            ownerId: productArrayAfterAllFilters()[i]?.ownerId,
+            id: productArrayAfterAllFilters()[i]?._id,
+            price: productArrayAfterAllFilters()[i]?.price,
             quantity: 1
           })
         }
@@ -139,13 +147,14 @@ const Store = () => {
 
         return currentCart
       })
-      setShowCart(currentUserCart.length < 1)
+      if (currentUserCart.length < 1) setShowCart(true)
+      console.log(currentUserCart.length)
     }
 
     const substractFromCart =(i, ci)=>{
       setCartArray(prev => {
         let currentCart = [...prev]
-        let productIndex = ci !== null && ci !== undefined && ci > -1 ? ci : currentCart.findIndex(item => item.id === products[i]._id)
+        let productIndex = ci !== null && ci !== undefined && ci > -1 ? ci : currentCart.findIndex(item => item.id === productArrayAfterAllFilters()[i]._id)
 
         if (productIndex !== -1) {
           currentCart[productIndex].quantity -= 1
@@ -221,6 +230,15 @@ const Store = () => {
       </div>
     )
   }
+
+  // const productArrayAfterAllFilters = ()=>{
+  //   const searchTerm = filterVal
+  //   const limitedProducts = products.filter((product, i)=> !isSubscribed ? i < 4 : i >= 0)
+  //   const fuse = new Fuse(limitedProducts, { keys: ['name'], threshold: 0.4 });
+  //   const filteredProducts = searchTerm ? fuse.search(searchTerm).map(res => res.item) : limitedProducts;
+  //   return filteredProducts
+  // }
+
 
   return (
     // loader 
@@ -453,10 +471,30 @@ const Store = () => {
 
       
 
-      <div className="max-w-6xl mx-auto px-6 lg:text-3xl md:text-2xl text-xl mt-10">Featured Products</div>
+      <div className="max-w-6xl mx-auto px-6  mt-10 md:flex justify-between">
+        <div className="lg:text-3xl md:text-2xl text-lg">Featured Products</div>
+        <div>
+          <div className="rounded-full text-sm md:text-md py-2 px-3 border border-gray-300 flex items-center spaxe-x-2  group focus-within:ring-1 duration-200 relative w-80 justify-end">
+            <input type="text" className="outline-none h-8 absolute w-11/12" 
+            placeholder="Search Products"
+            onChange={(e)=> setFilterVal(e.target.value)}
+            
+            />
+            <IoIosSearch className="text-lg md:text-xl right-0"/>
+          </div>
+        </div>
+
+      </div>
+
+      {filterVal && productArrayAfterAllFilters().length < 1 ? 
+          <div className="w-full h-30 mt-2 flex items-center justify-center">
+            No Search results for<span className="text-gray-600"> &nbsp; "{filterVal}"</span>
+          </div>
+          : null
+        }
       <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6 gap-2">
         
-        {products.filter((products, i)=> !isSubscribed ? i < 4 : i >= 0 ).map((product, i) => (
+        {productArrayAfterAllFilters().map((product, i) => (
           <div
             key={product._id}
             className="bg-white rounded-xl hover:scale-105  borde border-gray-300 transition overflow-hidden "
@@ -522,7 +560,9 @@ const Store = () => {
           </div>
         ))}
 
+
       </div>
+        
     </div>
   );
 };
