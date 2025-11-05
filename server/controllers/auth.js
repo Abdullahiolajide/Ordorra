@@ -108,8 +108,8 @@ const signIn = async (req, res) => {
 
     res.cookie("ord_token", token, {
       httpOnly: true,
-      secure: isProd,             // ✅ true only in production
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // ✅ local dev still works
+      secure: isProd,            
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
