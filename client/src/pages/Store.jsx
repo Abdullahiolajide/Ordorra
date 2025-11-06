@@ -492,6 +492,12 @@ const Store = () => {
           </div>
           : null
         }
+        {productArrayAfterAllFilters().length < 1 ? 
+          <div className="w-full h-30 mt-2 flex items-center justify-center">
+            This vendor has not uploaded any products
+          </div>
+          : null
+        }
       <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6 gap-2">
         
         {productArrayAfterAllFilters().map((product, i) => (

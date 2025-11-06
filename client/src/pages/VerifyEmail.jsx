@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CiLock } from 'react-icons/ci'
 import { backendurl } from '../../global'
 import axios from 'axios'
@@ -10,13 +10,30 @@ const verifyEmail = () => {
     const [otp, setOtp] = useState('')
     const [message, setMessage] = useState('')
     const [loading, setLoading] = useState(false)
+    const [timer, setTimer] = useState(40)
+    const [sending, setSending] = useState(false)
     const navigate = useNavigate()
 
+    useEffect(()=>{
+        StartInterval()
+    },[])
 
+    const StartInterval = ()=> {
+          const interval = setInterval(() => {
+            setTimer(prev=> {
+                if (prev <= 1){
+                    clearInterval(interval)
+                    return 0
+                }
+                return prev - 1
+            })
+        }, 1000);
+    }
+
+
+    const email = localStorage.getItem('ouseremail')
     const verifyEmail = async () => {
-        const email = localStorage.getItem('ouseremail')
-        
-        
+ 
         try {
             setLoading(true);
             
@@ -51,6 +68,24 @@ const verifyEmail = () => {
             setLoading(false);
         }
     };
+
+    const resendVerificationCode = async()=>{
+            try{
+                setSending(true)
+                await axios.post(`${backendurl}/auth/resend-code`, { email })
+                setTimer(60)
+                StartInterval()
+                toast.success("Verification code sent")
+            }catch(err){
+                if (err.response) {
+                toast.error(err.response.data.message || 'Something went wrong');
+                } else {
+                toast.error('Network error');
+                }
+            }finally{
+                setSending(false)
+            }
+        }
   return (
     <div>
         <section className='h-[90vh] flex mt-20 justify-center'>
@@ -64,8 +99,8 @@ const verifyEmail = () => {
                 <div className='flex justify-center py-3'>
                     <input type="text"  className='max-w-xs bg-gray-200 py-2 ps-3  text-3xl rounded' style={{"letterSpacing": "35px"}}
                         onChange={(e)=> setOtp(e.target.value)}
-                        disabled={otp.split('').length >= 6}
                     />
+
 
                 </div>
                    <div className='flex justify-center'>
@@ -75,7 +110,15 @@ const verifyEmail = () => {
                         className={`w-full mx-auto max-w-xs py-2 ${loading ? 'bg-gray-300' : 'bg-green-600 active:bg-green-700 hover:bg-green-500'} rounded text-white my-2  cursor-pointer`}>Verify{loading && '...'}
                     </button>
                    </div>
-            </div>
+                    <div className='text-sm text-center'>
+                        <div>
+                            <span className={`${timer > 0 || sending ?  "text-gray-400" : "text-green-500 hover:text-green-700"}  cursor-pointer`} disabled={timer > 0 || sending} onClick={resendVerificationCode}>
+                                {sending ? "sending..." : "resend code"} &nbsp;
+                            </span>
+                            in 0:{timer}s
+                        </div>
+                    </div>
+                </div>
         </section>
     </div>
   )

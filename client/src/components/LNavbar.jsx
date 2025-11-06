@@ -45,8 +45,8 @@ const LNavbar = () => {
                      <main className='flex ml-auto space-x-7'>
                        <ul className='hidden md:flex items-center space-x-7 font-medium text-gray-700 '>
                           <Link to={"/"}><li className='hover:text-black cursor-pointer'>Home</li></Link>
-                          <Link to={""}><li className='hover:text-black cursor-pointer'>Features</li></Link>
-                          <Link to={""}><li className='hover:text-black cursor-pointer'>Pricing</li></Link>
+                          <a href='#feature'><li className='hover:text-black cursor-pointer'>Features</li></a>
+                          <a href='#faqs'> <li className='hover:text-black cursor-pointer'>FAQs</li></a>
                       </ul>
                       
                     <div className='flex space-x-2 float-right'>
@@ -69,7 +69,7 @@ const LNavbar = () => {
               <ul className={`md:hidden ${show ? 'translate-x-0' : '-translate-x-full'} duration-300 absolute md:flex items-center font-medium text-gray-700 mt-10 bg-white w-full items-center flex flex-col space-y-6 pb-4 shadow-md`} onClick={()=> setShow(prev=> !prev)}>
                 <Link to={"/"}><li className='active:text-black cursor-pointer'>Home</li></Link>
                 <Link to={""}><li className='active:text-black cursor-pointer'>Features</li></Link>
-                <Link to={""}><li className='active:text-black cursor-pointer'>Pricing</li></Link>
+                <Link to={""}><li className='active:text-black cursor-pointer'>FAQs</li></Link>
             </ul>
             </div>
         </nav>

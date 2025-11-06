@@ -144,7 +144,7 @@ const Signin = () => {
             <div className='flex flex-col my-4 '>
                 <label htmlFor="" className='text-sm py-1'>Email</label>
                 <input 
-                type="text"
+                type="email"
                 name='email'
                 value={user?.email || ''}
                 className={`border ${clicked && !user.email ?'border-red-600' : 'border-gray-400'} rounded px-3 py-2 w-full`} 

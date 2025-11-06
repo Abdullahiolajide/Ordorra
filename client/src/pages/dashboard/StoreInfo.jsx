@@ -7,6 +7,8 @@ import PhoneInput from 'react-phone-number-input';
 import countries from '../../data/countries.json'
 import Select from "react-select";
 import Help from '../../components/Help';
+import InfoModal from '../../components/InfoModal';
+import { useNavigate } from 'react-router-dom';
 
 const StoreInfo = () => {
   const [formData, setFormData] = useState({
@@ -23,6 +25,9 @@ const StoreInfo = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [isNew, setIsNew] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const navigate = useNavigate()
 
 const options = countries
   .sort((a, b) => a.name.localeCompare(b.name))
@@ -40,16 +45,20 @@ const options = countries
       setLoading(true)
       try {
         const res = await axios.get(`${backendurl}/store/info`);
-
+        console.log('check')
         if (res.data) {
           setFormData(res.data);
           setIsEditing(true);
+        }else{
+          setIsNew(true)
         }
+        console.log(res.data)
       } catch (err) {
         if (err.response?.status !== 404) {
           console.error('Error fetching store info:', err.response?.data || err.message);
           toast.error('Failed to fetch store information.');
         }
+        console.log('los')
       }
       finally{
         setLoading(false)
@@ -82,7 +91,6 @@ const options = countries
         });
       }
     }
-    console.log(formData)
 
   const uploadImage = async (file) => {
      try {
@@ -127,6 +135,9 @@ const options = countries
       );
       
       setSaving(false)
+      if (isNew){
+        setShowModal(true)
+      }
       toast.success(`Store information ${isEditing ? 'updated' : 'saved'} successfully!`);
     } catch (err) {
       console.error('Error saving store info:', err.response?.data || err.message);
@@ -136,6 +147,14 @@ const options = countries
 
   return (
     <div className="max-w-6xl mx-auto md:py-6">
+       <InfoModal 
+        showModal={showModal}
+        setShowModal={setShowModal}
+        title={"Congratulations!"}
+        content={"Your store setup is now complete you can view your link in your dashboard"}
+        action={()=> navigate('/dashboard')}
+        actionText={'View Link'}
+      />
       <Help />
        {loading && <div
             className={`fixed inset-0 z-50 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}
@@ -247,7 +266,7 @@ const options = countries
             {/* store logo  */}
           <div>
             {/* <h3 className="text-lg font-semibold text-gray-700 mb-4">Store Logo</h3> */}
-         <label className="block text-sm font-medium text-gray-700 mb-2">Store Logo (optional)</label>
+         <label className="block text-sm font-medium text-gray-700 mb-2">Store Image (Optional)</label>
            <input
              type="file"
            name="storeLogo"

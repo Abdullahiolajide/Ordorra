@@ -59,7 +59,7 @@ const LandingPage = () => {
       </div>
 
       {/* Features */}
-      <div className='mb-40 px-4'>
+      <div className='mb-40 px-4' id='feature'>
         <h2 className='text-center text-3xl md:text-4xl'>Why use Ordorra?</h2>
         <p className='text-center my-5'>More than just a link, Ordorra makes selling simple</p>
         <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-7 max-w-5xl mx-auto mt-10'>
@@ -96,7 +96,7 @@ const LandingPage = () => {
       </div>
 
       {/* FAQ */}
-      <div className='mb-40 px-4 max-w-4xl mx-auto'>
+      <div className='mb-40 px-4 max-w-4xl mx-auto' id='faqs'>
         <h2 className='text-center text-3xl md:text-4xl'>Frequently Asked Questions</h2>
         <div className='mt-8 space-y-6'>
           <div>
@@ -109,7 +109,7 @@ const LandingPage = () => {
           </div>
           <div>
             <h3 className='font-medium'>Is Ordorra free?</h3>
-            <p className='text-gray-600'>Yes, our free plan is available. Paid plans with advanced features are coming soon.</p>
+            <p className='text-gray-600'>Yes, our free plan is available.</p>
           </div>
         </div>
       </div>

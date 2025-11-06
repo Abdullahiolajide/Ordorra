@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import AddProducts from "./AddProducts";
 import { IoIosClose } from "react-icons/io";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FiCopy } from "react-icons/fi";
 import { backendurl } from "../../../global";
 import { RefreshContext } from "../../components/DashboardLayout";
 import { toast } from "react-toastify";
 import Help from "../../components/Help";
+import InfoModal from "../../components/InfoModal";
 
 const Dashboard = () => {
   const [show, setShow] = useState(false);
@@ -15,7 +16,9 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [handle, setHandle] = useState(null)
+  const [showModal, setShowModal] = useState(false)
   const { refresh, isSubscribed, setShowSModal } = useContext(RefreshContext)
+  const navigate = useNavigate()
   // const location = useLocation()
   const [stats, setStats] = useState({
     products: null,
@@ -36,14 +39,15 @@ const Dashboard = () => {
           const res = await axios.get(`${backendurl}/store/info`);
   
           if (res.data.handle) {
-            // setFormData(res.data);
-            // setIsEditing(true);
             setStoreInfo(true)
             setHandle(res.data.handle)
+          }else{
+            setShowModal(true)
           }
         } catch (err) {
           if (err.response?.status !== 404) {
             console.error('Error fetching store info:', err.response?.data || err.message);
+            setShowModal(true)
             // toast.error('Failed to fetch store information.');
           }
         }
@@ -90,7 +94,16 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-[91vh] bg-gray-50 py-4 md:py-6 lg:py-18">
+
       <Help />
+      <InfoModal 
+        showModal={showModal}
+        setShowModal={setShowModal}
+        title={"Welcome! Set up your store"}
+        content={"Set up your store now to get your storefront link and start making sales"}
+        action={()=> navigate('store-info')}
+        actionText={'Set up Store'}
+      />
       {/* Backdrop */}
       <div
         className={`fixed inset-0 bg-black/30 transition-opacity duration-300 ${
@@ -118,32 +131,36 @@ const Dashboard = () => {
       </section>
       
 
-      {/* Store Link */}
       
 
       {/* Stats Cards */}
-      {/* {storeInfo && ( */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6 text-center hover:shadow-md transition">
             <p className="text-sm text-gray-500">Products</p>
             <p className="text-3xl font-bold text-gray-800">{stats.products}</p>
           </div>
-          {/* <div className="bg-white rounded-lg shadow p-6 text-center hover:shadow-md transition">
-            <p className="text-sm text-gray-500">Page Visits</p>
-            <p className="text-3xl font-bold text-gray-800">{stats.visits}</p>
-          </div>
-          <div className="bg-white rounded-lg shadow p-6 text-center hover:shadow-md transition">
-            <p className="text-sm text-gray-500">Order Clicks</p>
-            <p className="text-3xl font-bold text-gray-800">{stats.orders}</p>
-          </div> */}
         </section>
+
+         {!loading && stats.products < 1 ? 
+       <div className=" bg-white p-4 rounded border border-gray-300 space-y-2 mb-4">
+        There are no products in your store 
+
+        <button
+          className="text-sm cursor-pointer flex items-center md:gap-2 gap-1 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg px-2md: px-4 py-2 shadow transition"
+          onClick={()=> paywallCheck() ? setShow(true) : ''}
+        >
+          Add Product
+        </button>
+        
+       </div> : null}
+
       {/* )} */}
-      {!loading && (
-        <section className="md:w-fit mb-8 p-4 bg-white border border-gray-300 rounded-lg shadow-sm flex items-center justify-between">
+      {!loading ? (
+        <section className="relative md:w-fit mb-8 px-4 pb-8 pt-4 bg-white border border-gray-300 rounded-lg shadow-sm fle items-center justify-between">
           
           {storeInfo ? (
             <>
-              <div>
+              <div className="">
                 <p className="text-gray-700 font-medium">Your Storefront Link:</p>
                 <a
                   href={`${window.location.origin}/store/${handle}`}
@@ -156,7 +173,7 @@ const Dashboard = () => {
               </div>
               <button
                 onClick={handleCopy}
-                className="ml-4 flex items-center gap-1 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg border border-gray-300 transition"
+                className="absolute text-xs right-1 bottom-1 flex items-center gap-1 px-1 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg border border-gray-300 transition"
               >
                 <FiCopy />
                 {copied ? "Copied!" : "Copy"}
@@ -176,7 +193,12 @@ const Dashboard = () => {
             </div>
           )}
         </section>
-      )}
+      ) :
+       
+      <div>loading...</div>
+       }
+
+      
 
       {/* Add Product Modal */}
       <section
