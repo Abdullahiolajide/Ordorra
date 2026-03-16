@@ -1,0 +1,44 @@
+ordorra-frontend/
+├── src/
+│   ├── components/
+│   │   └── ProductCard.jsx
+│   │   └── Navbar.jsx
+│   │   └── StorePreview.jsx
+│   ├── pages/
+│   │   └── Register.jsx
+│   │   └── Login.jsx
+│   │   └── Dashboard.jsx
+│   │   └── Storefront.jsx
+│   ├── utils/
+│   │   └── api.js
+│   │   └── toast.js
+│   ├── App.jsx
+│   ├── index.js
+│   ├── App.css
+├── .env
+├── tailwind.config.js
+└── package.json
+
+
+ordorra-backend/
+├── controllers/
+│   └── authController.js
+│   └── productController.js
+│   └── storeController.js
+├── models/
+│   └── User.js
+│   └── Product.js
+│   └── Storefront.js
+├── routes/
+│   └── authRoutes.js
+│   └── productRoutes.js
+│   └── storeRoutes.js
+├── middleware/
+│   └── auth.js
+│   └── limitFreePlan.js
+├── utils/
+│   └── cloudinary.js
+│   └── generateToken.js
+├── .env
+├── app.js
+└── server.js

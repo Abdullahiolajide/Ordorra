@@ -1,0 +1,15 @@
+const express = require('express')
+const router = express.Router();
+const storeInfo = require('../controllers/storeInfo')
+const protect = require('../middleware/auth');
+
+router.get('/info/:handle', storeInfo.getStore);
+router.get('/subscription/:handle', storeInfo.getStoreSubscription);
+
+router.use(protect)
+
+router.post('/info', storeInfo.setStoreInfo);
+router.get('/info', storeInfo.getStoreInfo);
+router.put('/info', storeInfo.editStoreInfo);
+
+module.exports = router;

@@ -1,0 +1,157 @@
+import React, { useState } from 'react'
+import { MdNavigateNext } from 'react-icons/md'
+import { Link, useNavigate } from 'react-router-dom'
+import { backendurl } from '../../global'
+import axios from 'axios'
+import { myToast } from '../components/myToast'
+import { Helmet } from 'react-helmet'
+import { toast } from 'react-toastify'
+
+const Signup = () => {
+    const [user, setUser] = useState({})
+    const [errMsg, setErrMsg] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [clicked, setClicked] = useState(false)
+    const navigate = useNavigate()
+  
+
+    const handleChange = (e)=>{
+        const {name, value} = e.target
+        setUser(prevUser=>(
+            {
+                ...prevUser, 
+                [name]: value
+            }
+        ))
+    }
+    const signUp = async (e) => {
+        e.preventDefault()
+        const { email, password, confirm_password } = user;
+        if (!email || !password || !confirm_password) {
+            return setErrMsg('Fill in all fields')
+        }
+
+        if (password !== confirm_password) {
+            setErrMsg('Passwords do not match');
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            const res = await axios.post(`${backendurl}/auth/signup`, {
+            email,
+            password
+            });
+            localStorage.setItem('ouseremail', email)
+            myToast(
+                     <div className='text-center w-full max-w-xl'>
+                              <h1 className='text-xl font-md'>Sign Up Successful</h1>
+                              <p>A verification code has been sent to your email. Please enter it to complete your registration.</p>
+                              <button className='mt-2 p-2 bg-green-700 text-white rounded mx-auto'>Okay</button>
+                    </div>
+                )
+                if (window.gtag) {
+                    window.gtag('event', 'sign_up', { method: 'Email' });
+                    }
+
+            navigate('/verify-email')
+
+            // or show toast
+
+        } catch (err) {
+            // better error handling
+            if (err.response) {
+                if(err.response.data.errCode == 11000){
+                    toast.success('You already have an account, Sign In')
+                    navigate('/signin')
+                }
+            setErrMsg(err.response.data.message || 'Something went wrong');
+            } else {
+            setErrMsg('Network error');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+  return (
+    <div className='flex items-center justify-center h-[90vh]]'>
+        <section className=' mt-10 w-full max-w-xs  md:max-w-md'>
+            <div><img src="images/store.png" alt="" width={50} className='mx-auto'/></div>
+           <div className='text-center'>
+               <Helmet>
+                    <title>Ordorra - Create an account</title>
+                    <meta
+                    name="description"
+                    content="Create an account on ordorra to start receiving orders"
+                    />
+                </Helmet>
+                <h1 className='text-2xl'>Create an account</h1>
+                <p className='text-sm'>Create your WhatsApp commerce Storefront </p>
+                <p><small className='text-red-500'>{errMsg && errMsg}</small></p>
+           </div>
+            <form action="" onSubmit={(e)=> {signUp(e); setClicked(true)}}>
+
+            <div className='flex flex-col my-4 '>
+                <label htmlFor="" className='text-sm py-1'>Email</label>
+                <input 
+                type="email"
+                name='email'
+                required
+                value={user?.email || ''}
+                className={`border ${clicked && !user.email ? 'border-red-600' : 'border-gray-400'} rounded px-3 py-2 w-full`} 
+                placeholder='Ex. example@gmail.com'
+                onChange={handleChange}
+                />
+            </div>
+
+             <div className='flex flex-col my-4'>
+                <label htmlFor="" className='text-sm py-1'>Password</label>
+                <input 
+                type="password"
+                name='password'
+                required
+                value={user?.password || ''}
+                className={`border ${clicked && !user.password ?'border-red-600' : 'border-gray-400'} rounded px-3 py-2 w-full`} 
+                placeholder='Enter your password'
+                onChange={handleChange}
+                />
+            </div>
+
+            <div className='flex flex-col my-4'>
+                <label htmlFor="" className='text-sm py-1'>Confirm Password</label>
+                <input 
+                type="password"
+                required
+                name='confirm_password'
+                value={user?.confirm_password || ''}
+                className={`border ${clicked && !user.confirm_password ?'border-red-600' : 'border-gray-400'} rounded px-3 py-2 w-full`} 
+                placeholder='Confirm password'
+                onChange={handleChange}
+                />
+            </div>
+
+            <div>
+                <button 
+                className={`w-full py-2 ${loading ? 'bg-gray-300' : 'bg-green-600 active:bg-green-700 hover:bg-green-500'} rounded text-white my-2  cursor-pointer`}
+                disabled={loading}
+                type='submit'
+                
+                >
+                    Sign Up{loading && '...'}
+                </button>
+            </div>
+            <div className='flex space-x-2 justify-center'>
+                <span>Already have an account?</span> 
+                <Link to={'/signin'}><span className='flex text-green-600 items-center justify-center'>Sign in <MdNavigateNext /></span> </Link>
+            </div>
+            </form>
+
+        </section>
+    </div>
+  )
+}
+
+export default Signup

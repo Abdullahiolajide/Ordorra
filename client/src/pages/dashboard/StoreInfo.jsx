@@ -1,0 +1,325 @@
+import React, { useState, useEffect} from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { backendurl } from '../../../global';
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input';
+import countries from '../../data/countries.json'
+import Select from "react-select";
+import Help from '../../components/Help';
+import InfoModal from '../../components/InfoModal';
+import { useNavigate } from 'react-router-dom';
+
+const StoreInfo = () => {
+  const [formData, setFormData] = useState({
+    fullname: '',
+    whatsappNumber: '',
+    storeName: '',
+    handle: '',
+    storeBio: '',
+    storeLogo: '',
+    currency:"",
+    imagePublicId:""
+  });
+  const [uploading, setUploading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [isNew, setIsNew] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+  const navigate = useNavigate()
+
+const options = countries
+  .sort((a, b) => a.name.localeCompare(b.name))
+  .map((c) => ({
+    value: c.symbol,
+    label: `${c.name} (${c.symbol} ${c.currency})`,
+  }));
+
+
+
+
+
+  useEffect(() => {
+    const fetchStoreInfo = async () => {
+      setLoading(true)
+      try {
+        const res = await axios.get(`${backendurl}/store/info`);
+        console.log('check')
+        if (res.data) {
+          setFormData(res.data);
+          setIsEditing(true);
+        }else{
+          setIsNew(true)
+        }
+        console.log(res.data)
+      } catch (err) {
+        if (err.response?.status !== 404) {
+          console.error('Error fetching store info:', err.response?.data || err.message);
+          toast.error('Failed to fetch store information.');
+        }
+        console.log('los')
+      }
+      finally{
+        setLoading(false)
+      }
+    };
+
+    fetchStoreInfo();
+  }, []);
+
+      const handleChange = (e) => {
+      const { name, value, files } = e.target;
+
+      if (name === "storeLogo" && files[0]) {
+        uploadImage(files[0]);
+      } else {
+        let newValue = value;
+
+        if (name === "handle") {
+          newValue = newValue
+            .replace(/[^a-zA-Z0-9\s-]/g, "") // allow only letters, numbers, spaces, and dashes
+            .replace(/\s+/g, "-")            // replace spaces with -
+            .replace(/-+/g, "-")             // collapse multiple dashes
+            .replace(/^-+|-+$/g, "-")         // trim leading/trailing -
+            .toLowerCase();                  // make lowercase
+        }
+
+        setFormData({
+          ...formData,
+          [name]: newValue,
+        });
+      }
+    }
+
+  const uploadImage = async (file) => {
+     try {
+        setUploading(true);
+        if (formData.imagePublicId){
+          await axios.post(`${backendurl}/image/delete`, {public_id:formData.imagePublicId});
+        }
+        const res = await axios.get(`${backendurl}/image/sign`, {withCredentials: true})
+    
+        const data = new FormData();
+        data.append('file', file);
+        data.append("api_key", res.data.apiKey);
+        data.append("timestamp", res.data.timestamp);
+        data.append("signature", res.data.signature);
+        data.append("folder", res.data.folder);
+        const result = await axios.post('https://api.cloudinary.com/v1_1/dsr9rtryb/image/upload', data, { withCredentials: false } );
+        
+     
+        setFormData(prev => ({ ...prev, storeLogo: result.data.secure_url, imagePublicId:result.data.public_id }));
+    
+      } catch (err) {
+        console.error(err);
+        toast.error('Image upload failed');
+        if (fileInputRef.current) {
+          fileInputRef.current.value = null;
+        }
+      } finally {
+        setUploading(false);
+      }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setSaving(true)
+    
+    try {
+      const method = isEditing ? 'put' : 'post';
+      await axios[method](
+        `${backendurl}/store/info`,
+        formData
+      );
+      
+      setSaving(false)
+      if (isNew){
+        setShowModal(true)
+      }
+      toast.success(`Store information ${isEditing ? 'updated' : 'saved'} successfully!`);
+    } catch (err) {
+      console.error('Error saving store info:', err.response?.data || err.message);
+      toast.error('Failed to save store information.');
+    }
+  };
+
+  return (
+    <div className="max-w-6xl mx-auto md:py-6">
+       <InfoModal 
+        showModal={showModal}
+        setShowModal={setShowModal}
+        title={"Congratulations!"}
+        content={"Your store setup is now complete you can view your link in your dashboard"}
+        action={()=> navigate('/dashboard')}
+        actionText={'View Link'}
+      />
+      <Help />
+       {loading && <div
+            className={`fixed inset-0 z-50 bg-black/30 transition-opacity duration-300 opacity-100 flex items-center justify-center`}
+            >
+
+            <div className="h-13 w-13 border absolute border-5 rounded-4xl border-b-transparent border-green-600 animate-spin">
+
+            </div>
+      </div>}
+      <h2 className="text-2xl font-bold mb-4 mt-4 md:mt-14 text-gray-800">Store Information</h2>
+      <div className="grid lg:grid-cols-2 gap-10">
+        
+        {/* Left: Polished Form */}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-xl shadow-lg px-4 py-8 md:p-8 border border-gray-100 space-y-2"
+        >
+          {/* Section: Personal Info */}
+          <div className=" border- border-gray-100">
+            {/* <h3 className="text-lg font-semibold text-gray-700 mb-2">Personal Information</h3> */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-1 gap-3">
+              <div>
+                <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Full Name</label>
+                <input
+                  type="text"
+                  name="fullname"
+                  value={formData.fullname}
+                  onChange={handleChange}
+                  placeholder="Your Full Name"
+                  required
+                  className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+                />
+              </div>
+             
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">WhatsApp Number</label>
+                <PhoneInput 
+                    className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none"
+                    defaultCountry="NG"
+                    initialValueFormat="national"
+                    placeholder="9076284628"
+                    required
+                    value={formData.whatsappNumber}
+                    onChange={phone => setFormData(prev=> ({...prev, whatsappNumber: phone }))}
+
+              />
+              <small className='text-xs leading-[0.9]'>Ensure that your number is correct else, you might not receive orders</small>
+            </div>
+            <div>
+              <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Country/Currency</label>
+              <Select
+                  options={options}
+                  value={options.find(opt => opt.value === formData.currency)}
+                  placeholder="Select country"
+                  onChange={(selected) => setFormData(prev=> ({...prev, currency:selected.value}))}
+                  className="w-full"
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      borderColor: "#ccc",
+                      boxShadow: "none",
+                      "&:hover": { borderColor: "#999" },
+                    }),
+                  }}
+                />
+              
+            </div>
+            </div>
+          </div>
+
+          {/* Section: Store Info */}
+          <div className="pb-4 border-b border-gray-100">
+            <div className="space-y-4">
+              <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Store name</label>
+              <input
+                type="text"
+                name="storeName"
+                value={formData.storeName}
+                onChange={handleChange}
+                placeholder="Ex. Ordorra store"
+                required
+                className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+              />
+              <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Handle</label>
+              <input
+                type="text"
+                name="handle"
+                value={formData.handle}
+                onChange={handleChange}
+                placeholder="Ex. ordorra-store"
+                required
+                disabled={isEditing}
+                className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-60 transition"
+              />
+              <div className='-mt-3 text-gray-500'><small>{`${window.location.origin}/store/${formData.handle}`}</small></div>
+              <label className="block text-xs md:text-sm font-medium text-gray-600 mb-1">Tagline</label>
+              <textarea
+                name="storeBio"
+                value={formData.storeBio}
+                onChange={handleChange}
+                placeholder="Ex. Everything you need just an order away"
+                rows="3"
+                className="w-full bg-gray-50 rounded-lg border border-gray-200 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
+              />
+            </div>
+          </div>
+
+         
+            {/* store logo  */}
+          <div>
+            {/* <h3 className="text-lg font-semibold text-gray-700 mb-4">Store Logo</h3> */}
+         <label className="block text-sm font-medium text-gray-700 mb-2">Store Image (Optional)</label>
+           <input
+             type="file"
+           name="storeLogo"
+           onChange={handleChange}
+           accept="image/*"
+           className="cursor-pointer file:cursor-pointer block w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+          />
+           {uploading && <p className="text-sm text-gray-500 mt-1">Uploading...</p>}
+           {formData.storeLogo && (
+             <div className="mt-3">
+               <img
+                 src={formData.storeLogo}
+                 alt="Store Logo Preview"
+                 className="h-16 w-16 object-cover rounded-full border border-green-300"
+                 />
+             </div>
+           )}
+         </div>
+           {/* store logo  */}
+
+          {/* Save Button */}
+          <button
+            type="submit"
+            disabled={uploading || saving}
+            className="cursor-pointer w-full bg-green-600 text-white py-2 rounded-lg font-medium hover:bg-green-700 focus:ring-4 focus:ring-green-300 transition disabled:bg-green-300"
+          >
+            {isEditing ? 'Update Store Info' : 'Save Store Info'}{saving && '...'}
+          </button>
+        </form>
+
+        {/* Store Preview*/}
+        <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100 flex flex-col items-center text-center h-fit sticky top-3">
+          <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-gray-100 shadow-sm mb-5">
+            {formData.storeLogo ? (
+              <img
+                src={formData.storeLogo}
+                alt="Logo Preview"
+                className="object-cover w-full h-full"
+              />
+            ) : (
+              <div className="bg-gray-100 w-full h-full flex items-center justify-center text-gray-400">
+                Logo
+              </div>
+            )}
+          </div>
+          <h3 className="text-2xl font-bold text-gray-800">{formData.storeName || 'Store Name'}</h3>
+          <p className="text-gray-500 text-sm mb-3">@{formData.handle || 'handle'}</p>
+          <p className="text-gray-600 leading-relaxed">{formData.storeBio || 'Your store bio will appear here.'}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default StoreInfo;
+
