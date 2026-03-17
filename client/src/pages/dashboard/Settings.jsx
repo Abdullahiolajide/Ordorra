@@ -41,10 +41,10 @@ const Settings = () => {
           </div>
           <button className="cursor-pointer bg-green-50 text-green-600 px-4 py-2 rounded-lg hover:bg-green-100 transition"
           onClick={() => {
-            window.location.href = 'mailto:support@ordorra.app'
+            navigate('/dashboard/pricing')
           }}
               >
-            Contact Support
+            Open Support Page
           </button>
         </section>
       </div>

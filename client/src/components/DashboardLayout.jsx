@@ -113,9 +113,9 @@ useEffect(() => {
           <Link to={'/'}><div className='flex items-center text-xl md:text-2xl font-bold text-gray-700'><Icon /> Ordorra</div></Link>
           <div className='flex'>
             <div className="mb-2 flex items-center h-full">
-              <a href="mailto:support@ordorra.app">
+              <Link to={'pricing'}>
                 <button className='text-green-700 px-2 cursor-pointer hover:text-green-800'>Support</button>
-              </a>
+              </Link>
             </div>
             <div className='flex items-center text-3xl'><IoPersonCircle /></div>
           </div>
