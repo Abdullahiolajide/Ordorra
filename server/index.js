@@ -40,6 +40,21 @@ app.use('/api/store', storeInfos);
 app.use("/api/subscription", subscriptionRoutes);
 app.use("/api/webhooks", paystackWebhook);
 app.use("/api/image", cloudinaryRoutes)
+
+app.get('/api/debug/ip', async (req, res) => {
+  try {
+    const response = await fetch('https://api.ipify.org?format=json');
+    if (!response.ok) {
+      return res.status(502).json({ message: 'Failed to fetch public IP' });
+    }
+
+    const data = await response.json();
+    res.status(200).json({ ip: data.ip });
+  } catch (error) {
+    res.status(500).json({ message: 'Unable to determine public IP' });
+  }
+});
+
 app.get('/ping', (req, res) => {
   res.status(200).send('pong');
 });
