@@ -23,8 +23,6 @@ const Store = () => {
   const [cartArray, setCartArray] = useState([])
   const [showCart, setShowCart] = useState(false)
   const [totalPrice, setTodalPrice] = useState(0)
-  const [isSubscribed, setIsSubscribed] = useState(false)
-  const [subWarning, setSubWarning] = useState(true)
   const [exist, setExists] = useState(true)
   const [filterVal, setFilterVal] = useState('')
 
@@ -33,48 +31,6 @@ const Store = () => {
     useEffect(()=>{
     document.title = store.storeName
   }, [store])
-
-    useEffect(()=>{
-     getSubscriptionStatus()
-   }, [])
-
-      const getSubscriptionStatus = async () => {
-    
-          try {
-            const res = await axios.get(`${backendurl}/store/subscription/${params.handle}`);
-            const status = res.data.subscription.status
-            payWall(status, res.data.subscription.nextPaymentDate)
-
-          } catch (error) {
-            console.error('Error fetching subscription status:', error.response?.data || error);
-          }
-          
-     };
-
-      const payWall = (status, nextPaymentDate) => {
-      const npd = new Date(nextPaymentDate);
-      const currentDate = new Date();
-      const diffInDays = (npd - currentDate) / (1000 * 60 * 60 * 24);
-
-      if (status === "active" || status === "non-renewing") {
-        setIsSubscribed(true);
-      }
-      if (diffInDays >= -2 && diffInDays <= -1) {
-        setSubWarning(true); 
-        // setSubWarningModal(true); 
-      }
-      if (diffInDays <= -2) {
-        setSubWarning(true); 
-        setIsSubscribed(false);
-      }else if(diffInDays >= -2 && npd && status != "pending") {
-
-        setIsSubscribed(true)
-      }
-
-    
-    };
-  
-
 
       const getStore = useCallback(async () => {
         setLoading(true)
@@ -121,9 +77,8 @@ const Store = () => {
     }, [cartArray])
       const productArrayAfterAllFilters = ()=>{
       const searchTerm = filterVal
-      const limitedProducts = products.filter((product, i)=> !isSubscribed ? i < 4 : i >= 0)
-      const fuse = new Fuse(limitedProducts, { keys: ['name'], threshold: 0.4 });
-      const filteredProducts = searchTerm ? fuse.search(searchTerm).map(res => res.item) : limitedProducts;
+      const fuse = new Fuse(products, { keys: ['name'], threshold: 0.4 });
+      const filteredProducts = searchTerm ? fuse.search(searchTerm).map(res => res.item) : products;
       return filteredProducts
     }
 

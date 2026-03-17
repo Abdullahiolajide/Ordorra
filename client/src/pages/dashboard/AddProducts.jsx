@@ -16,7 +16,7 @@ const AddProducts = ({productInfo = null}) => {
   const [saving, setSaving] = useState(false)
   const fileInputRef = useRef(null);
   
-  const {setRefresh, pl, isSubscribed, setShowSModal} = useContext(RefreshContext)
+  const {setRefresh} = useContext(RefreshContext)
 
 
 
@@ -85,11 +85,6 @@ const uploadImageToCloudinary = async (file) => {
 
 const handleSubmit = async (e) => {
   e.preventDefault();
-      if (!isSubscribed && pl >= 4) {
-        // console.log(isSubscribed)
-        setShowSModal(true)
-        return
-      }
 
   const { name, price, description, imageUrl, imagePublicId } = formData;
   setSaving(true)

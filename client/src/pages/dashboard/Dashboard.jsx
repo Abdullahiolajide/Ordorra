@@ -17,7 +17,7 @@ const Dashboard = () => {
   const [copied, setCopied] = useState(false);
   const [handle, setHandle] = useState(null)
   const [showModal, setShowModal] = useState(false)
-  const { refresh, isSubscribed, setShowSModal } = useContext(RefreshContext)
+  const { refresh } = useContext(RefreshContext)
   const navigate = useNavigate()
   // const location = useLocation()
   const [stats, setStats] = useState({
@@ -77,14 +77,6 @@ const Dashboard = () => {
       }
     };
 
-    const paywallCheck = ()=>{
-      if (!isSubscribed && stats.products >= 4) {
-        setShowSModal(true)
-        return false
-      }
-      return true
-    }
-
   const handleCopy = () => {
     // if (!storeInfo) return;
     navigator.clipboard.writeText(`${window.location.origin}/store/${handle}`);
@@ -124,7 +116,7 @@ const Dashboard = () => {
         <h1 className="text-2xl font-semibold text-gray-800">Dashboard</h1>
         <button
           className="text-sm cursor-pointer flex items-center md:gap-2 gap-1 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg px-2md: px-4 py-2 shadow transition"
-          onClick={()=> paywallCheck() ? setShow(true) : ''}
+          onClick={() => setShow(true)}
         >
           <span className="md:text-lg flex items-center">+</span> Add Product
         </button>
@@ -147,7 +139,7 @@ const Dashboard = () => {
 
         <button
           className="text-sm cursor-pointer flex items-center md:gap-2 gap-1 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg px-2md: px-4 py-2 shadow transition"
-          onClick={()=> paywallCheck() ? setShow(true) : ''}
+          onClick={() => setShow(true)}
         >
           Add Product
         </button>

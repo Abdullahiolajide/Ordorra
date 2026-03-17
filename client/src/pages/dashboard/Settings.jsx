@@ -37,14 +37,14 @@ const Settings = () => {
         <section className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
           <div className="flex items-center mb-4">
             <FaLock className="text-green-500 text-lg mr-2" />
-            <h2 className="text-lg font-semibold">Subscription</h2>
+            <h2 className="text-lg font-semibold">Support</h2>
           </div>
           <button className="cursor-pointer bg-green-50 text-green-600 px-4 py-2 rounded-lg hover:bg-green-100 transition"
-          onClick={()=> {
-            navigate('subscribtions')
+          onClick={() => {
+            window.location.href = 'mailto:support@ordorra.app'
           }}
               >
-            Manage Subscription 
+            Contact Support
           </button>
         </section>
       </div>

@@ -15,8 +15,7 @@ const Products = () => {
   const [actions, setActions] = useState(null)
   const [productInfo, setProductInfo] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [subscription, setSubscription] = useState({})
-  const { refresh, isSubscribed, setShowSModal } = useContext(RefreshContext)
+  const { refresh } = useContext(RefreshContext)
 
   useEffect(()=>{
     getProducts()
@@ -57,15 +56,6 @@ const Products = () => {
       }
     };
 
-    const paywallCheck = ()=>{
-      if (!isSubscribed && userProducts.length >= 4) {
-        setShowSModal(true)
-        return false
-      }
-      return true
-    }
-
-
   return (
   <div className="relative">
     {/* Backdrop */}
@@ -98,7 +88,7 @@ const Products = () => {
       />
       <button
         className="whitespace-nowrap flex items-center gap-1 bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg px-2 md:px-4 py-2 md:py-3  transition"
-        onClick={()=> paywallCheck() ? setShow(true) : ''}
+        onClick={() => setShow(true)}
       >
         <IoAddOutline className="text-xl whitespace-nowrap
 " /> Add Product

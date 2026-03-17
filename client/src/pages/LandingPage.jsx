@@ -81,16 +81,16 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* Pricing teaser */}
+      {/* Free + Support teaser */}
       <div className='mb-40 text-center px-4'>
-        <h2 className='text-3xl md:text-4xl'>Start Free, Grow with Us</h2>
+        <h2 className='text-3xl md:text-4xl'>Always Free, Backed by Support</h2>
         <p className='my-5 max-w-2xl mx-auto'>
-          Begin with our free plan and explore Ordorra’s features. 
-          Premium plans coming soon to help scale your business.
+          Ordorra is free to use. If you run into any issues or need help setting up,
+          our support channel is available.
         </p>
         <Link to={'/signup'}>
           <button className='rounded-md bg-green-800 text-white px-6 py-3 hover:bg-green-700 duration-150 cursor-pointer'>
-            Get Started Free
+            Get Started
           </button>
         </Link>
       </div>
@@ -125,7 +125,7 @@ const LandingPage = () => {
             <h3 className='font-medium mb-3'>Quick Links</h3>
             <ul className='space-y-2 text-gray-400 text-sm'>
               <li><Link to='/features'>Features</Link></li>
-              <li><Link to='/pricing'>Pricing</Link></li>
+              <li><a href='mailto:support@ordorra.app'>Support</a></li>
               <li><Link to='/faq'>FAQ</Link></li>
             </ul>
           </div>
